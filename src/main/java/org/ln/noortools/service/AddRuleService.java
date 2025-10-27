@@ -23,36 +23,40 @@ import org.springframework.stereotype.Service;
 @Service("addruleservice")
 public class AddRuleService implements RuleService {
 
-    @Override
+	@Override
     public List<RenamableFile> applyRule(List<RenamableFile> files, Object... params) {
         String text = (String) params[0];
         int position = (int) params[1];
         return applyRule(files, text, position);
     }
-    
-    
-    // ✅ overload tipizzato
+
     public List<RenamableFile> applyRule(List<RenamableFile> files, String text, int position) {
-        if (files == null) return List.of();
+        if (files == null || files.isEmpty()) return List.of();
+        if (text == null) text = "";
+
+        List<RenamableFile> updated = new java.util.ArrayList<>();
 
         for (RenamableFile file : files) {
+            if (file == null) continue;
+
             String base = FileUtil.getNameWithoutExtension(file.getSource());
+            String ext  = file.getExtension();
             String newName = insertAt(base, text, position);
-            file.setDestinationName(newName);
-            System.out.println("applyRule su " + files.size() + " file con text=" + text);
+
+            // 🔑 Copia l'oggetto per non rompere l’osservabilità
+            RenamableFile copy = new RenamableFile(file.getSource());
+            copy.setDestinationName(newName + (ext.isEmpty() ? "" : "." + ext));
+            updated.add(copy);
         }
-        return files;
+
+        return updated;
     }
 
     private String insertAt(String base, String text, int pos) {
         if (base == null) return text;
         if (pos <= 0) return text + base;
+        if (pos == Integer.MAX_VALUE) return base + text;
         if (pos >= base.length()) return base + text;
         return base.substring(0, pos) + text + base.substring(pos);
     }
-
-
-	
-
-
 }

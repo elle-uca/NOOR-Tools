@@ -32,7 +32,7 @@ public class RenamerDemoApp {
 
         // --- Service principali
         RenamerService renamerService = new RenamerService();
-        AddRuleService addRuleService = new AddRuleServiceMock();
+        AddRuleService addRuleService = new AddRuleService();
 
         // --- Tabella a destra
         FileTableModel tableModel = new FileTableModel();
