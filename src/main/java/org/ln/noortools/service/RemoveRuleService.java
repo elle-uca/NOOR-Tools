@@ -66,13 +66,17 @@ public class RemoveRuleService  implements RuleService {
     // ✅ overload tipizzato
     public List<RenamableFile> applyRule(List<RenamableFile> files, int position, int length) {
         if (files == null) return List.of();
+        List<RenamableFile> updated = new ArrayList<RenamableFile>();
 
         for (RenamableFile file : files) {
             String base = FileUtil.getNameWithoutExtension(file.getSource());
             String newName = removeSubstring(base, position, length);
-            file.setDestinationName(newName);
+            // 🔑 Copia l'oggetto per non rompere l’osservabilità
+            RenamableFile copy = new RenamableFile(file.getSource());
+            copy.setDestinationName(newName);
+            updated.add(copy);
         }
-        return files;
+        return updated;
     }
 
     private String removeSubstring(String base, int pos, int len) {

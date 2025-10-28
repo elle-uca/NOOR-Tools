@@ -1,11 +1,12 @@
 package org.ln.noortools.view;
 
-import org.ln.noortools.model.RenamableFile;
-import org.ln.noortools.service.RenamerServiceListener;
-
-import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.table.AbstractTableModel;
+
+import org.ln.noortools.model.RenamableFile;
+import org.ln.noortools.service.RenamerServiceListener;
 
 public class FileTableModel extends AbstractTableModel implements RenamerServiceListener {
 

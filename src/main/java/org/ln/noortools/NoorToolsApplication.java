@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.swing.SwingUtilities;
 
-import org.ln.noortools.enums.ModeCase;
 import org.ln.noortools.service.TagProcessorService;
 import org.ln.noortools.view.MainFrame;
 import org.springframework.boot.WebApplicationType;

@@ -1,59 +1,84 @@
-//package org.ln.noortools.view.panel;
-//
-//import java.util.List;
-//
-//import javax.swing.JLabel;
-//
-//import org.ln.noortools.model.RenamableFile;
-//import org.ln.noortools.service.RemoveRuleService;
-//import org.ln.noortools.view.JIntegerSpinner;
-//
-//import net.miginfocom.swing.MigLayout;
-//
-///**
-// * Panel <Remove>
-// * Remove characters from file names.
-// */
-//@SuppressWarnings("serial")
-//public class RemovePanel extends AbstractPanelContent {
-//
-//    private JLabel posLabel;
-//    private JLabel numLabel;
-//    private JIntegerSpinner posSpinner;
-//    private JIntegerSpinner numSpinner;
-//
-//    private final RemoveRuleService removeRuleService = new RemoveRuleService();
-//
-//    public RemovePanel(AccordionPanel accordion, java.util.ResourceBundle bundle) {
-//        super(accordion, bundle);
-//    }
-//
-//    @Override
-//    protected void initComponents() {
-//        posLabel = new JLabel(bundle.getString("removePanel.label.position"));
-//        numLabel = new JLabel(bundle.getString("removePanel.label.number"));
-//
-//        posSpinner = new JIntegerSpinner();
-//        numSpinner = new JIntegerSpinner();
-//
-//        posSpinner.addChangeListener(this);
-//        numSpinner.addChangeListener(this);
-//
-//        setLayout(new MigLayout("", "[][grow]", "20[][]20"));
-//        add(numLabel);
-//        add(numSpinner, "growx, wrap");
-//        add(posLabel);
-//        add(posSpinner, "growx, wrap");
-//    }
-//
-//    @Override
-//    protected void updateView() {
-//        List<RenamableFile> updated = removeRuleService.applyRule(
-//            accordion.getTableData(),
-//            posSpinner.getIntValue(),
-//            numSpinner.getIntValue()
-//        );
-//
-//        accordion.setTableData(updated);
-//    }
-//}
+package org.ln.noortools.view.panel;
+
+import javax.swing.JLabel;
+
+import org.ln.noortools.i18n.I18n;
+import org.ln.noortools.service.RenamerService;
+import org.ln.noortools.view.IntegerSpinner;
+
+import net.miginfocom.swing.MigLayout;
+
+
+
+/**
+ * Panel <Remove>
+ *
+ * Provides a UI for removing characters from filenames.
+ * 
+ * Users can specify:
+ * - the starting position,
+ * - the number of characters to remove.
+ *
+ * The panel interacts with {@link RemoveRuleService} to perform
+ * the operation, and {@link RenamerService} to update the file list
+ * and notify the table on the right.
+ * 
+ * Author: Luca Noale
+ */
+@SuppressWarnings("serial")
+public class RemovePanel extends AbstractPanelContent {
+
+    private JLabel posLabel;
+    private JLabel numLabel;
+    private IntegerSpinner posSpinner;
+    private IntegerSpinner numSpinner;
+
+    private final RenamerService renamerService;
+
+    /**
+     * Creates a RemovePanel instance.
+     *
+     * @param accordion       	parent accordion container
+     * param i18n               internationalization support				
+     * @param renamerService  	service responsible for applying renaming rules
+     */
+    public RemovePanel(AccordionPanel accordion,  I18n i18n, 
+    		 RenamerService renamerService) {
+        super(accordion, i18n);
+        this.renamerService = renamerService;
+    }
+
+    /**
+     * Initializes UI components: labels and spinners
+     * to configure remove position and length.
+     */
+    @Override
+    protected void initComponents() {
+        posLabel = new JLabel(i18n.get("removePanel.label.position"));
+        numLabel = new JLabel(i18n.get("removePanel.label.number"));
+        posSpinner = new IntegerSpinner();
+        numSpinner = new IntegerSpinner();
+
+        posSpinner.addChangeListener(this);
+        numSpinner.addChangeListener(this);
+
+        setLayout(new MigLayout("", "[][grow]", "20[][]20"));
+        add(numLabel);
+        add(numSpinner, "growx, wrap");
+        add(posLabel);
+        add(posSpinner, "growx, wrap");
+    }
+    
+    /**
+     * Called whenever spinner values change.
+     * Applies the <Remove> rule using {@link RenamerService}.
+     */
+    @Override
+    protected void updateView() {
+        renamerService.applyRule(
+                "remove",
+                posSpinner.getIntValue(),
+                numSpinner.getIntValue()
+        );
+    }
+}

@@ -1,9 +1,9 @@
 package org.ln.noortools.prefs;
 
+import java.util.prefs.Preferences;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.prefs.Preferences;
 
 /**
  * Centralized management of program preferences.

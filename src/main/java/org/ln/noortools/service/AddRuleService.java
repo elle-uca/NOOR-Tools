@@ -1,5 +1,6 @@
 package org.ln.noortools.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.ln.noortools.model.RenamableFile;
@@ -34,7 +35,7 @@ public class AddRuleService implements RuleService {
         if (files == null || files.isEmpty()) return List.of();
         if (text == null) text = "";
 
-        List<RenamableFile> updated = new java.util.ArrayList<>();
+        List<RenamableFile> updated = new ArrayList<RenamableFile>();
 
         for (RenamableFile file : files) {
             if (file == null) continue;
@@ -54,9 +55,22 @@ public class AddRuleService implements RuleService {
 
     private String insertAt(String base, String text, int pos) {
         if (base == null) return text;
-        if (pos <= 0) return text + base;
-        if (pos == Integer.MAX_VALUE) return base + text;
-        if (pos >= base.length()) return base + text;
-        return base.substring(0, pos) + text + base.substring(pos);
+        if (text == null) text = "";
+
+        // normalizza: l'utente parte da 1, Java da 0
+        int index = pos - 1;
+
+        if (index <= 0) return text + base;                  // inserisci all'inizio
+        if (pos == Integer.MAX_VALUE) return base + text;    // convenzione per fine
+        if (index >= base.length()) return base + text;      // oltre la lunghezza → append
+        return base.substring(0, index) + text + base.substring(index);
     }
+    
+//    private String insertAt(String base, String text, int pos) {
+//        if (base == null) return text;
+//        if (pos <= 0) return text + base;
+//        if (pos == Integer.MAX_VALUE) return base + text;
+//        if (pos >= base.length()) return base + text;
+//        return base.substring(0, pos) + text + base.substring(pos);
+//    }
 }

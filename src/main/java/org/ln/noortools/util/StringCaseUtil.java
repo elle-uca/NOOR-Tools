@@ -1,15 +1,17 @@
 package org.ln.noortools.util;
 
-import org.ln.noortools.enums.ModeCase;
-
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import org.ln.noortools.enums.ModeCase;
+
 /**
  * Utility class for transforming the case of strings based on {@link ModeCase}.
+ * 
+ * Author: Luca Noale
  */
-public class CaseTransformer {
+public class StringCaseUtil {
 
     /**
      * Transforms the case of the provided input string based on the specified {@link ModeCase}.

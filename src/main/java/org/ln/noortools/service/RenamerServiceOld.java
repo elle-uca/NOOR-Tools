@@ -1,11 +1,11 @@
 package org.ln.noortools.service;
 
-import org.ln.noortools.model.RenamableFile;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.ln.noortools.model.RenamableFile;
+import org.springframework.stereotype.Service;
 
 @Service
 public class RenamerServiceOld {

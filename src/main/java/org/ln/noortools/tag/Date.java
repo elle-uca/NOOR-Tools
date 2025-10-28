@@ -15,9 +15,9 @@ import org.ln.noortools.util.DateTimeFormatMapper;
  *
  * Author: Luca Noale
  */
-public class DateTag extends AbstractTag {
+public class Date extends AbstractTag {
 
-    public DateTag(Object... args) {
+    public Date(Object... args) {
         super(args);
         this.tagName = "Date";
     }

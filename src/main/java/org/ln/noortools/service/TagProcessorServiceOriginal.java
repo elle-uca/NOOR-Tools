@@ -1,13 +1,16 @@
 package org.ln.noortools.service;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.ln.noortools.tag.AbstractTag;
 import org.ln.noortools.tag.IncN;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class TagProcessorServiceOriginal {

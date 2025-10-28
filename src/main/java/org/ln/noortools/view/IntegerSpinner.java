@@ -9,7 +9,7 @@ import javax.swing.SpinnerNumberModel;
  * Provides a convenient getIntValue() method to avoid explicit casts.
  */
 @SuppressWarnings("serial")
-public class JIntegerSpinner extends JSpinner {
+public class IntegerSpinner extends JSpinner {
 
 
 
@@ -17,7 +17,7 @@ public class JIntegerSpinner extends JSpinner {
      * Costruttore di default.
      * Crea uno JIntegerSpinner con valori di default (1, 0, max int, 1).
      */
-    public JIntegerSpinner() {
+    public IntegerSpinner() {
     	this(1, 0, Integer.MAX_VALUE, 1);
     }
     
@@ -25,7 +25,7 @@ public class JIntegerSpinner extends JSpinner {
      * Costruttore di default.
      * Crea uno JIntegerSpinner con valori di default (1, 0, max int, 1).
      */
-    public JIntegerSpinner(int value) {
+    public IntegerSpinner(int value) {
         this(value, 0, Integer.MAX_VALUE, 1);
     }
 
@@ -38,7 +38,7 @@ public class JIntegerSpinner extends JSpinner {
      * @param max   the maximum allowed value
      * @param step  the amount to increase or decrease at each step
      */
-    public JIntegerSpinner(int value, int min, int max, int step) {
+    public IntegerSpinner(int value, int min, int max, int step) {
         super(new SpinnerNumberModel(value, min, max, step));
     }
     

@@ -2,7 +2,6 @@ package org.ln.noortools.view.panel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ResourceBundle;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -10,6 +9,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
+import org.ln.noortools.i18n.I18n;
 
 /**
  * Base class for all accordion panel contents.
@@ -30,9 +31,12 @@ public abstract class AbstractPanelContent extends JPanel
 
     protected final AccordionPanel accordion;
     protected final JTextField renameField;
-   // protected final ResourceBundle bundle;
+   
+    protected final I18n i18n;      
+	 
 
-    public AbstractPanelContent(AccordionPanel accordion) {
+	 public AbstractPanelContent(AccordionPanel accordion, I18n i18n) {
+		 this.i18n = i18n;
         this.accordion = accordion;
         this.renameField = new JTextField();
 

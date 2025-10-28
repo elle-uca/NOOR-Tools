@@ -1,27 +1,35 @@
 package org.ln.noortools.view.panel;
 
-import java.util.List;
-
 import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-import org.ln.noortools.model.RenamableFile;
-import org.ln.noortools.service.AddRuleService;
+import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.service.RenamerService;
 
 import net.miginfocom.swing.MigLayout;
 
 /**
- * Panel per aggiungere testo ai nomi dei file.
- * Usa AddRuleService per la logica e RenamerService per notificare la tabella.
+ * Panel <Add>
+ *
+ * Provides a UI for adding a substring to filenames.
+ * 
+ * Users can choose where to insert the text:
+ * - at the beginning,
+ * - at the end,
+ * - or at a specific position.
+ *
+ * The panel interacts with {@link RenamerService}, which updates
+ * the file list and notifies the table view on the right.
+ * 
+ * Author: Luca Noale
+ * 
  */
 @SuppressWarnings("serial")
 public class AddPanel extends AbstractPanelContent {
 
-    private final AddRuleService addRuleService;
     private final RenamerService renamerService;
 
     private JLabel textLabel;
@@ -32,12 +40,22 @@ public class AddPanel extends AbstractPanelContent {
     private JRadioButton jrbEnd;
     private JRadioButton jrbPos;
 
-    public AddPanel(AccordionPanel accordion, AddRuleService addRuleService, RenamerService renamerService) {
-        super(accordion);
-        this.addRuleService = addRuleService;
+    /**
+     * Creates an AddPanel instance.
+     *
+     * @param accordion       parent accordion container
+     * @param i18n            internationalization support
+     * @param renamerService  service responsible for applying renaming rules
+     */
+    public AddPanel(AccordionPanel accordion, I18n i18n, RenamerService renamerService) {
+        super(accordion, i18n);
         this.renamerService = renamerService;
     }
 
+    /**
+     * Initializes UI components: labels, radio buttons, and spinner.
+     * Provides options for selecting the position where the text will be added.
+     */
     @Override
     protected void initComponents() {
         renameField.getDocument().addDocumentListener(this);
@@ -71,12 +89,17 @@ public class AddPanel extends AbstractPanelContent {
         add(posSpinner,  "cell 2 3, growx");
     }
 
+    /**
+     * Called whenever the user changes text or position.
+     * Determines the insertion point and applies the <Add> rule
+     * through {@link RenamerService}.
+     */
     @Override
-	protected void updateView() {
+    protected void updateView() {
         int position = 1;
 
         if (jrbEnd.isSelected()) {
-            position = Integer.MAX_VALUE; // convenzione: fine del nome
+            position = Integer.MAX_VALUE; // convention: append at the end
         }
         if (jrbPos.isSelected()) {
             posSpinner.setEnabled(true);
@@ -84,14 +107,8 @@ public class AddPanel extends AbstractPanelContent {
         } else {
             posSpinner.setEnabled(false);
         }
-        
-        
 
-     // Applica la regola usando AddRuleService
-        List<RenamableFile> updated =
-                addRuleService.applyRule(renamerService.getFiles(), getRenameText(), position);
-
-        // Aggiorna la lista → RenamerService notifica la tabella
-        renamerService.setFiles(updated);
+        // Dispatch to RenamerService → updates model and notifies listeners
+        renamerService.applyRule("add", renameField.getText(), position);
     }
 }

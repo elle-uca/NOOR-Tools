@@ -1,18 +1,32 @@
 package org.ln.noortools.view;
 
-import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatLightLaf;
-import net.miginfocom.swing.MigLayout;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
-import org.springframework.stereotype.Component;
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 
-import java.awt.*;
+import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
-@Component
+//@Component
 public class MainFrame extends JFrame {
 
     private JTable table;

@@ -1,5 +1,6 @@
 package org.ln.noortools.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.ln.noortools.enums.ReplacementType;
@@ -38,13 +39,17 @@ public class ReplaceRuleService implements RuleService {
                                          ReplacementType type,
                                          boolean caseSensitive) {
         if (files == null) return List.of();
+        
+        List<RenamableFile> updated = new ArrayList<RenamableFile>();
 
         for (RenamableFile file : files) {
             String base = FileUtil.getNameWithoutExtension(file.getSource());
             String newName = replaceText(base, search, replace, type, caseSensitive);
-            file.setDestinationName(newName);
+            RenamableFile copy = new RenamableFile(file.getSource());
+            copy.setDestinationName(newName);
+            updated.add(copy);
         }
-        return files;
+        return updated;
     }
 
     private String replaceText(String input, String search, String replace,
