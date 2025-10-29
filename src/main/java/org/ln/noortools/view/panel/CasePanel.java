@@ -16,7 +16,10 @@ import org.ln.noortools.service.RenamerService;
  * - Capitalize first letter
  * - Toggle case
  *
- * This panel updates the renaming preview by delegating to RenamerService.
+ * The panel interacts with {@link RenamerService}, which updates
+ * the file list and notifies the table view on the right.
+ * 
+ * Author: Luca Noale
  */
 @SuppressWarnings("serial")
 public class CasePanel extends AbstractPanelContent {

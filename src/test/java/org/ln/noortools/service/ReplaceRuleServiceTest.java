@@ -1,102 +1,119 @@
-//package org.ln.noortools.service;
-//
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertTrue;
-//
-//import java.util.Arrays;
-//import java.util.List;
-//
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Test;
-//import org.ln.noortools.enums.ReplacementType;
-//
-//class ReplaceRuleServiceTest {
-//
-//    private final ReplaceRuleService service = new ReplaceRuleService();
-//
-//    @Test
-//    @DisplayName("FIRST occurrence replacement")
-//    void testReplaceFirst() {
-//        List<String> result = service.apply(
-//                List.of("hello world hello"),
-//                "hello", "hi",
-//                ReplacementType.FIRST, true
-//        );
-//        assertEquals(List.of("hi world hello"), result);
-//    }
-//
-//    @Test
-//    @DisplayName("LAST occurrence replacement")
-//    void testReplaceLast() {
-//        List<String> result = service.apply(
-//                List.of("hello world hello"),
-//                "hello", "hi",
-//                ReplacementType.LAST, true
-//        );
-//        assertEquals(List.of("hello world hi"), result);
-//    }
-//
-//    @Test
-//    @DisplayName("ALL occurrences replacement")
-//    void testReplaceAll() {
-//        List<String> result = service.apply(
-//                List.of("hello world hello"),
-//                "hello", "hi",
-//                ReplacementType.ALL, true
-//        );
-//        assertEquals(List.of("hi world hi"), result);
-//    }
-//
-//    @Test
-//    @DisplayName("Case-insensitive replacement")
-//    void testCaseInsensitive() {
-//        List<String> result = service.apply(
-//                List.of("Hello world HELLO"),
-//                "hello", "hi",
-//                ReplacementType.ALL, false // case-insensitive
-//        );
-//        assertEquals(List.of("hi world hi"), result);
-//    }
-//
-//    @Test
-//    @DisplayName("No match → unchanged string")
-//    void testNoMatch() {
-//        List<String> result = service.apply(
-//                List.of("filename"),
-//                "xyz", "123",
-//                ReplacementType.ALL, true
-//        );
-//        assertEquals(List.of("filename"), result);
-//    }
-//
-//    @Test
-//    @DisplayName("Null or empty input list → returns empty list")
-//    void testNullInputList() {
-//        assertTrue(service.apply(null, "a", "b", ReplacementType.ALL, true).isEmpty());
-//        assertTrue(service.apply(List.of(), "a", "b", ReplacementType.ALL, true).isEmpty());
-//    }
-//
-//    @Test
-//    @DisplayName("Null element inside input list → preserved as null")
-//    void testNullElementInList() {
-//        List<String> input = Arrays.asList("abc", null, "abc"); // ✅ consente null
-//        List<String> result = service.apply(
-//                input,
-//                "a", "x",
-//                ReplacementType.ALL, true
-//        );
-//
-//        assertEquals(Arrays.asList("xbc", null, "xbc"), result);
-//    }
-//
-//
-//    @Test
-//    @DisplayName("Null or empty search string → input unchanged")
-//    void testNullOrEmptySearch() {
-//        List<String> result1 = service.apply(List.of("test"), null, "x", ReplacementType.ALL, true);
-//        List<String> result2 = service.apply(List.of("test"), "", "x", ReplacementType.ALL, true);
-//
-//        assertEquals(List.of("test"), result1);
-//        assertEquals(List.of("test"), result2);
-//    }
-//}
+package org.ln.noortools.service;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.File;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.ln.noortools.enums.RenameMode;
+import org.ln.noortools.enums.ReplacementType;
+import org.ln.noortools.model.RenamableFile;
+
+class ReplaceRuleServiceTest {
+
+    private ReplaceRuleService service;
+
+    @BeforeEach
+    void setup() {
+        service = new ReplaceRuleService();
+    }
+
+    private RenamableFile file(String name) {
+        return new RenamableFile(new File(name));
+    }
+
+    @Test
+    void testReplaceFirstInName() {
+        List<RenamableFile> result = service.applyRule(
+                List.of(file("file.txt")),
+                "f", "X", ReplacementType.FIRST, RenameMode.NAME_ONLY
+        );
+
+        assertEquals("Xile.txt", result.get(0).getDestinationName());
+    }
+
+    @Test
+    void testReplaceLastInName() {
+        List<RenamableFile> result = service.applyRule(
+                List.of(file("hello.txt")),
+                "l", "X", ReplacementType.LAST, RenameMode.NAME_ONLY
+        );
+
+        assertEquals("helXo.txt", result.get(0).getDestinationName());
+    }
+
+    @Test
+    void testReplaceAllInName() {
+        List<RenamableFile> result = service.applyRule(
+                List.of(file("hello.txt")),
+                "l", "X", ReplacementType.ALL, RenameMode.NAME_ONLY
+        );
+
+        assertEquals("heXXo.txt", result.get(0).getDestinationName());
+    }
+
+    @Test
+    void testReplaceFirstInExtension() {
+        List<RenamableFile> result = service.applyRule(
+                List.of(file("report.txt")),
+                "t", "X", ReplacementType.FIRST, RenameMode.EXT_ONLY
+        );
+
+        // "txt" → "Xxt"
+        assertEquals("report.Xxt", result.get(0).getDestinationName());
+    }
+
+    @Test
+    void testReplaceLastInExtension() {
+        List<RenamableFile> result = service.applyRule(
+                List.of(file("report.txt")),
+                "t", "X", ReplacementType.LAST, RenameMode.EXT_ONLY
+        );
+
+        // "txt" → "txX"
+        assertEquals("report.txX", result.get(0).getDestinationName());
+    }
+
+    @Test
+    void testReplaceAllInExtension() {
+        List<RenamableFile> result = service.applyRule(
+                List.of(file("report.txt")),
+                "t", "X", ReplacementType.ALL,RenameMode.EXT_ONLY
+        );
+
+        // "txt" → "XxX"
+        assertEquals("report.XxX", result.get(0).getDestinationName());
+    }
+
+    @Test
+    void testReplaceInFullName() {
+        List<RenamableFile> result = service.applyRule(
+                List.of(file("file.txt")),
+                "e", "E", ReplacementType.ALL, RenameMode.FULL
+        );
+
+        assertEquals("filE.txT".toLowerCase(), result.get(0).getDestinationName().toLowerCase());
+    }
+
+    @Test
+    void testNoMatch() {
+        List<RenamableFile> result = service.applyRule(
+                List.of(file("data.csv")),
+                "z", "X", ReplacementType.ALL, RenameMode.NAME_ONLY
+        );
+
+        assertEquals("data.csv", result.get(0).getDestinationName());
+    }
+
+    @Test
+    void testNullFileList() {
+        List<RenamableFile> result = service.applyRule(
+                null, "a", "b", ReplacementType.ALL, RenameMode.NAME_ONLY
+        );
+
+        assertTrue(result.isEmpty());
+    }
+}

@@ -19,9 +19,8 @@ import net.miginfocom.swing.MigLayout;
  * - the starting position,
  * - the number of characters to remove.
  *
- * The panel interacts with {@link RemoveRuleService} to perform
- * the operation, and {@link RenamerService} to update the file list
- * and notify the table on the right.
+ * The panel interacts with {@link RenamerService}, which updates
+ * the file list and notifies the table view on the right.
  * 
  * Author: Luca Noale
  */
@@ -70,8 +69,10 @@ public class RemovePanel extends AbstractPanelContent {
     }
     
     /**
-     * Called whenever spinner values change.
-     * Applies the <Remove> rule using {@link RenamerService}.
+     * Called whenever the user interacts with the panel.
+     * Detects which case option is selected and applies it
+     * via the central {@link RenamerService}.
+     * 
      */
     @Override
     protected void updateView() {

@@ -22,9 +22,8 @@ import net.miginfocom.swing.MigLayout;
  * - whether the search is case-sensitive,
  * - and whether to replace the first, last, or all occurrences.
  *
- * The panel interacts with {@link ReplaceRuleService} to perform
- * replacements, and {@link RenamerService} to update the file list
- * and notify the table view.
+ * The panel interacts with {@link RenamerService}, which updates
+ * the file list and notifies the table view on the right.
  * 
  * Author: Luca Noale
  */
@@ -99,6 +98,12 @@ public class ReplacePanel extends AbstractPanelContent {
         add(jrbAll,         "cell 1 4");
     }
 
+    /**
+     * Called whenever the user interacts with the panel.
+     * Detects which case option is selected and applies it
+     * via the central {@link RenamerService}.
+     * 
+     */
     @Override
     protected void updateView() {
         ReplacementType type = ReplacementType.FIRST;
@@ -114,6 +119,5 @@ public class ReplacePanel extends AbstractPanelContent {
                 type,
                 jrbCase.isSelected()
         );
-        // NIENTE setFiles qui: RenamerService farà notifyListeners() dopo applyRule()
     }
 }

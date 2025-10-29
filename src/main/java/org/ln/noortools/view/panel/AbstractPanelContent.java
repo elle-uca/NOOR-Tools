@@ -36,7 +36,7 @@ public abstract class AbstractPanelContent extends JPanel
 	 
 
 	 public AbstractPanelContent(AccordionPanel accordion, I18n i18n) {
-		 this.i18n = i18n;
+		this.i18n = i18n;
         this.accordion = accordion;
         this.renameField = new JTextField();
 

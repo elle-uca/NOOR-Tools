@@ -1,12 +1,6 @@
 package org.ln.noortools.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.ln.noortools.model.RenamableFile;
-import org.ln.noortools.util.FileUtil;
 import org.springframework.stereotype.Service;
-
 
 /**
  * Rule service <Add>
@@ -22,55 +16,45 @@ import org.springframework.stereotype.Service;
  * Author: Luca Noale
  */
 @Service("addruleservice")
-public class AddRuleService implements RuleService {
+public class AddRuleService extends AbstractRuleService {
 
-	@Override
-    public List<RenamableFile> applyRule(List<RenamableFile> files, Object... params) {
-        String text = (String) params[0];
-        int position = (int) params[1];
-        return applyRule(files, text, position);
-    }
-
-    public List<RenamableFile> applyRule(List<RenamableFile> files, String text, int position) {
-        if (files == null || files.isEmpty()) return List.of();
-        if (text == null) text = "";
-
-        List<RenamableFile> updated = new ArrayList<RenamableFile>();
-
-        for (RenamableFile file : files) {
-            if (file == null) continue;
-
-            String base = FileUtil.getNameWithoutExtension(file.getSource());
-            String ext  = file.getExtension();
-            String newName = insertAt(base, text, position);
-
-            // 🔑 Copia l'oggetto per non rompere l’osservabilità
-            RenamableFile copy = new RenamableFile(file.getSource());
-            copy.setDestinationName(newName + (ext.isEmpty() ? "" : "." + ext));
-            updated.add(copy);
-        }
-
-        return updated;
-    }
-
-    private String insertAt(String base, String text, int pos) {
+    @Override
+//    protected String transformName(String base, Object... params) {
+//        String text = (params.length > 0 && params[0] instanceof String) ? (String) params[0] : "";
+//        int position = (params.length > 1 && params[1] instanceof Integer) ? (int) params[1] : 1;
+//        if (base == null) return text;
+//        if (text == null) text = "";
+//
+//        int index = position - 1;
+//
+//        if (index <= 0) return text + base;                  // start
+//        if (position == Integer.MAX_VALUE) return base + text;    // end
+//        if (index >= base.length()) return base + text;      // beyond length → append
+//        return base.substring(0, index) + text + base.substring(index);
+//
+//    }
+    
+    protected String transformName(String base, Object... params) {
+        String text = (params.length > 0 && params[0] instanceof String) ? (String) params[0] : "";
+        int position = (params.length > 1 && params[1] instanceof Integer) ? (int) params[1] : 1;
         if (base == null) return text;
         if (text == null) text = "";
 
-        // normalizza: l'utente parte da 1, Java da 0
-        int index = pos - 1;
+        int index = position - 1;
 
-        if (index <= 0) return text + base;                  // inserisci all'inizio
-        if (pos == Integer.MAX_VALUE) return base + text;    // convenzione per fine
-        if (index >= base.length()) return base + text;      // oltre la lunghezza → append
+        if (index <= 0) return text + base;                       // all'inizio
+        if (position == Integer.MAX_VALUE) return base + text;    // alla fine
+        if (index >= base.length()) return base + text;           // oltre → append
         return base.substring(0, index) + text + base.substring(index);
     }
     
-//    private String insertAt(String base, String text, int pos) {
-//        if (base == null) return text;
-//        if (pos <= 0) return text + base;
-//        if (pos == Integer.MAX_VALUE) return base + text;
-//        if (pos >= base.length()) return base + text;
-//        return base.substring(0, pos) + text + base.substring(pos);
-//    }
+    @Override
+    protected String transformExtension(String currentExt, Object... params) {
+        // 🔧 Per EXT_ONLY in Add vogliamo SOSTITUIRE l’estensione, non inserirci testo.
+        String text = (params.length > 0 && params[0] instanceof String) ? (String) params[0] : "";
+        if (text == null) text = "";
+        // normalizza: senza il punto iniziale
+        return text.startsWith(".") ? text.substring(1) : text;
+    }
+
 }

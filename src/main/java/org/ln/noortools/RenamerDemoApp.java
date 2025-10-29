@@ -17,7 +17,7 @@ import org.ln.noortools.service.RenamerService;
 import org.ln.noortools.view.panel.AccordionPanel;
 import org.ln.noortools.view.panel.AddPanel;
 import org.ln.noortools.view.panel.CasePanel;
-import org.ln.noortools.view.panel.ReplacePanel;
+import org.ln.noortools.view.panel.RemovePanel;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -69,7 +69,7 @@ public class RenamerDemoApp {
             accordion.addPanel("Add Text",
                     new AddPanel(accordion, i18n,  renamerService));
             accordion.addPanel("Replace Text",
-                    new ReplacePanel(accordion, i18n,  renamerService));
+                    new RemovePanel(accordion, i18n,  renamerService));
             accordion.addPanel("Case Text",
                     new CasePanel(accordion, i18n,  renamerService));
             
