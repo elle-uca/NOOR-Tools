@@ -1,8 +1,13 @@
 package org.ln.noortools.view.panel;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
@@ -10,6 +15,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.ln.noortools.enums.RenameMode;
 import org.ln.noortools.i18n.I18n;
 
 /**
@@ -31,7 +37,7 @@ public abstract class AbstractPanelContent extends JPanel
 
     protected final AccordionPanel accordion;
     protected final JTextField renameField;
-   
+    protected final JComboBox<RenameMode> modeCombo;
     protected final I18n i18n;      
 	 
 
@@ -39,13 +45,39 @@ public abstract class AbstractPanelContent extends JPanel
 		this.i18n = i18n;
         this.accordion = accordion;
         this.renameField = new JTextField();
+        this.modeCombo = new JComboBox<>(RenameMode.values());
+        // Default: NAME_ONLY
+        this.modeCombo.setSelectedItem(RenameMode.NAME_ONLY);
+        modeCombo.addActionListener(this);
 
         // Hook changes
         renameField.getDocument().addDocumentListener(this);
+        
+        // layout base con area per i controlli + combo in basso
+        setLayout(new BorderLayout());
+
+        JPanel contentArea = new JPanel(); 
+        contentArea.setLayout(new GridBagLayout()); // i figli concreti useranno GridBag o MigLayout
+        add(contentArea, BorderLayout.CENTER);
+
+        // pannello footer con combo
+        JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        footer.add(new JLabel("Rename Mode:"));
+        footer.add(modeCombo);
+        add(footer, BorderLayout.SOUTH);
+
+        // delega a sottoclasse per costruire controlli specifici
+        initComponents(contentArea);
 
         // Build UI
-        initComponents();
+        //initComponents();
     }
+	 
+	 
+	   /**
+	     * Subclasses must implement this to add their specific UI components.
+	     */
+	    protected abstract void initComponents(JPanel contentArea);
 
     /** Subclasses must implement component initialization */
     protected abstract void initComponents();
@@ -61,7 +93,12 @@ public abstract class AbstractPanelContent extends JPanel
     public String getRenameText() {
         return renameField.getText();
     }
-
+    
+    /** Get the rename mode chosen by user */
+    public RenameMode getRenameMode() {
+        return (RenameMode) modeCombo.getSelectedItem();
+    }
+    
     // ---- Listeners: all trigger updateView() ----
     @Override
     public void insertUpdate(DocumentEvent e) {

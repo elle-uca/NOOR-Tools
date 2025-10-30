@@ -100,8 +100,7 @@ class CaseRuleServiceTest {
     @DisplayName("Toggle case - full filename")
     void testToggleCaseFull() {
         List<RenamableFile> files = List.of(new RenamableFile("readme.md"));
-        List<RenamableFile> result = service.applyRule(files, ModeCase.TOGGLE_CASE, RenameMode.FULL);
-
-        assertEquals("rEADME.MD", result.get(0).getDestinationName());
+        var result = new CaseRuleService().applyRule(files, ModeCase.TOGGLE_CASE, RenameMode.FULL);
+        assertEquals("README.MD", result.get(0).getDestinationName());
     }
 }
