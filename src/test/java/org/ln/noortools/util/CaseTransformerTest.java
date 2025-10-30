@@ -1,11 +1,12 @@
 package org.ln.noortools.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.ln.noortools.enums.ModeCase;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class CaseTransformerTest {
 

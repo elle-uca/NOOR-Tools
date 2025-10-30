@@ -74,13 +74,13 @@ public abstract class AbstractPanelContent extends JPanel
     }
 	 
 	 
-	   /**
-	     * Subclasses must implement this to add their specific UI components.
-	     */
-	    protected abstract void initComponents(JPanel contentArea);
+	 /**
+	 * Subclasses must implement this to add their specific UI components.
+	 */
+	 protected abstract void initComponents(JPanel contentArea);
 
-    /** Subclasses must implement component initialization */
-    protected abstract void initComponents();
+//    /** Subclasses must implement component initialization */
+//    protected abstract void initComponents();
 
     /** Subclasses must implement how data is updated when inputs change */
     protected abstract void updateView();
@@ -124,4 +124,10 @@ public abstract class AbstractPanelContent extends JPanel
     public void actionPerformed(ActionEvent e) {
         updateView();
     }
+
+
+	protected void initComponents() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -2,6 +2,7 @@ package org.ln.noortools.view.panel;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -51,15 +52,9 @@ public class AddPanel extends AbstractPanelContent {
         super(accordion, i18n);
         this.renamerService = renamerService;
     }
-
-    /**
-     * Initializes UI components: labels, radio buttons, and spinner.
-     * Provides options for selecting the position where the text will be added.
-     */
-    @Override
-    protected void initComponents() {
-        renameField.getDocument().addDocumentListener(this);
-
+    
+	@Override
+	protected void initComponents(JPanel contentArea) {
         textLabel = new JLabel("Text to add:");
         whereLabel = new JLabel("Position:");
         posSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 999, 1));
@@ -79,15 +74,18 @@ public class AddPanel extends AbstractPanelContent {
         jrbEnd.addActionListener(this);
         jrbPos.addActionListener(this);
 
-        setLayout(new MigLayout("", "[][][grow]", "20[][][][]20"));
-        add(textLabel,   "cell 0 0 3 1");
-        add(renameField, "cell 0 1 3 1, growx, wrap");
-        add(whereLabel,  "cell 0 2 1 2");
-        add(jrbStart,    "cell 1 2");
-        add(jrbEnd,      "cell 2 2, wrap");
-        add(jrbPos,      "cell 1 3");
-        add(posSpinner,  "cell 2 3, growx");
-    }
+        
+        contentArea.setLayout(new MigLayout("", "[][][grow]", "20[][][][]"));
+        contentArea.add(textLabel,   "cell 0 0 3 1");
+        contentArea.add(renameField, "cell 0 1 3 1, growx, wrap");
+        contentArea.add(whereLabel,  "cell 0 2 1 2");
+        contentArea.add(jrbStart,    "cell 1 2");
+        contentArea.add(jrbEnd,      "cell 2 2, wrap");
+        contentArea.add(jrbPos,      "cell 1 3");
+        contentArea.add(posSpinner,  "cell 2 3, growx");
+		
+	}
+
 
     /**
      * Called whenever the user changes text or position.
@@ -109,6 +107,8 @@ public class AddPanel extends AbstractPanelContent {
         }
 
         // Dispatch to RenamerService → updates model and notifies listeners
-        renamerService.applyRule("add", renameField.getText(), position);
+        renamerService.applyRule("add", getRenameMode(), renameField.getText(), position);
     }
+
+
 }

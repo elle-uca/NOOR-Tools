@@ -1,10 +1,14 @@
 package org.ln.noortools.view.panel;
 
-import javax.swing.*;
-import net.miginfocom.swing.MigLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+
 import org.ln.noortools.enums.ModeCase;
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.service.RenamerService;
+
+import net.miginfocom.swing.MigLayout;
 
 /**
  * Panel <Case>
@@ -44,13 +48,11 @@ public class CasePanel extends AbstractPanelContent {
         super(accordion, i18n);
         this.renamerService = renamerService;
     }
-
-    /**
-     * Initializes the UI components of the panel.
-     */
-    @Override
-    protected void initComponents() {
-        // Create radio buttons with localized labels
+    
+    
+	@Override
+	protected void initComponents(JPanel contentArea) {
+		// Create radio buttons with localized labels
         jrbUpper    = new JRadioButton(i18n.get("casePanel.radioButton.upper"), true);
         jrbLower    = new JRadioButton(i18n.get("casePanel.radioButton.lower"));
         jrbCapAll   = new JRadioButton(i18n.get("casePanel.radioButton.titleCase"));
@@ -73,13 +75,15 @@ public class CasePanel extends AbstractPanelContent {
         jrbInvert.addActionListener(this);
 
         // Layout: vertical with spacing
-        setLayout(new MigLayout("", "30[]", "20[][][][][]20"));
-        add(jrbUpper,    "wrap");
-        add(jrbLower,    "wrap");
-        add(jrbCapAll,   "wrap");
-        add(jrbCapFirst, "wrap");
-        add(jrbInvert,   "wrap");
-    }
+        contentArea.setLayout(new MigLayout("", "30[]", "20[][][][][]20"));
+        contentArea.add(jrbUpper,    "wrap");
+        contentArea.add(jrbLower,    "wrap");
+        contentArea.add(jrbCapAll,   "wrap");
+        contentArea.add(jrbCapFirst, "wrap");
+        contentArea.add(jrbInvert,   "wrap");
+		
+	}
+
 
     /**
      * Called whenever the user interacts with the panel.
@@ -95,6 +99,8 @@ public class CasePanel extends AbstractPanelContent {
         if (jrbInvert.isSelected()) modeCase = ModeCase.TOGGLE_CASE;
 
         // 👉 Delegate to RenamerService (dispatches to CaseRuleService internally)
-        renamerService.applyRule("case", modeCase);
+        renamerService.applyRule("case", getRenameMode(), modeCase);
     }
+
+
 }

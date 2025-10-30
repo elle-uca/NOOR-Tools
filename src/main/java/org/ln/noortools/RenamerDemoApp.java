@@ -9,15 +9,19 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
-import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.service.RenamerService;
+import org.ln.noortools.view.NaturalOrderComparator;
+import org.ln.noortools.view.NewNameCellRenderer;
+import org.ln.noortools.view.RenamableFileTableModel;
+import org.ln.noortools.view.StatusCellRenderer;
 import org.ln.noortools.view.panel.AccordionPanel;
 import org.ln.noortools.view.panel.AddPanel;
 import org.ln.noortools.view.panel.CasePanel;
-import org.ln.noortools.view.panel.RemovePanel;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -38,7 +42,6 @@ public class RenamerDemoApp {
         I18n i18n = context.getBean(I18n.class);
 
         // Recupera i servizi Spring
-        //ReplaceRuleService ruleService = context.getBean(ReplaceRuleService.class);
         RenamerService renamerService = context.getBean(RenamerService.class);
         
         // Avvio Swing
@@ -50,11 +53,22 @@ public class RenamerDemoApp {
 
 
             // --- Tabella a destra
-            FileTableModel tableModel = new FileTableModel();
-            JTable table = new JTable(tableModel);
+            RenamableFileTableModel tableModel = new RenamableFileTableModel();
+             JTable table = new JTable(tableModel);
 
             // Listener -> aggiorna la tabella quando cambia la lista
-            renamerService.addListener(tableModel::setFiles);
+            renamerService.addListener(tableModel);
+            
+    		table.setAutoCreateRowSorter(true);
+            table.getColumnModel().getColumn(4).setCellRenderer(new StatusCellRenderer());
+            table.getColumnModel().getColumn(2).setCellRenderer(new NewNameCellRenderer());
+            TableRowSorter<TableModel> sorter = new TableRowSorter<>(tableModel);
+            sorter.setComparator(1, new NaturalOrderComparator()); // colonna Name
+            sorter.setComparator(2, new NaturalOrderComparator()); // colonna New Name
+            table.setRowSorter(sorter);
+            
+            
+            
 
             // --- Mock files iniziali
             List<RenamableFile> initial = List.of(
@@ -68,8 +82,8 @@ public class RenamerDemoApp {
             AccordionPanel accordion = new AccordionPanel();
             accordion.addPanel("Add Text",
                     new AddPanel(accordion, i18n,  renamerService));
-            accordion.addPanel("Replace Text",
-                    new RemovePanel(accordion, i18n,  renamerService));
+//            accordion.addPanel("Replace Text",
+//                    new RemovePanel(accordion, i18n,  renamerService));
             accordion.addPanel("Case Text",
                     new CasePanel(accordion, i18n,  renamerService));
             
@@ -86,29 +100,4 @@ public class RenamerDemoApp {
         });
     }
     
-    // --- Modello tabella minimale
-    @SuppressWarnings("serial")
-	static class FileTableModel extends AbstractTableModel {
-        private List<RenamableFile> files = new ArrayList<>();
-        private final String[] cols = {"Original", "Destination"};
-
-        public void setFiles(List<RenamableFile> files) {
-            this.files = files != null ? files : new ArrayList<>();
-            fireTableDataChanged();
-        }
-
-        @Override public int getRowCount() { return files.size(); }
-        @Override public int getColumnCount() { return cols.length; }
-        @Override public String getColumnName(int c) { return cols[c]; }
-
-        @Override
-        public Object getValueAt(int r, int c) {
-            RenamableFile f = files.get(r);
-            return switch (c) {
-                case 0 -> f.getSource().getName();
-                case 1 -> f.getDestinationName();
-                default -> "";
-            };
-        }
-    }
 }

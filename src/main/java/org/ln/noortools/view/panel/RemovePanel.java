@@ -1,6 +1,7 @@
 package org.ln.noortools.view.panel;
 
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.service.RenamerService;
@@ -51,8 +52,8 @@ public class RemovePanel extends AbstractPanelContent {
      * Initializes UI components: labels and spinners
      * to configure remove position and length.
      */
-    @Override
-    protected void initComponents() {
+	@Override
+	protected void initComponents(JPanel contentArea) {
         posLabel = new JLabel(i18n.get("removePanel.label.position"));
         numLabel = new JLabel(i18n.get("removePanel.label.number"));
         posSpinner = new IntegerSpinner();
@@ -61,12 +62,13 @@ public class RemovePanel extends AbstractPanelContent {
         posSpinner.addChangeListener(this);
         numSpinner.addChangeListener(this);
 
-        setLayout(new MigLayout("", "[][grow]", "20[][]20"));
-        add(numLabel);
-        add(numSpinner, "growx, wrap");
-        add(posLabel);
-        add(posSpinner, "growx, wrap");
-    }
+        contentArea.setLayout(new MigLayout("", "[][grow]", "20[][]20"));
+        contentArea.add(numLabel);
+        contentArea.add(numSpinner, "growx, wrap");
+        contentArea.add(posLabel);
+        contentArea.add(posSpinner, "growx, wrap");
+	}
+
     
     /**
      * Called whenever the user interacts with the panel.
@@ -78,6 +80,7 @@ public class RemovePanel extends AbstractPanelContent {
     protected void updateView() {
         renamerService.applyRule(
                 "remove",
+                getRenameMode(),
                 posSpinner.getIntValue(),
                 numSpinner.getIntValue()
         );
