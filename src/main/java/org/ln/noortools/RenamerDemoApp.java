@@ -39,7 +39,7 @@ public class RenamerDemoApp {
                 SpringApplication.run(NoorToolsApplication.class, args);
         
         // Recupera i bean Spring
-        I18n i18n = context.getBean(I18n.class);
+       I18n i18n = context.getBean(I18n.class); 
 
         // Recupera i servizi Spring
         RenamerService renamerService = context.getBean(RenamerService.class);
