@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  *
  * Usage:
  *   - With Spring: inject RnPrefs as a bean
- *   - Legacy: use RnPrefs.getProp("key"), RnPrefs.saveWindow(800,600), etc.
+ *   - Legacy: use Prefs.getProp("key"), Prefs.saveWindow(800,600), etc.
  */
 @Component
 public class Prefs {
