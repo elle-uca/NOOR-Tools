@@ -1,8 +1,15 @@
 package org.ln.noortools.view;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Insets;
 import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
+
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 public class ToolbarBuilder2 {
 

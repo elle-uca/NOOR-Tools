@@ -48,8 +48,8 @@ public class AddPanel extends AbstractPanelContent {
      * @param i18n            internationalization support
      * @param renamerService  service responsible for applying renaming rules
      */
-    public AddPanel(AccordionPanel accordion, I18n i18n, RenamerService renamerService) {
-        super(accordion, i18n);
+    public AddPanel(I18n i18n, RenamerService renamerService) {
+        super( i18n);
         this.renamerService = renamerService;
     }
     

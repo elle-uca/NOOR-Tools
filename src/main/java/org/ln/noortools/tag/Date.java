@@ -3,6 +3,7 @@ package org.ln.noortools.tag;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.util.DateTimeFormatMapper;
 
 /**
@@ -17,8 +18,8 @@ import org.ln.noortools.util.DateTimeFormatMapper;
  */
 public class Date extends AbstractTag {
 
-    public Date(Object... args) {
-        super(args);
+    public Date(I18n i18n, Object... args) {
+        super(i18n, args);
         this.tagName = "Date";
     }
 

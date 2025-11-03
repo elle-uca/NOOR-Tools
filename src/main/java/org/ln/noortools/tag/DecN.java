@@ -1,5 +1,6 @@
 package org.ln.noortools.tag;
 
+import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.util.NumberSequenceUtil;
 
 /**
@@ -21,8 +22,8 @@ public class DecN extends AbstractTag {
 	/**
 	 * @param arg
 	 */
-	public DecN(Object...arg) {
-		super(arg);
+	public DecN(I18n i18n, Object...arg) {
+		super(i18n, arg);
 		this.tagName = "DecN";
 	}
 

@@ -3,6 +3,8 @@ package org.ln.noortools.tag;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ln.noortools.i18n.I18n;
+
 /**
  * Tag <Word>
  * Extracts a word/segment from a string,
@@ -19,8 +21,8 @@ public class Word extends AbstractTag {
 
     private static final String DELIMITERS = ".-_()[]";
 
-    public Word(Object... arg) {
-        super(arg);
+    public Word(I18n i18n, Object... arg) {
+        super(i18n, arg);
         this.tagName = "Word";
     }
 

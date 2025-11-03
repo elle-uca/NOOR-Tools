@@ -1,5 +1,7 @@
 package org.ln.noortools.tag;
 
+import org.ln.noortools.i18n.I18n;
+
 /**
  * Tag <IncH>
  * 
@@ -19,8 +21,8 @@ package org.ln.noortools.tag;
  */
 public class IncH extends AbstractTag {
 
-    public IncH(Object... arg) {
-        super(arg);
+    public IncH(I18n i18n, Object... arg) {
+        super(i18n, arg);
         this.tagName = "IncH";
     }
 

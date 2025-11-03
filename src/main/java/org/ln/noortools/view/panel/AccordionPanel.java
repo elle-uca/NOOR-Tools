@@ -7,11 +7,16 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 /**
  * AccordionPanel gestisce una lista di SlidingPanel (regole).
  * Mostra i pannelli uno sotto l’altro, in stile fisarmonica.
  */
 @SuppressWarnings("serial")
+@Component
+@Scope("prototype") // ⚡ Importantissimo!
 public class AccordionPanel extends JPanel {
 
     private final List<SlidingPanel> panels = new ArrayList<>();
@@ -28,6 +33,7 @@ public class AccordionPanel extends JPanel {
      * @param content contenuto (AbstractPanelContent)
      */
     public void addPanel(String title, AbstractPanelContent content) {
+    	content.setAccordion(this); // 👈 assegni qui
         SlidingPanel panel = new SlidingPanel(title, content, this);
 
         // comportamento "chiudi gli altri"

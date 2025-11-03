@@ -2,6 +2,8 @@ package org.ln.noortools.tag;
 
 import java.security.SecureRandom;
 
+import org.ln.noortools.i18n.I18n;
+
 /**
  * Tag <RandN>
  *
@@ -19,8 +21,8 @@ public class RandN extends AbstractTag {
 
     private static final SecureRandom RANDOM = new SecureRandom();
 
-    public RandN(Object... arg) {
-        super(arg);
+    public RandN(I18n i18n, Object... arg) {
+        super(i18n, arg);
         this.tagName = "RandN";
     }
 

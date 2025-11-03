@@ -1,5 +1,6 @@
 package org.ln.noortools.tag;
 
+import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.util.RomanNumberUtil;
 
 /**
@@ -19,8 +20,8 @@ import org.ln.noortools.util.RomanNumberUtil;
  */
 public class IncR extends AbstractTag {
 
-    public IncR(Object... arg) {
-        super(arg);
+    public IncR(I18n i18n, Object... arg) {
+        super(i18n, arg);
         this.tagName = "IncR";
     }
 

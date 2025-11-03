@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ln.noortools.i18n.I18n;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Base class for all renaming tags used by NOOR Tools.
@@ -20,21 +19,21 @@ public abstract class AbstractTag {
 
 
 	protected String tagName;
-	
+
 	protected int start; 	
 	protected int step;		
 	protected int pos;		
-	
+
 	private List<String> oldNames = new ArrayList<String>();
-	
+
 	private List<String> newNames = new ArrayList<String>();;
-	
-	 protected Object[] rawArgs;
-	 
-	 protected Integer[] normArgs;
-	
-	 @Autowired
-	 protected I18n i18n;
+
+	protected Object[] rawArgs;
+
+	protected Integer[] normArgs;
+
+	/** Internationalization helper, injected via constructor. */
+	protected final I18n i18n;
 
 
 	protected static final char OPEN_TAG = '<';
@@ -44,16 +43,23 @@ public abstract class AbstractTag {
 	protected Object[] args;
 	
 
-	 /**
+	   /**
      * Base constructor for all tags.
+     * @param i18n injected I18n instance
+     * @param args optional tag arguments
      */
-    public AbstractTag(Object... args) {
-    	setArgs(args);
+    protected AbstractTag(I18n i18n, Object... args) {
+        this.i18n = i18n;
+        setArgs(args);
     }
 
 
 	
-    /** Parser/normalizer centrale degli argomenti */
+    // --------------------------------------------
+    // 🧩 Argument parsing helpers
+    // --------------------------------------------
+
+    /** Parser/normalizer for all tag arguments. */
     public final void setArgs(Object... args) {
         this.rawArgs = args != null ? args : new Object[0];
         this.normArgs = new Integer[rawArgs.length];
@@ -63,7 +69,7 @@ public abstract class AbstractTag {
         }
     }
 	
-    /** Utility: prova a convertire un Object in int */
+    /** Converts an object to an int safely. */
     protected int coerceToInt(Object val, int def) {
         if (val == null) return def;
         if (val instanceof Number) return ((Number) val).intValue();
@@ -86,7 +92,9 @@ public abstract class AbstractTag {
         return def;
     }
 
-    
+    // --------------------------------------------
+    // 🔧 Abstract methods to implement
+    // --------------------------------------------
 	
     /**
      * Initialize the tag logic and produce new names.
@@ -101,6 +109,9 @@ public abstract class AbstractTag {
     public abstract String getDescription();
 
 
+    // --------------------------------------------
+    // 🧱 Generic getters / helpers
+    // --------------------------------------------
 
     /**
      * Returns the tag name (e.g., "IncN" or "Date").

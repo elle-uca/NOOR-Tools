@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Objects;
 
 import org.ln.noortools.enums.FileStatus;
+import org.ln.noortools.util.FileNameUtil;
 
 /**
  * Represents a file that can be renamed.
@@ -34,10 +35,10 @@ public class RenamableFile {
         return source;
     }
 
-//    /** @return file extension (without dot) */
-//    public String getExtension() {
-//        return FileUtil.getExtension(source);
-//    }
+    /** @return file extension (without dot) */
+    public String getExtension() {
+        return FileNameUtil.getExtension(source.getName());
+    }
 
     /** @return parent directory path */
     public String getParentPath() {

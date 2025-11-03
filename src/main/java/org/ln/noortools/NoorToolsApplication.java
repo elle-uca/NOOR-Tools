@@ -22,9 +22,5 @@ public class NoorToolsApplication {
             MainFrame frame = context.getBean(MainFrame.class);
             frame.setVisible(true);
         });
-        
-        
-
-
     }
 }

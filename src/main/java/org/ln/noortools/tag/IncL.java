@@ -3,6 +3,8 @@ package org.ln.noortools.tag;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ln.noortools.i18n.I18n;
+
 /**
  * Tag <IncL>
  * Generates incremental alphabetical labels.
@@ -12,8 +14,8 @@ import java.util.List;
  */
 public class IncL extends AbstractTag {
 
-    public IncL(Object... arg) {
-        super(arg);
+    public IncL(I18n i18n, Object... arg) {
+        super(i18n, arg);
         this.tagName = "IncL";
     }
 

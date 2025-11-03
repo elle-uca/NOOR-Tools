@@ -1,5 +1,7 @@
 package org.ln.noortools.tag;
 
+import org.ln.noortools.i18n.I18n;
+
 /**
  * Tag <DecH>
  * 
@@ -20,8 +22,8 @@ package org.ln.noortools.tag;
  */
 public class DecH extends AbstractTag {
 
-    public DecH(Object... arg) {
-        super(arg);
+    public DecH(I18n i18n, Object... arg) {
+        super(i18n, arg);
         this.tagName = "DecH";
     }
 

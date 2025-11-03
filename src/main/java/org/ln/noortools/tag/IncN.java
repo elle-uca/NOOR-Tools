@@ -1,5 +1,6 @@
 package org.ln.noortools.tag;
 
+import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.util.NumberSequenceUtil;
 
 
@@ -18,8 +19,8 @@ public class IncN extends AbstractTag {
 	/**
 	 * @param arg
 	 */
-	public IncN(Object...arg) {
-		super(arg);
+	public IncN(I18n i18n, Object...arg) {
+		super(i18n, arg);
 		this.tagName = "IncN";
 	}
 

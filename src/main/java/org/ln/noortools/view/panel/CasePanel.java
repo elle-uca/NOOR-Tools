@@ -44,8 +44,8 @@ public class CasePanel extends AbstractPanelContent {
      * @param i18n            internationalization helper
      * @param renamerService  service for applying renaming rules
      */
-    public CasePanel(AccordionPanel accordion, I18n i18n, RenamerService renamerService) {
-        super(accordion, i18n);
+    public CasePanel(I18n i18n, RenamerService renamerService) {
+        super(i18n);
         this.renamerService = renamerService;
     }
     

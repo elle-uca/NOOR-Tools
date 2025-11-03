@@ -42,9 +42,9 @@ public class RemovePanel extends AbstractPanelContent {
      * param i18n               internationalization support				
      * @param renamerService  	service responsible for applying renaming rules
      */
-    public RemovePanel(AccordionPanel accordion,  I18n i18n, 
+    public RemovePanel(I18n i18n, 
     		 RenamerService renamerService) {
-        super(accordion, i18n);
+        super(i18n);
         this.renamerService = renamerService;
     }
 

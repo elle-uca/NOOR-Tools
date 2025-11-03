@@ -1,5 +1,7 @@
 package org.ln.noortools.tag;
 
+import org.ln.noortools.i18n.I18n;
+
 /**
  * Tag <Subs>
  *
@@ -16,8 +18,8 @@ package org.ln.noortools.tag;
  */
 public class Subs extends AbstractTag {
 
-    public Subs(Object... arg) {
-        super(arg);
+    public Subs(I18n i18n, Object... arg) {
+        super(i18n, arg);
         this.tagName = "Subs";
     }
 
@@ -36,7 +38,7 @@ public class Subs extends AbstractTag {
 
     @Override
     public String getDescription() {
-        return i18n.get("tag.subs.description");
+        return "Subs";//i18n.get("tag.subs.description");
     }
 
     /**
