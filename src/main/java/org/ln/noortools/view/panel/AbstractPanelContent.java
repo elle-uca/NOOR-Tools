@@ -33,107 +33,105 @@ import org.ln.noortools.i18n.I18n;
  */
 @SuppressWarnings("serial")
 public abstract class AbstractPanelContent extends JPanel
-implements ChangeListener, DocumentListener, ActionListener {
+        implements ChangeListener, DocumentListener, ActionListener {
 
-	protected  AccordionPanel accordion;
-	protected final JTextField renameField;
-	protected final JComboBox<RenameMode> modeCombo;
-	protected final I18n i18n;      
+    protected AccordionPanel accordion;
+    protected final JTextField renameField;
+    protected final JComboBox<RenameMode> modeCombo;
+    protected final I18n i18n;      
+	 
 
-
-	public AbstractPanelContent( I18n i18n) {
-		//public AbstractPanelContent(AccordionPanel accordion, I18n i18n) {
+	 public AbstractPanelContent(I18n i18n) {
 		this.i18n = i18n;
-		this.accordion = accordion;
-		this.renameField = new JTextField();
-		this.modeCombo = new JComboBox<>(RenameMode.values());
-		// Default: NAME_ONLY
-		this.modeCombo.setSelectedItem(RenameMode.NAME_ONLY);
-		modeCombo.addActionListener(this);
+       // this.accordion = accordion;
+        this.renameField = new JTextField();
+        this.modeCombo = new JComboBox<>(RenameMode.values());
+        // Default: NAME_ONLY
+        this.modeCombo.setSelectedItem(RenameMode.NAME_ONLY);
+        modeCombo.addActionListener(this);
 
-		// Hook changes
-		renameField.getDocument().addDocumentListener(this);
+        // Hook changes
+        renameField.getDocument().addDocumentListener(this);
+        
+        // layout base con area per i controlli + combo in basso
+        setLayout(new BorderLayout());
 
-		// layout base con area per i controlli + combo in basso
-		setLayout(new BorderLayout());
+        JPanel contentArea = new JPanel(); 
+        contentArea.setLayout(new GridBagLayout()); // i figli concreti useranno GridBag o MigLayout
+        add(contentArea, BorderLayout.CENTER);
 
-		JPanel contentArea = new JPanel(); 
-		contentArea.setLayout(new GridBagLayout()); // i figli concreti useranno GridBag o MigLayout
-		add(contentArea, BorderLayout.CENTER);
+        // pannello footer con combo
+        JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        footer.add(new JLabel("Rename Mode:"));
+        footer.add(modeCombo);
+        add(footer, BorderLayout.SOUTH);
 
-		// pannello footer con combo
-		JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		footer.add(new JLabel("Rename Mode:"));
-		footer.add(modeCombo);
-		add(footer, BorderLayout.SOUTH);
+        // delega a sottoclasse per costruire controlli specifici
+        initComponents(contentArea);
 
-		// delega a sottoclasse per costruire controlli specifici
-		initComponents(contentArea);
-
-		// Build UI
-		//initComponents();
-	}
-
-	/**
-	 * Allows delayed injection of the parent AccordionPanel
-	 * (useful when the panel is managed by Spring and built before accordion exists).
-	 */
-	public void setAccordion(AccordionPanel accordion) {
-		this.accordion = accordion;
-	}
-
-	/**
+        // Build UI
+        //initComponents();
+    }
+	 
+	    /** chiamata da SlidingPanel subito dopo la creazione */
+	    public void setAccordion(AccordionPanel accordion) {
+	        this.accordion = accordion;
+	    }
+	 
+	 /**
 	 * Subclasses must implement this to add their specific UI components.
 	 */
-	protected abstract void initComponents(JPanel contentArea);
+	 protected abstract void initComponents(JPanel contentArea);
 
+//    /** Subclasses must implement component initialization */
+//    protected abstract void initComponents();
 
-	/** Subclasses must implement how data is updated when inputs change */
-	protected abstract void updateView();
+    /** Subclasses must implement how data is updated when inputs change */
+    protected abstract void updateView();
 
-	// ---- Utility methods ----
-	public JTextField getRenameField() {
-		return renameField;
-	}
+    // ---- Utility methods ----
+    public JTextField getRenameField() {
+        return renameField;
+    }
 
-	public String getRenameText() {
-		return renameField.getText();
-	}
+    public String getRenameText() {
+        return renameField.getText();
+    }
+    
+    /** Get the rename mode chosen by user */
+    public RenameMode getRenameMode() {
+        return (RenameMode) modeCombo.getSelectedItem();
+    }
+    
+    // ---- Listeners: all trigger updateView() ----
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        updateView();
+    }
 
-	/** Get the rename mode chosen by user */
-	public RenameMode getRenameMode() {
-		return (RenameMode) modeCombo.getSelectedItem();
-	}
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        updateView();
+    }
 
-	// ---- Listeners: all trigger updateView() ----
-	@Override
-	public void insertUpdate(DocumentEvent e) {
-		updateView();
-	}
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        updateView();
+    }
 
-	@Override
-	public void removeUpdate(DocumentEvent e) {
-		updateView();
-	}
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        updateView();
+    }
 
-	@Override
-	public void changedUpdate(DocumentEvent e) {
-		updateView();
-	}
-
-	@Override
-	public void stateChanged(ChangeEvent e) {
-		updateView();
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		updateView();
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        updateView();
+    }
 
 
 	protected void initComponents() {
 		// TODO Auto-generated method stub
-
+		
 	}
 }
