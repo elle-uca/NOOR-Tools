@@ -17,6 +17,11 @@ import org.ln.noortools.i18n.I18n;
  */
 public abstract class AbstractTag {
 
+	
+//    public abstract String getTagString();   // es: "<RandN:3>"
+//    public abstract String evaluate();       // es: "572"
+//    public abstract String getDescription(); // es: "Numero casuale"
+//    public abstract String getTagName();     // es: "RandN"
 
 	protected String tagName;
 
@@ -195,7 +200,9 @@ public abstract class AbstractTag {
 		return newNames.add(e);
 	}
 
-
+	public String getNewName(int index) {
+	    return (newNames != null && index >= 0 && index < newNames.size()) ? newNames.get(index) : "";
+	}
 
 	/**
      * Returns the arguments passed to the tag (if any).

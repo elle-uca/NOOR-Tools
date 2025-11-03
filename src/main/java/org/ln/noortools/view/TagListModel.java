@@ -45,6 +45,8 @@ public class TagListModel extends AbstractListModel<AbstractTag> {
         dataList.add(tagFactory.createIncRTag(1, 1));
         dataList.add(tagFactory.createIncHTag(1, 1));
         dataList.add(tagFactory.createIncLTag(1, 1));
+        dataList.add(tagFactory.createDateTag("dd-mmm-yyyy"));
+        dataList.add(tagFactory.createTimeTag("hh:nn:ss"));
 	}
 
 	@SuppressWarnings("unused")

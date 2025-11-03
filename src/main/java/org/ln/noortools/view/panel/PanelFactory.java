@@ -78,10 +78,6 @@ public class PanelFactory {
     /**
      * Creates a new {@link TagPanel} instance bound to the specified accordion.
      */
-//    public TagPanel createTagPanel(AccordionPanel accordion) {
-//        return new TagPanel(i18n, renamerService, tagListModel);
-//    }
-    
     public TagPanel createTagPanel(AccordionPanel accordion) {
         TagPanel panel = tagPanelProvider.getObject();
         panel.setAccordion(accordion);

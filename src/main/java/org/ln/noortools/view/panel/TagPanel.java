@@ -16,6 +16,7 @@ import javax.swing.border.EmptyBorder;
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.service.RenamerService;
 import org.ln.noortools.tag.AbstractTag;
+import org.ln.noortools.util.StringParser;
 import org.ln.noortools.view.TagListCellRenderer;
 import org.ln.noortools.view.TagListModel;
 import org.springframework.context.annotation.Scope;
@@ -122,14 +123,12 @@ public class TagPanel extends AbstractPanelContent {
 	@Override
 	protected
 	void updateView() {
-//		RnPrefs.getInstance().setGlobalProperty(
-//				"FILL_TYPE", fill.getSelectedOption().name());
-//		RnPrefs.getInstance().setGlobalProperty(
-//				"FILL_VALUE", fill.getStringValue());
-//		if(StringParser.isParsable(renameField.getText())) {
-//			accordion.setTableData(StringParser.parse(
-//					renameField.getText(), accordion.getTableData())) ;
-//		}
+		String text = renameField.getText();
+	    if (StringParser.isParsable(text)) {
+	        accordion.setTableData(
+	            StringParser.parse(text, accordion.getTableData())
+	        );
+	    }
 		
 	}
 
