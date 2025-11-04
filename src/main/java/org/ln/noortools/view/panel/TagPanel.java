@@ -3,6 +3,7 @@ package org.ln.noortools.view.panel;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -14,7 +15,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 
 import org.ln.noortools.i18n.I18n;
+import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.service.RenamerService;
+import org.ln.noortools.service.StringParser;
 import org.ln.noortools.tag.AbstractTag;
 import org.ln.noortools.view.TagListCellRenderer;
 import org.ln.noortools.view.TagListModel;
@@ -115,21 +118,20 @@ public class TagPanel extends AbstractPanelContent {
 		
 	}
 
-	
-
 
 
 	@Override
 	protected
 	void updateView() {
-//		RnPrefs.getInstance().setGlobalProperty(
-//				"FILL_TYPE", fill.getSelectedOption().name());
-//		RnPrefs.getInstance().setGlobalProperty(
-//				"FILL_VALUE", fill.getStringValue());
-//		if(StringParser.isParsable(renameField.getText())) {
-//			accordion.setTableData(StringParser.parse(
-//					renameField.getText(), accordion.getTableData())) ;
-//		}
+		
+	    // ✅ Non fare nulla se il testo non è ancora valido
+	    if (!StringParser.isParsable(renameField.getText())) {
+	        return;
+	    }
+		
+		List<RenamableFile> updated =
+			    StringParser.parse(renameField.getText(), renamerService.getFiles(), getRenameMode());
+		renamerService.setFiles(updated);
 		
 	}
 

@@ -65,6 +65,17 @@ public class RenamerService {
     }
     
 
+    public void renameFiles() {
+        System.out.println("=== Rename simulation ===");
+        for (RenamableFile file : files) {
+            System.out.printf(
+                "Would rename: %s → %s%n",
+                file.getSource().getName(),
+                file.getDestinationName()
+            );
+        }
+    }
+    
 
     public void setFiles(List<RenamableFile> newFiles) {
         files.clear();

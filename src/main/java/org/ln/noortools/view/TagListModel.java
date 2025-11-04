@@ -35,7 +35,6 @@ public class TagListModel extends AbstractListModel<AbstractTag> {
 	}
 
 	private void initClassic() {
-        // Each tag is created through the factory (I18n injection included)
         dataList.add(tagFactory.createIncNTag(1, 1));
         dataList.add(tagFactory.createDecNTag(1, 1));
         dataList.add(tagFactory.createSubsTag(1, 1));
@@ -49,31 +48,7 @@ public class TagListModel extends AbstractListModel<AbstractTag> {
         dataList.add(tagFactory.createTimeTag("hh:nn:ss"));
 	}
 
-	@SuppressWarnings("unused")
-//	private void initReflection() {
-//		dataList = new ArrayList<>();
-//		
-//        List<Class<?>> classes = null;
-//		try {
-//			classes = FileUtils.getClasses("org.ln.java.renamer.tag");
-//		} catch (ClassNotFoundException | IOException e) {
-//			e.printStackTrace();
-//		}
-//        RnTag tag = null;
-//        Integer[] arr = {1,1};
-//        for (Class<?> clazz : classes) {
-//        	if(!clazz.getSuperclass().getName().equals("java.lang.Object")) {
-//        		Constructor<?> cons = null;
-//				try {
-//					cons = clazz.getDeclaredConstructor(Integer[].class);
-//					tag = (RnTag) cons.newInstance((Object) arr);
-//					dataList.add(tag);
-//				} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-//					e.printStackTrace();
-//				}
-//        	}
-//         }
-//	}
+
 	
 	
 	@Override

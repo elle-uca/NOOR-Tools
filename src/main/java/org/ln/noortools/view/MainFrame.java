@@ -221,7 +221,7 @@ public class MainFrame extends JFrame {
 		JToolBar toolBar = ToolbarBuilder.buildToolbar(
 				this::showFileChooser,   // 👈 riferimento diretto al metodo
 				this::showDirChooser,
-				this::showFileChooser
+				this::rename
 				);
 
         //toolBar.addSeparator(new Dimension(20, 0));
@@ -344,6 +344,11 @@ public class MainFrame extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+
+	private void rename() {
+		renamerService.renameFiles();
 	}
 
 
