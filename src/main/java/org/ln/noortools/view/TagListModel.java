@@ -30,7 +30,6 @@ public class TagListModel extends AbstractListModel<AbstractTag> {
 	public TagListModel(TagFactory tagFactory) {
 		this.tagFactory = tagFactory;
 		dataList = new ArrayList<AbstractTag>();
-		//initReflection();
 		initClassic();
 	}
 
@@ -48,8 +47,6 @@ public class TagListModel extends AbstractListModel<AbstractTag> {
         dataList.add(tagFactory.createTimeTag("hh:nn:ss"));
 	}
 
-
-	
 	
 	@Override
 	public int getSize() {

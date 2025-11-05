@@ -2,9 +2,9 @@ package org.ln.noortools.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -24,6 +24,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.table.TableModel;
@@ -41,6 +42,7 @@ import org.springframework.stereotype.Component;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -54,9 +56,9 @@ public class MainFrame extends JFrame {
 	private JLabel infoLabel;        // global info
 	private JLabel fileInfoLabel;    // single file info
 	private JToggleButton themeToggle;
-	
-	private JLabel statusBarLabel;
 
+	private JLabel statusBarLabel;
+	private JTable table;
 	private AccordionPanel accordion;
 	private final  I18n i18n;
 	private final  RenamerService renamerService;
@@ -80,22 +82,21 @@ public class MainFrame extends JFrame {
 		FlatLightLaf.setup();
 
 		initComponents();
+
 		setSize(950, 600);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		// 👇 Chiudi Spring al termine
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                context.close();
-            }
-        });
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				context.close();
+			}
+		});
 	}
 
 
 	private void initComponents() {
-
-
 		JSplitPane splitPane = new JSplitPane(
 				JSplitPane.HORIZONTAL_SPLIT, 
 				createMethodPanel(), 
@@ -107,19 +108,17 @@ public class MainFrame extends JFrame {
 		statusBarLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		statusBarLabel.setFont(statusBarLabel.getFont().deriveFont(Font.PLAIN, 12f));
 
-        // 🔘 Toggle Light/Dark
-        themeToggle = new JToggleButton("🌞");
-        themeToggle.addActionListener(e -> switchTheme());
-		
+		// 🔘 Toggle Light/Dark
+		themeToggle = new JToggleButton("🌞");
+		themeToggle.addActionListener(e -> switchTheme());
+
 		JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 		statusPanel.add(themeToggle);
 		statusPanel.add(statusBarLabel);
-		
 		statusPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(210, 210, 210)));
 
 		getContentPane().add(statusPanel, BorderLayout.SOUTH);
 
-		
 		setMenuBar();
 	}
 
@@ -131,43 +130,43 @@ public class MainFrame extends JFrame {
 
 	private JPanel createMethodPanel() {
 		JPanel panel = new JPanel(new BorderLayout());
-		JPanel buttonPanel = new JPanel();
-		TextButton addButton = new TextButton("Aggiungi", "ADD");
-		TextButton removeButton = new TextButton("Rimuovi", "REMOVE");
-		TextButton replaceButton = new TextButton("Replace", "REPLACE");
-		TextButton caseButton = new TextButton("Case", "CASE");
-		TextButton tagButton = new TextButton("New Name", "NEW");
-
-		buttonPanel.setLayout(new GridLayout(0, 4));
-		buttonPanel.add(tagButton);
-		buttonPanel.add(addButton);
-		buttonPanel.add(removeButton);
-		buttonPanel.add(replaceButton);
-		buttonPanel.add(caseButton);
-		
 
 		accordion = new AccordionPanel();
 		accordion.setLayout(new BoxLayout(accordion, BoxLayout.Y_AXIS));
 		accordion.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
 		accordion.setBorder(BorderFactory.createEmptyBorder());
-
-		addButton.addActionListener(e -> addPanel(e));
-		removeButton.addActionListener(e -> addPanel(e));
-		caseButton.addActionListener(e -> addPanel(e));
-		replaceButton.addActionListener(e -> addPanel(e));
-		tagButton.addActionListener(e -> addPanel(e));
-
 		panel.add(accordion, BorderLayout.NORTH);
-		panel.add(buttonPanel, BorderLayout.SOUTH);
 
+		JPanel ruleButtonBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 6));
+
+		ruleButtonBar.add(newRuleButton("New Name",  "NEW", "wrench.svg"));
+		ruleButtonBar.add(newRuleButton("Aggiungi", "ADD", "plus.svg"));
+		ruleButtonBar.add(newRuleButton("Rimuovi", "REMOVE", "x.svg"));
+		ruleButtonBar.add(newRuleButton("Replace", "REPLACE", "rotate.svg"));
+		ruleButtonBar.add(newRuleButton("Case", "CASE", "case-upper.svg"));
+
+		panel.add(ruleButtonBar, BorderLayout.SOUTH);
 
 		return panel;
+	}
+
+
+	private JButton newRuleButton(String text, String actionCommand, String iconName) {
+		JButton b = new JButton(text, new FlatSVGIcon("icons/" + iconName, 16, 16));
+		b.setActionCommand(actionCommand);
+		b.addActionListener(e -> addPanel(e));
+		b.putClientProperty("JButton.buttonType", "toolBarButton");
+		b.putClientProperty("JButton.borderless", true);
+		 b.setUI(new HoverButtonUI(true)); // 👈 ATTENZIONE QUI
+		b.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		b.setHorizontalTextPosition(SwingConstants.RIGHT);
+		b.setFont(b.getFont().deriveFont(Font.PLAIN, 12f));
+		return b;
 	}
 
 	private void addPanel(ActionEvent e) {
 		JButton button = (JButton) e.getSource();
 
-		// accordion.addPanel(button.getText(), panelFactory.createAddPanel(accordion));
 
 		switch (button.getActionCommand()) {
 		case "ADD" ->
@@ -184,9 +183,6 @@ public class MainFrame extends JFrame {
 		throw new IllegalArgumentException("Unknown command: " + button.getActionCommand());
 		}
 
-
-
-		//	    case "Nuovo nome" -> accordion.addPanel(name, new TagPanel(accordion));
 		//	    case "Split" -> accordion.addPanel(name, new SplitPanel(accordion));
 		//	    case "Merge" -> accordion.addPanel(name, new MergePanel(accordion));
 	}
@@ -197,7 +193,7 @@ public class MainFrame extends JFrame {
 		JScrollPane tableScrollPane = new JScrollPane();
 		RenamableFileTableModel tableModel = new RenamableFileTableModel();
 		renamerService.addListener(tableModel);
-		JTable table = new JTable(tableModel);
+		table = new JTable(tableModel);
 		tableScrollPane.setViewportView(table);
 		table.setAutoCreateRowSorter(true);
 		table.getColumnModel().getColumn(4).setCellRenderer(new StatusCellRenderer());
@@ -206,6 +202,8 @@ public class MainFrame extends JFrame {
 		sorter.setComparator(1, new NaturalOrderComparator()); // colonna Name
 		sorter.setComparator(2, new NaturalOrderComparator()); // colonna New Name
 		table.setRowSorter(sorter);
+
+
 
 		// --- Labels
 		infoLabel = new JLabel("No files loaded");
@@ -224,8 +222,8 @@ public class MainFrame extends JFrame {
 				this::rename
 				);
 
-        //toolBar.addSeparator(new Dimension(20, 0));
-        //toolBar.add(themeToggle);
+		//toolBar.addSeparator(new Dimension(20, 0));
+		//toolBar.add(themeToggle);
 		container.setLayout(new MigLayout(
 				"fill, insets 10",     // padding interno di 10px
 				"[grow]",              // una sola colonna che cresce
@@ -325,11 +323,11 @@ public class MainFrame extends JFrame {
 
 
 	private void updateStatusBar() {
-	    String theme = (themeToggle != null && themeToggle.isSelected()) ? "🌙 Dark mode" : "🌞 Light mode";
-	    int ruleCount = (accordion != null) ? accordion.getPanelCount() : 0;
-	    statusBarLabel.setText(String.format("%s — %d rule%s loaded", theme, ruleCount, ruleCount == 1 ? "" : "s"));
+		String theme = (themeToggle != null && themeToggle.isSelected()) ? "🌙 Dark mode" : "🌞 Light mode";
+		int ruleCount = (accordion != null) ? accordion.getPanelCount() : 0;
+		statusBarLabel.setText(String.format("%s — %d rule%s loaded", theme, ruleCount, ruleCount == 1 ? "" : "s"));
 	}
-	
+
 	private void switchTheme() {
 		try {
 			if (themeToggle.isSelected()) {
@@ -340,6 +338,7 @@ public class MainFrame extends JFrame {
 				themeToggle.setText("🌞");
 			}
 			SwingUtilities.updateComponentTreeUI(this);
+			//ThemeUtil.applyDarkTheme(this, table, 2); 
 			updateStatusBar(); 
 		} catch (Exception e) {
 			e.printStackTrace();

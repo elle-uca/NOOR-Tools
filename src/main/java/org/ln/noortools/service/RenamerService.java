@@ -1,17 +1,23 @@
 package org.ln.noortools.service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.ln.noortools.enums.FileStatus;
 import org.ln.noortools.enums.RenameMode;
 import org.ln.noortools.model.RenamableFile;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RenamerService {
+
+   // private final PanelFactory panelFactory;
 
     
     private final List<RenamableFile> files = new ArrayList<>();
@@ -27,6 +33,7 @@ public class RenamerService {
             ruleRegistry.put(key, service);
             System.out.println("Registered rule: " + key + " -> " + service.getClass().getName());
         }
+       // this.panelFactory = panelFactory;
     }
    
     
@@ -66,6 +73,19 @@ public class RenamerService {
     
 
     public void renameFiles() {
+    	
+		Map<RenamableFile, String> newNames = new HashMap<>();
+		List<RenamableFile> list = getFiles();
+		
+		for (RenamableFile rnFile : list) {
+			newNames.put(rnFile, rnFile.getDestinationName());
+		}
+		
+		if (checkConflicts(list.getFirst().getSource().getParentFile(), 
+				newNames)) {
+			return;
+		}
+    	
         System.out.println("=== Rename simulation ===");
         for (RenamableFile file : files) {
             System.out.printf(
@@ -77,6 +97,46 @@ public class RenamerService {
     }
     
 
+	/**
+	 * @param directory
+	 * @param newNames
+	 * @return
+	 */
+	public static boolean checkConflicts(File directory, Map<RenamableFile, String> newNames) {
+		File[] files = directory.listFiles();
+		// Nomi già esistenti
+		Set<String> existingNames = new HashSet<>();
+		for (File f : files) {
+			existingNames.add(f.getName());
+		}
+
+		// Controllo conflitti
+		Set<String> usedNewNames = new HashSet<>();
+		boolean conflictFound = false;
+
+		for (Map.Entry<RenamableFile, String> entry : newNames.entrySet()) {
+			File oldFile = entry.getKey().getSource();
+			String newName = entry.getValue();
+
+			// 1. conflitto con file esistenti (ma non se è lo stesso file)
+			if (existingNames.contains(newName) && !oldFile.getName().equals(newName)) {
+				entry.getKey().setFileStatus(FileStatus.KO);
+				 System.out.println("❌ Conflitto: " + newName + " esiste già nella cartella.");
+				conflictFound = true;
+			}
+
+			// 2. duplicati nella lista dei nuovi nomi
+			if (!usedNewNames.add(newName)) {
+				entry.getKey().setFileStatus(FileStatus.KO);
+				 System.out.println("❌ Conflitto: il nuovo nome " + newName + " è duplicato.");
+				conflictFound = true;
+			}else {
+				entry.getKey().setFileStatus(FileStatus.OK);
+			}
+		}
+		return conflictFound;
+	}
+    
     public void setFiles(List<RenamableFile> newFiles) {
         files.clear();
         if (newFiles != null) {
