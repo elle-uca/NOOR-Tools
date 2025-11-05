@@ -17,6 +17,8 @@ import org.ln.noortools.util.FileNameUtil;
  * - Handles file extensions consistently
  * - Supports RenameMode: FULL, NAME_ONLY, EXT_ONLY
  * - Delegates string transformation to subclasses via {@link #transformName}.
+ * 
+ * Author: Luca Noale
  */
 public abstract class AbstractRuleService implements RuleService {
 	

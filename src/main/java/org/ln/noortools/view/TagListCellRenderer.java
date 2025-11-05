@@ -21,35 +21,54 @@ import org.ln.noortools.tag.AbstractTag;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
+/**
+ * Custom ListCellRenderer for JList that displays AbstractTag objects.
+ * It renders each list item as a "card" with an icon, a bold title, and a secondary tag string.
+ * It also implements custom hover and selection coloring using UIManager colors and FlatLaf icons.
+ * 
+ * Author: Luca Noale
+ */
 @SuppressWarnings("serial")
 public class TagListCellRenderer extends JPanel implements ListCellRenderer<AbstractTag> {
 
+    // Labels for the three main parts of the cell content
     private final JLabel iconLabel = new JLabel();
     private final JLabel titleLabel = new JLabel();
     private final JLabel tagLabel = new JLabel();
 
+    /**
+     * Constructor sets up the renderer's layout and initial component styling.
+     */
     public TagListCellRenderer() {
-        setLayout(new BorderLayout(8, 0));
-        setBorder(new EmptyBorder(6, 10, 6, 10));
+        // Use BorderLayout for the main panel: Icon (WEST) and Text (CENTER).
+        setLayout(new BorderLayout(8, 0)); 
+        // Set initial inner padding/margin for the cell.
+        setBorder(new EmptyBorder(6, 10, 6, 10)); 
 
-        // Titolo principale
+        // Primary title styling (Bold, slightly larger font)
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 13f));
 
-        // Tag secondario
+        // Secondary tag styling (Monospaced, slightly smaller, disabled-like color)
         tagLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 11));
         tagLabel.setForeground(UIManager.getColor("Label.disabledForeground"));
 
+        // Panel to stack the two text labels (title and tag) vertically.
         JPanel textPanel = new JPanel(new GridLayout(2, 1, 0, 2));
-        textPanel.setOpaque(false);
+        textPanel.setOpaque(false); // Make sure the nested panel is transparent.
         textPanel.add(titleLabel);
         textPanel.add(tagLabel);
 
+        // Add components to the main renderer panel.
         add(iconLabel, BorderLayout.WEST);
         add(textPanel, BorderLayout.CENTER);
 
-        setOpaque(false); // lasciamo il background trasparente
+        // Keep the panel background initially non-opaque (will be set dynamically).
+        setOpaque(false); 
     }
 
+    /**
+     * This method is called to configure the renderer component for a specific cell.
+     */
     @Override
     public Component getListCellRendererComponent(
             JList<? extends AbstractTag> list,
@@ -58,53 +77,71 @@ public class TagListCellRenderer extends JPanel implements ListCellRenderer<Abst
             boolean isSelected,
             boolean cellHasFocus) {
 
+        // --- 1. Load Data ---
         if (value != null) {
-            iconLabel.setIcon(resolveIcon(value));
-            titleLabel.setText(value.getDescription());
-            tagLabel.setText(value.getTagString());
+            iconLabel.setIcon(resolveIcon(value));      // Set icon based on tag type.
+            titleLabel.setText(value.getDescription()); // Set the main description.
+            tagLabel.setText(value.getTagString());     // Set the secondary tag string.
         }
 
-        // Colori coerenti con FlatLaf
+        // --- 2. Determine Colors based on State (Selection/Hover) ---
         Color bg;
         Color fg;
 
         if (isSelected) {
+            // Selected state uses standard list selection colors.
             bg = UIManager.getColor("List.selectionBackground");
             fg = UIManager.getColor("List.selectionForeground");
         } else if (isHover(list, index)) {
+            // Custom hover state: blend the list background and selection background for a soft effect.
             bg = blend(UIManager.getColor("List.background"), UIManager.getColor("List.selectionBackground"), 0.1f);
             fg = UIManager.getColor("List.foreground");
         } else {
+            // Normal, unselected state uses standard list colors.
             bg = UIManager.getColor("List.background");
             fg = UIManager.getColor("List.foreground");
         }
 
-        // Applica i colori
+        // --- 3. Apply Colors and Border Style ---
+
+        // Apply foreground color to the main title.
         titleLabel.setForeground(fg);
+        
+        // Apply secondary tag color: bright selection foreground if selected, otherwise disabled foreground.
         tagLabel.setForeground(isSelected
                 ? UIManager.getColor("List.selectionForeground").brighter()
                 : UIManager.getColor("Label.disabledForeground"));
 
-        // Applica sfondo “card”
+        // Apply background color and make the panel opaque to display the color.
         setBackground(bg);
         setOpaque(true);
+        
+        // Apply a CompoundBorder to achieve a "card" look:
+        // 1. LineBorder: A soft, slightly rounded border (opacity based on selection).
+        // 2. EmptyBorder: Inner padding for the content.
         setBorder(new CompoundBorder(
-                new LineBorder(new Color(0, 0, 0, isSelected ? 60 : 20), 1, true), // bordo arrotondato soft
+                new LineBorder(new Color(0, 0, 0, isSelected ? 60 : 20), 1, true), 
                 new EmptyBorder(6, 10, 6, 10)
         ));
 
-        return this;
+        return this; // Return the configured JPanel as the component to be painted.
     }
 
-    /** Ritorna true se il mouse è sopra l’elemento corrente */
+    /** * Helper method to check if the mouse is currently hovering over the specified list item. 
+     */
     private boolean isHover(JList<?> list, int index) {
         Point mouse = list.getMousePosition();
         if (mouse == null) return false;
-        int hoverIndex = list.locationToIndex(mouse);
+        // Convert mouse coordinates to a list index.
+        int hoverIndex = list.locationToIndex(mouse); 
         return hoverIndex == index;
     }
 
-    /** Mescola due colori per effetto hover morbido */
+    /** * Helper method to blend two colors for soft visual effects (like hover). 
+     * * @param c1 The first color.
+     * * @param c2 The second color.
+     * * @param ratio The blending ratio (0.0 to 1.0).
+     */
     private static Color blend(Color c1, Color c2, float ratio) {
         if (c1 == null || c2 == null) return c1;
         float ir = 1.0f - ratio;
@@ -114,16 +151,20 @@ public class TagListCellRenderer extends JPanel implements ListCellRenderer<Abst
         return new Color(r, g, b);
     }
 
-    /** Icona coerente col tipo di tag */
+    /** * Helper method to resolve and load the appropriate SVG icon based on the tag type. 
+     * (Uses FlatSVGIcon from the FlatLaf extras library).
+     */
     private Icon resolveIcon(AbstractTag tag) {
         String name = tag.getTagName().toLowerCase();
         String iconPath = switch (name) {
+            // Map specific tag names to their corresponding SVG icon file paths.
             case "incn", "decn" -> "icons/file-digit.svg";
             case "randl", "randn" -> "icons/dices.svg";
             case "subs" -> "icons/tag-subs.svg";
             case "word" -> "icons/tag-word.svg";
-            default -> "icons/hash.svg";
+            default -> "icons/hash.svg"; // Default icon for unrecognized tags.
         };
-        return new FlatSVGIcon(iconPath, 16, 16);
+        // Load the icon and scale it to 16x16 pixels.
+        return new FlatSVGIcon(iconPath, 16, 16); 
     }
 }

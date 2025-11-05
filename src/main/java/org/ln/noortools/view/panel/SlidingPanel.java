@@ -31,6 +31,8 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
  *  - Theme-aware colors (FlatLaf light/dark)
  *  - Hover feedback
  *  - Soft shadow card effect
+ *  
+ *  Author: Luca Noale
  */
 @SuppressWarnings("serial")
 public class SlidingPanel extends JPanel {

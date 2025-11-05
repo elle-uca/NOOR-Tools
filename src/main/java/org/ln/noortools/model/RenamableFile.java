@@ -10,6 +10,8 @@ import org.ln.noortools.util.FileNameUtil;
  * Represents a file that can be renamed.
  * Wraps the original {@link File}, the destination name, 
  * selection status and rename result.
+ * 
+ * Author: Luca Noale
  */
 public class RenamableFile {
 

@@ -198,10 +198,24 @@ public class MainFrame extends JFrame {
 		table.setAutoCreateRowSorter(true);
 		table.getColumnModel().getColumn(4).setCellRenderer(new StatusCellRenderer());
 		table.getColumnModel().getColumn(2).setCellRenderer(new NewNameCellRenderer());
-		TableRowSorter<TableModel> sorter = new TableRowSorter<>(tableModel);
-		sorter.setComparator(1, new NaturalOrderComparator()); // colonna Name
-		sorter.setComparator(2, new NaturalOrderComparator()); // colonna New Name
+		
+		
+		TableRowSorter<?> sorter = new TableRowSorter<>(tableModel);
+		sorter.setComparator(1,
+		    new NaturalOrderComparator()
+		);
+		sorter.setComparator(2,
+		    new NaturalOrderComparator()
+		);
+
 		table.setRowSorter(sorter);
+		
+		
+			
+//		TableRowSorter<TableModel> sorter = new TableRowSorter<>(tableModel);
+//		sorter.setComparator(1, new NaturalOrderComparator()); // colonna Name
+//		sorter.setComparator(2, new NaturalOrderComparator()); // colonna New Name
+//		table.setRowSorter(sorter);
 
 
 

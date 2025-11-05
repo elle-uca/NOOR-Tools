@@ -74,17 +74,6 @@ public class RenamerService {
 
     public void renameFiles() {
     	
-		Map<RenamableFile, String> newNames = new HashMap<>();
-		List<RenamableFile> list = getFiles();
-		
-		for (RenamableFile rnFile : list) {
-			newNames.put(rnFile, rnFile.getDestinationName());
-		}
-		
-		if (checkConflicts(list.getFirst().getSource().getParentFile(), 
-				newNames)) {
-			return;
-		}
     	
         System.out.println("=== Rename simulation ===");
         for (RenamableFile file : files) {
@@ -102,7 +91,16 @@ public class RenamerService {
 	 * @param newNames
 	 * @return
 	 */
-	public static boolean checkConflicts(File directory, Map<RenamableFile, String> newNames) {
+	public boolean checkConflicts2() {
+		Map<RenamableFile, String> newNames = new HashMap<>();
+		List<RenamableFile> list = getFiles();
+		File directory = list.getFirst().getSource().getParentFile();
+		for (RenamableFile rnFile : list) {
+			newNames.put(rnFile, rnFile.getDestinationName());
+		}
+		
+		
+		
 		File[] files = directory.listFiles();
 		// Nomi già esistenti
 		Set<String> existingNames = new HashSet<>();
@@ -142,8 +140,57 @@ public class RenamerService {
         if (newFiles != null) {
             files.addAll(newFiles);
         }
+        
+        checkConflicts();
         notifyListeners();
     }
+    
+    public boolean checkConflicts() {
+
+        if (files.isEmpty()) return false;
+
+        File directory = files.getFirst().getSource().getParentFile();
+
+        Set<String> existingNames = new HashSet<>();
+        for (File f : directory.listFiles()) {
+            existingNames.add(f.getName());
+        }
+
+        Set<String> used = new HashSet<>();
+        boolean conflict = false;
+
+        for (RenamableFile f : files) {
+
+            String oldName = f.getSource().getName();
+            String newName = f.getDestinationName();
+
+            // ✅ SE NUOVO NOME NON ANCORA CALCOLATO → USA IL VECCHIO
+            if (newName == null || newName.isBlank()) {
+                newName = oldName;
+                f.setDestinationName(newName); // opzionale ma utile
+            }
+
+            // Reset predefinito
+            f.setFileStatus(FileStatus.OK);
+
+            // 1) Conflitto con file esistenti (se non è lo stesso file)
+            if (existingNames.contains(newName) && !newName.equals(oldName)) {
+                f.setFileStatus(FileStatus.KO);
+                conflict = true;
+                continue;
+            }
+
+            // 2) Conflitto tra destinazioni duplicate
+            if (!used.add(newName)) {
+                f.setFileStatus(FileStatus.KO);
+                conflict = true;
+            }
+        }
+
+        return conflict;
+    }
+
+
 
     public List<RenamableFile> getFiles() {
         return Collections.unmodifiableList(files);

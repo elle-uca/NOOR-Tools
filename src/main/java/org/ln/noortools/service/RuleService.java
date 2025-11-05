@@ -7,12 +7,7 @@ import org.ln.noortools.model.RenamableFile;
 
 public interface RuleService {
     
-//	/**
-//     * Apply the rule to a single input string.
-//     */
-//	List<RenamableFile> applyRule(List<RenamableFile> names, Object... args);
-	
-	
+
 
     /**
      * Applies a rename rule to the given files.
@@ -25,8 +20,4 @@ public interface RuleService {
     List<RenamableFile> applyRule(List<RenamableFile> files, RenameMode mode, Object... params);
 
 
-    /**
-     * A human-readable description of the rule.
-     */
-//    String getDescription();
 }

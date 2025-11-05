@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableRowSorter;
 
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.service.RenamerServiceListener;
@@ -84,6 +85,9 @@ public class RenamableFileTableModel extends AbstractTableModel implements Renam
         fireTableDataChanged(); // 🔄 refresh JTable
         System.out.println("onFilesUpdated");
     }		
+	
+	
+
 	
 	public RenamableFile getFileAt(int rowIndex) {
 	    if (rowIndex < 0 || rowIndex >= data.size()) return null;

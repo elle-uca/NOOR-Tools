@@ -28,7 +28,8 @@ public class PanelFactory {
 
     private final I18n i18n;
     private final RenamerService renamerService;
-    private final TagListModel tagListModel;
+    @SuppressWarnings("unused")
+	private final TagListModel tagListModel;
     private final ObjectProvider<TagPanel> tagPanelProvider;
 
     /**
