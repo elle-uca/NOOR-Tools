@@ -74,6 +74,12 @@ public class RenamableFile {
         this.selected = selected;
     }
 
+    public String getSafeDestinationName() {
+        return (destinationName == null || destinationName.isBlank())
+                ? source.getName()
+                : destinationName;
+    }
+    
     @Override
     public String toString() {
         return "RenamableFile{source=" + source +

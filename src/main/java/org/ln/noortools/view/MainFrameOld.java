@@ -2,10 +2,8 @@ package org.ln.noortools.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -16,7 +14,6 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,13 +21,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -136,30 +130,30 @@ public class MainFrameOld extends JFrame {
 	private JPanel createMethodPanel() {
 		JPanel panel = new JPanel(new BorderLayout());
 		JPanel buttonPanel = new JPanel();
-		TextButton addButton = new TextButton("Aggiungi", "ADD");
-		TextButton removeButton = new TextButton("Rimuovi", "REMOVE");
-		TextButton replaceButton = new TextButton("Replace", "REPLACE");
-		TextButton caseButton = new TextButton("Case", "CASE");
-		TextButton tagButton = new TextButton("New Name", "NEW");
-
-		buttonPanel.setLayout(new GridLayout(0, 4));
-		buttonPanel.add(tagButton);
-		buttonPanel.add(addButton);
-		buttonPanel.add(removeButton);
-		buttonPanel.add(replaceButton);
-		buttonPanel.add(caseButton);
-		
+//		TextButton addButton = new TextButton("Aggiungi", "ADD");
+//		TextButton removeButton = new TextButton("Rimuovi", "REMOVE");
+//		TextButton replaceButton = new TextButton("Replace", "REPLACE");
+//		TextButton caseButton = new TextButton("Case", "CASE");
+//		TextButton tagButton = new TextButton("New Name", "NEW");
+//
+//		buttonPanel.setLayout(new GridLayout(0, 4));
+//		buttonPanel.add(tagButton);
+//		buttonPanel.add(addButton);
+//		buttonPanel.add(removeButton);
+//		buttonPanel.add(replaceButton);
+//		buttonPanel.add(caseButton);
+//		
 
 		accordion = new AccordionPanel();
 		accordion.setLayout(new BoxLayout(accordion, BoxLayout.Y_AXIS));
 		accordion.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
 		accordion.setBorder(BorderFactory.createEmptyBorder());
 
-		addButton.addActionListener(e -> addPanel(e));
-		removeButton.addActionListener(e -> addPanel(e));
-		caseButton.addActionListener(e -> addPanel(e));
-		replaceButton.addActionListener(e -> addPanel(e));
-		tagButton.addActionListener(e -> addPanel(e));
+//		addButton.addActionListener(e -> addPanel(e));
+//		removeButton.addActionListener(e -> addPanel(e));
+//		caseButton.addActionListener(e -> addPanel(e));
+//		replaceButton.addActionListener(e -> addPanel(e));
+//		tagButton.addActionListener(e -> addPanel(e));
 
 		panel.add(accordion, BorderLayout.NORTH);
 		panel.add(buttonPanel, BorderLayout.SOUTH);
@@ -355,7 +349,7 @@ public class MainFrameOld extends JFrame {
 
 
 	private void rename() {
-		renamerService.renameFiles();
+	//	renamerService.renameFiles();
 	}
 
 

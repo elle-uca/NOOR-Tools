@@ -9,15 +9,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -27,11 +31,12 @@ import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.table.TableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
+import org.ln.noortools.service.FileRenameManager;
 import org.ln.noortools.service.RenamerService;
 import org.ln.noortools.util.SwingUtil;
 import org.ln.noortools.view.panel.AccordionFactory;
@@ -53,6 +58,12 @@ import net.miginfocom.swing.MigLayout;
 public class MainFrame extends JFrame {
 
 	private final ConfigurableApplicationContext context;
+	private final I18n i18n;
+	private final RenamerService renamerService;
+	private final AccordionFactory accordionFactory;
+	private final PanelFactory panelFactory;
+	private final FileRenameManager fileRenameManager; 
+	
 	private JLabel infoLabel;        // global info
 	private JLabel fileInfoLabel;    // single file info
 	private JToggleButton themeToggle;
@@ -60,16 +71,16 @@ public class MainFrame extends JFrame {
 	private JLabel statusBarLabel;
 	private JTable table;
 	private AccordionPanel accordion;
-	private final  I18n i18n;
-	private final  RenamerService renamerService;
-	private final AccordionFactory accordionFactory;
-	private final PanelFactory panelFactory;
+
+//	@Autowired
+//	private FileRenameManager fileRenameManager;
 
 	public MainFrame(I18n i18n, 
 			RenamerService renamerService, 
 			PanelFactory panelFactory, 
 			AccordionFactory accordionFactory, 
-			ConfigurableApplicationContext context) {
+			ConfigurableApplicationContext context,
+			FileRenameManager fileRenameManager) {
 		super("NOOR Tools (Not Only an Ordinary Renamer) by Luke");
 		this.i18n = i18n;
 		this.renamerService = renamerService;
@@ -77,6 +88,7 @@ public class MainFrame extends JFrame {
 		this.panelFactory = panelFactory;
 		this.accordion = accordionFactory.createAccordion();
 		this.context = context;
+		this.fileRenameManager = fileRenameManager; 
 
 		// ✅ Avvio in Light mode
 		FlatLightLaf.setup();
@@ -110,9 +122,36 @@ public class MainFrame extends JFrame {
 
 		// 🔘 Toggle Light/Dark
 		themeToggle = new JToggleButton("🌞");
-		themeToggle.addActionListener(e -> switchTheme());
+		themeToggle.addActionListener(e -> switchTheme());  
+		
+		JButton undoButton = new JButton("Undo");
+		Icon undoIcon  = new ImageIcon(getClass().getResource("/icons/undo.png"));
+		undoButton.setEnabled(false); // disabilitato all’inizio
+
+		undoButton.putClientProperty("JButton.buttonType", "toolBarButton");
+		undoButton.putClientProperty("JButton.focusedBackground", null);
+		undoButton.setIcon(undoIcon);
+		undoButton.setText("Undo"); // solo icona
+		undoButton.setToolTipText("Undo last rename operation");
+
+		// Evento di click
+		undoButton.addActionListener(e -> {
+		    try {
+		    	fileRenameManager.undoLast();
+		        JOptionPane.showMessageDialog(this, "↩️ Ultima rinomina annullata.");
+		    } catch (Exception ex) {
+		    	JOptionPane.showMessageDialog(this, "❌ Errore durante la rinomina:\n" + ex.getMessage());
+		        ex.printStackTrace();
+		    }
+		});
+
+		fileRenameManager.addUndoStateListener(available -> {
+		    undoButton.setEnabled(available);
+		});
 
 		JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+		
+		statusPanel.add(undoButton);
 		statusPanel.add(themeToggle);
 		statusPanel.add(statusBarLabel);
 		statusPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(210, 210, 210)));
@@ -157,7 +196,7 @@ public class MainFrame extends JFrame {
 		b.addActionListener(e -> addPanel(e));
 		b.putClientProperty("JButton.buttonType", "toolBarButton");
 		b.putClientProperty("JButton.borderless", true);
-		 b.setUI(new HoverButtonUI(true)); // 👈 ATTENZIONE QUI
+		//b.setUI(new HoverButtonUI(true)); // 👈 ATTENZIONE QUI
 		b.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		b.setHorizontalTextPosition(SwingConstants.RIGHT);
 		b.setFont(b.getFont().deriveFont(Font.PLAIN, 12f));
@@ -194,6 +233,17 @@ public class MainFrame extends JFrame {
 		RenamableFileTableModel tableModel = new RenamableFileTableModel();
 		renamerService.addListener(tableModel);
 		table = new JTable(tableModel);
+		table.putClientProperty( "Table.alternateRowColor", null );
+//		for (int i = 0; i < table.getColumnCount(); i++) {
+//		    TableCellRenderer baseRenderer = table.getColumnModel().getColumn(i).getCellRenderer();
+//		    if (baseRenderer == null) {
+//		        baseRenderer = table.getDefaultRenderer(table.getColumnClass(i));
+//		    }
+//		    table.getColumnModel().getColumn(i).setCellRenderer(
+//		        new RowActivityDecoratorRenderer(baseRenderer));
+//		}
+		
+		
 		tableScrollPane.setViewportView(table);
 		table.setAutoCreateRowSorter(true);
 		table.getColumnModel().getColumn(4).setCellRenderer(new StatusCellRenderer());
@@ -201,23 +251,14 @@ public class MainFrame extends JFrame {
 		
 		
 		TableRowSorter<?> sorter = new TableRowSorter<>(tableModel);
-		sorter.setComparator(1,
-		    new NaturalOrderComparator()
-		);
-		sorter.setComparator(2,
-		    new NaturalOrderComparator()
-		);
-
+		sorter.setComparator(1, new NaturalOrderComparator());
+		sorter.setComparator(2, new NaturalOrderComparator());
 		table.setRowSorter(sorter);
 		
 		
-			
-//		TableRowSorter<TableModel> sorter = new TableRowSorter<>(tableModel);
-//		sorter.setComparator(1, new NaturalOrderComparator()); // colonna Name
-//		sorter.setComparator(2, new NaturalOrderComparator()); // colonna New Name
-//		table.setRowSorter(sorter);
-
-
+		//table.setDefaultRenderer(Object.class, new RenamableFileRowRenderer());
+		//table.setDefaultRenderer(String.class, new RenamableFileRowRenderer());
+		//table.setDefaultRenderer(Boolean.class, new RenamableFileRowRenderer());
 
 		// --- Labels
 		infoLabel = new JLabel("No files loaded");
@@ -360,8 +401,13 @@ public class MainFrame extends JFrame {
 	}
 
 
-	private void rename() {
-		renamerService.renameFiles();
+	private void rename()  {
+		try {
+			fileRenameManager.commitRename(renamerService.getFiles());
+			JOptionPane.showMessageDialog(this, "✅ Rinomina completata!");
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(this, "❌ Errore durante la rinomina:\n" + e.getMessage());
+		}
 	}
 
 

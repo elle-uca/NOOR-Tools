@@ -4,9 +4,11 @@ import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.JTable;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.ln.noortools.enums.FileStatus;
+import org.ln.noortools.model.RenamableFile;
 
 @SuppressWarnings("serial")
 public class NewNameCellRenderer extends DefaultTableCellRenderer {
@@ -48,6 +50,14 @@ public class NewNameCellRenderer extends DefaultTableCellRenderer {
 			//c.setBackground(table.getSelectionBackground());
 		}
 
+	    RenamableFile file = ((RenamableFileTableModel) table.getModel()).getFileAt(row);
+
+	    if (!file.isSelected()) {
+	        c.setForeground(UIManager.getColor("Label.disabledForeground"));
+	    } else {
+	        c.setForeground(UIManager.getColor("Label.foreground"));
+	    }
+		
 		// opzionale: errore evidenziato se "Errore" (col 3) contiene qualcosa
 		Object errorObj = table.getValueAt(row, 3);
 		if (errorObj instanceof FileStatus) {

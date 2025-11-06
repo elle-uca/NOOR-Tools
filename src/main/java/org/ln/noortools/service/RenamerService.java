@@ -1,6 +1,7 @@
 package org.ln.noortools.service;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,9 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RenamerService {
 
-   // private final PanelFactory panelFactory;
-
-    
+     
     private final List<RenamableFile> files = new ArrayList<>();
     private final List<RenamerServiceListener> listeners = new ArrayList<>();
     private final Map<String, RuleService> ruleRegistry = new HashMap<>();
@@ -49,91 +48,29 @@ public class RenamerService {
         if (service == null) {
             throw new IllegalArgumentException("Unknown rule: " + ruleName);
         }
-        
-//        // 🔑 Filtra i file selezionati
-//        List<RenamableFile> activeFiles = new ArrayList<>();
-//        List<RenamableFile> inactiveFiles = new ArrayList<>();
-//
-//        for (RenamableFile f : files) {
-//            if (f.isSelected()) {
-//                activeFiles.add(f);
-//            } else {
-//                inactiveFiles.add(f);
-//            }
-//        }
-//          // 🔄 Applica la regola solo ai file attivi
-//        List<RenamableFile> updated = service.applyRule(activeFiles, mode, params);
-//       // ➕ Aggiungi quelli inattivi invariati
-//        updated.addAll(inactiveFiles);
-//        setFiles(updated);
-        
-        List<RenamableFile> updated = service.applyRule(files, mode, params);
-        setFiles(updated);
-    }
-    
 
-    public void renameFiles() {
-    	
-    	
-        System.out.println("=== Rename simulation ===");
-        for (RenamableFile file : files) {
-            System.out.printf(
-                "Would rename: %s → %s%n",
-                file.getSource().getName(),
-                file.getDestinationName()
-            );
+   
+         List<RenamableFile> activeFiles = new ArrayList<>();
+        List<RenamableFile> inactiveFiles = new ArrayList<>();
+
+        // Separate active/inactive
+        for (RenamableFile f : files) {
+            if (f.isSelected()) activeFiles.add(f);
+            else inactiveFiles.add(f);
         }
+
+        // Apply rule only to selected files
+        List<RenamableFile> updatedActive = service.applyRule(activeFiles, mode, params);
+
+        // Merge back (inactive unchanged)
+        List<RenamableFile> result = new ArrayList<>();
+        result.addAll(updatedActive);
+        result.addAll(inactiveFiles);
+
+        setFiles(result);
     }
+   
     
-
-	/**
-	 * @param directory
-	 * @param newNames
-	 * @return
-	 */
-	public boolean checkConflicts2() {
-		Map<RenamableFile, String> newNames = new HashMap<>();
-		List<RenamableFile> list = getFiles();
-		File directory = list.getFirst().getSource().getParentFile();
-		for (RenamableFile rnFile : list) {
-			newNames.put(rnFile, rnFile.getDestinationName());
-		}
-		
-		
-		
-		File[] files = directory.listFiles();
-		// Nomi già esistenti
-		Set<String> existingNames = new HashSet<>();
-		for (File f : files) {
-			existingNames.add(f.getName());
-		}
-
-		// Controllo conflitti
-		Set<String> usedNewNames = new HashSet<>();
-		boolean conflictFound = false;
-
-		for (Map.Entry<RenamableFile, String> entry : newNames.entrySet()) {
-			File oldFile = entry.getKey().getSource();
-			String newName = entry.getValue();
-
-			// 1. conflitto con file esistenti (ma non se è lo stesso file)
-			if (existingNames.contains(newName) && !oldFile.getName().equals(newName)) {
-				entry.getKey().setFileStatus(FileStatus.KO);
-				 System.out.println("❌ Conflitto: " + newName + " esiste già nella cartella.");
-				conflictFound = true;
-			}
-
-			// 2. duplicati nella lista dei nuovi nomi
-			if (!usedNewNames.add(newName)) {
-				entry.getKey().setFileStatus(FileStatus.KO);
-				 System.out.println("❌ Conflitto: il nuovo nome " + newName + " è duplicato.");
-				conflictFound = true;
-			}else {
-				entry.getKey().setFileStatus(FileStatus.OK);
-			}
-		}
-		return conflictFound;
-	}
     
     public void setFiles(List<RenamableFile> newFiles) {
         files.clear();
@@ -146,11 +83,9 @@ public class RenamerService {
     }
     
     public boolean checkConflicts() {
-
         if (files.isEmpty()) return false;
 
         File directory = files.getFirst().getSource().getParentFile();
-
         Set<String> existingNames = new HashSet<>();
         for (File f : directory.listFiles()) {
             existingNames.add(f.getName());
@@ -160,7 +95,6 @@ public class RenamerService {
         boolean conflict = false;
 
         for (RenamableFile f : files) {
-
             String oldName = f.getSource().getName();
             String newName = f.getDestinationName();
 
@@ -169,7 +103,6 @@ public class RenamerService {
                 newName = oldName;
                 f.setDestinationName(newName); // opzionale ma utile
             }
-
             // Reset predefinito
             f.setFileStatus(FileStatus.OK);
 
@@ -186,12 +119,39 @@ public class RenamerService {
                 conflict = true;
             }
         }
-
         return conflict;
     }
 
+    public void reloadDirectory(Path directory) {
+        if (directory == null) return;
+        File dirFile = directory.toFile();
+        if (!dirFile.isDirectory()) return;
 
+        List<RenamableFile> reloaded = new ArrayList<>();
 
+        File[] list = dirFile.listFiles();
+        if (list != null) {
+            for (File f : list) {
+                // Ricostruisci RenamableFile usando lo stato attuale come base
+                RenamableFile newFile = new RenamableFile(f);
+
+                // Mantieni la destinazione se già calcolata in precedenza
+                // altrimenti copia il nome sorgente
+                newFile.setDestinationName(f.getName());
+
+                reloaded.add(newFile);
+            }
+        }
+
+        // 🔄 Sostituisci l’elenco attuale
+        files.clear();
+        files.addAll(reloaded);
+
+        // ✅ Ricalcola conflitti + aggiorna UI
+        checkConflicts();
+        notifyListeners();
+    }
+    
     public List<RenamableFile> getFiles() {
         return Collections.unmodifiableList(files);
     }
@@ -209,4 +169,5 @@ public class RenamerService {
             l.onFilesUpdated(getFiles());
         }
     }
+    
 }

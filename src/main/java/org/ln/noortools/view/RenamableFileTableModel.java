@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableRowSorter;
 
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.service.RenamerServiceListener;
@@ -39,43 +38,75 @@ public class RenamableFileTableModel extends AbstractTableModel implements Renam
         };
     }
     
+//    @Override
+//    public Object getValueAt(int rowIndex, int columnIndex) {
+//    	if (rowIndex >= data.size()) {
+//    		return switch (columnIndex) {
+//    		case 0 -> Boolean.FALSE; // checkbox spento di default
+//    		default -> "";           // stringa vuota per le altre colonne
+//    		};
+//    	}
+//    	
+//    	RenamableFile file = data.get(rowIndex);
+//
+//    	return switch (columnIndex) {
+//    	case 0 -> file.isSelected();
+//    	case 1 -> file.getSource().getName();
+//    	case 2 -> (file.getDestinationName() == null || 
+//    			file.getDestinationName().isEmpty()) ? 
+//    			file.getSource().getName() : 
+//    			file.getDestinationName();
+//    	case 3 -> file.getSource().getParent();
+//    	case 4 -> file.getFileStatus();
+//    	default -> "";
+//    	};
+//    }
+
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-    	if (rowIndex >= data.size()) {
-    		return switch (columnIndex) {
-    		case 0 -> Boolean.FALSE; // checkbox spento di default
-    		default -> "";           // stringa vuota per le altre colonne
-    		};
-    	}
-    	
-    	RenamableFile file = data.get(rowIndex);
+        RenamableFile file = data.get(rowIndex);
 
-    	return switch (columnIndex) {
-    	case 0 -> file.isSelected();
-    	case 1 -> file.getSource().getName();
-    	case 2 -> (file.getDestinationName() == null || 
-    			file.getDestinationName().isEmpty()) ? 
-    			file.getSource().getName() : 
-    			file.getDestinationName();
-    	case 3 -> file.getSource().getParent();
-    	case 4 -> file.getFileStatus();
-    	default -> "";
-    	};
+        // If unchecked → row considered "disabled"
+        boolean active = file.isSelected();
+
+        return switch (columnIndex) {
+            case 0 -> file.isSelected();
+            case 1 -> file.getSource().getName(); // Original name ALWAYS shown
+            case 2 -> active ? file.getSafeDestinationName() : ""; // New name hidden when inactive
+            case 3 -> active ? file.getSource().getParent() : "";  // Path hidden
+            case 4 -> file.getFileStatus();          // Status hidden
+            default -> "";
+        };
     }
+    
 
+    
+    
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return columnIndex == 0; // ✅ solo la colonna checkbox è editabile
     }
     
+//    @Override
+//    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+//        if (columnIndex == 0 && rowIndex < data.size()) {
+//            RenamableFile file = data.get(rowIndex);
+//            if (aValue instanceof Boolean) {
+//                file.setSelected((Boolean) aValue);
+//                fireTableCellUpdated(rowIndex, columnIndex);
+//            }
+//        }
+//    }
+    
+    
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        if (columnIndex == 0 && rowIndex < data.size()) {
+        if (columnIndex == 0 && rowIndex < data.size() && aValue instanceof Boolean) {
             RenamableFile file = data.get(rowIndex);
-            if (aValue instanceof Boolean) {
-                file.setSelected((Boolean) aValue);
-                fireTableCellUpdated(rowIndex, columnIndex);
-            }
+            file.setSelected((Boolean) aValue);
+
+            // re-eval new name or empty view
+            fireTableRowsUpdated(rowIndex, rowIndex);
         }
     }
     
