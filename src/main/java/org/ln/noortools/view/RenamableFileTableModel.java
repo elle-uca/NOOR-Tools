@@ -33,8 +33,9 @@ public class RenamableFileTableModel extends AbstractTableModel implements Renam
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         return switch (columnIndex) {
-            case 0 -> Boolean.class;  // checkbox
-            default -> String.class; // all other columns as text
+            case 0 -> Boolean.class;        // checkbox
+            case 4 -> org.ln.noortools.enums.FileStatus.class; // SEMPRE l’enum
+            default -> String.class;
         };
     }
     
@@ -64,17 +65,19 @@ public class RenamableFileTableModel extends AbstractTableModel implements Renam
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        RenamableFile file = data.get(rowIndex);
-
-        // If unchecked → row considered "disabled"
-        boolean active = file.isSelected();
+        RenamableFile f = data.get(rowIndex);
+        boolean active = f.isSelected();
 
         return switch (columnIndex) {
-            case 0 -> file.isSelected();
-            case 1 -> file.getSource().getName(); // Original name ALWAYS shown
-            case 2 -> active ? file.getSafeDestinationName() : ""; // New name hidden when inactive
-            case 3 -> active ? file.getSource().getParent() : "";  // Path hidden
-            case 4 -> file.getFileStatus();          // Status hidden
+            case 0 -> f.isSelected();
+            case 1 -> f.getSource().getName();
+            case 2 -> active
+                    ? (f.getDestinationName() == null || f.getDestinationName().isBlank()
+                        ? f.getSource().getName()
+                        : f.getDestinationName())
+                    : "";          // riga disattiva → vuoto
+            case 3 -> active ? f.getSource().getParent() : ""; // vuoto se disattiva
+            case 4 -> active ? f.getFileStatus() : null;        // NULL (non String!)
             default -> "";
         };
     }

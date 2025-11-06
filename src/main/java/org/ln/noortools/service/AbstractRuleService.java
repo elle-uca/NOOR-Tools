@@ -81,6 +81,8 @@ public abstract class AbstractRuleService implements RuleService {
     private RenamableFile copyWithName(RenamableFile original, String newName) {
         RenamableFile copy = new RenamableFile(new File(original.getSource().getPath()));
         copy.setDestinationName(newName);
+        copy.setSelected(original.isSelected());           // ✅ preserva selezione
+        copy.setFileStatus(original.getFileStatus()); 
         return copy;
     }
 }

@@ -43,41 +43,92 @@ public class RenamerService {
      * @param mode     rename mode (FULL, NAME_ONLY, EXT_ONLY)
      * @param params   rule-specific parameters
      */
+//    public void applyRule(String ruleName, RenameMode mode, Object... params) {
+//        RuleService service = ruleRegistry.get(ruleName.toLowerCase());
+//        if (service == null) {
+//            throw new IllegalArgumentException("Unknown rule: " + ruleName);
+//        }
+//
+//   
+//         List<RenamableFile> activeFiles = new ArrayList<>();
+//        List<RenamableFile> inactiveFiles = new ArrayList<>();
+//
+//        // Separate active/inactive
+//        for (RenamableFile f : files) {
+//            if (f.isSelected()) activeFiles.add(f);
+//            else inactiveFiles.add(f);
+//        }
+//
+//        // Apply rule only to selected files
+//        List<RenamableFile> updatedActive = service.applyRule(activeFiles, mode, params);
+//
+//        // Merge back (inactive unchanged)
+//        List<RenamableFile> result = new ArrayList<>();
+//        result.addAll(updatedActive);
+//        result.addAll(inactiveFiles);
+//
+//        setFiles(result);
+//    }
+   
     public void applyRule(String ruleName, RenameMode mode, Object... params) {
         RuleService service = ruleRegistry.get(ruleName.toLowerCase());
         if (service == null) {
             throw new IllegalArgumentException("Unknown rule: " + ruleName);
         }
 
-   
-         List<RenamableFile> activeFiles = new ArrayList<>();
-        List<RenamableFile> inactiveFiles = new ArrayList<>();
-
-        // Separate active/inactive
+        // 🔥 1) Salva lo stato dei selected
+        Map<String, Boolean> selectionMap = new HashMap<>();
         for (RenamableFile f : files) {
-            if (f.isSelected()) activeFiles.add(f);
-            else inactiveFiles.add(f);
+            selectionMap.put(f.getSource().getAbsolutePath(), f.isSelected());
         }
 
-        // Apply rule only to selected files
-        List<RenamableFile> updatedActive = service.applyRule(activeFiles, mode, params);
+        // 2) Applica la regola SOLO ai file selezionati
+        List<RenamableFile> active = new ArrayList<>();
+        List<RenamableFile> inactive = new ArrayList<>();
 
-        // Merge back (inactive unchanged)
+        for (RenamableFile f : files) {
+            if (f.isSelected()) active.add(f);
+            else inactive.add(f);
+        }
+
+        List<RenamableFile> updatedActive = service.applyRule(active, mode, params);
+
+        // 3) Ricombina attivi + inattivi
         List<RenamableFile> result = new ArrayList<>();
         result.addAll(updatedActive);
-        result.addAll(inactiveFiles);
+        result.addAll(inactive);
 
+        // 🔥 4) Ripristina il flag selected su ogni file
+        for (RenamableFile f : result) {
+            Boolean sel = selectionMap.get(f.getSource().getAbsolutePath());
+            if (sel != null) {
+                f.setSelected(sel);
+            }
+        }
+
+        // 5) Aggiorna modello
         setFiles(result);
     }
-   
-    
+
     
     public void setFiles(List<RenamableFile> newFiles) {
+        // mappa selezioni correnti per path
+        Map<Path, Boolean> selectedByPath = new HashMap<>();
+        for (RenamableFile f : this.files) {
+            selectedByPath.put(f.getSource().toPath(), f.isSelected());
+        }
+
         files.clear();
         if (newFiles != null) {
             files.addAll(newFiles);
         }
-        
+
+        // re-applica la selezione pre-esistente
+        for (RenamableFile f : files) {
+            Boolean sel = selectedByPath.get(f.getSource().toPath());
+            if (sel != null) f.setSelected(sel);
+        }
+
         checkConflicts();
         notifyListeners();
     }

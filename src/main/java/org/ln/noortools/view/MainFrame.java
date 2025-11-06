@@ -31,7 +31,7 @@ import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import org.ln.noortools.i18n.I18n;
@@ -234,15 +234,8 @@ public class MainFrame extends JFrame {
 		renamerService.addListener(tableModel);
 		table = new JTable(tableModel);
 		table.putClientProperty( "Table.alternateRowColor", null );
-//		for (int i = 0; i < table.getColumnCount(); i++) {
-//		    TableCellRenderer baseRenderer = table.getColumnModel().getColumn(i).getCellRenderer();
-//		    if (baseRenderer == null) {
-//		        baseRenderer = table.getDefaultRenderer(table.getColumnClass(i));
-//		    }
-//		    table.getColumnModel().getColumn(i).setCellRenderer(
-//		        new RowActivityDecoratorRenderer(baseRenderer));
-//		}
-		
+
+
 		
 		tableScrollPane.setViewportView(table);
 		table.setAutoCreateRowSorter(true);
@@ -250,15 +243,26 @@ public class MainFrame extends JFrame {
 		table.getColumnModel().getColumn(2).setCellRenderer(new NewNameCellRenderer());
 		
 		
-		TableRowSorter<?> sorter = new TableRowSorter<>(tableModel);
+//		TableRowSorter<?> sorter = new TableRowSorter<>(tableModel);
+//		sorter.setComparator(1, new NaturalOrderComparator());
+//		sorter.setComparator(2, new NaturalOrderComparator());
+//		table.setRowSorter(sorter);
+
+		table.setAutoCreateRowSorter(true);
+
+		TableRowSorter<TableModel> sorter =
+		        (TableRowSorter<TableModel>) table.getRowSorter();
+
+		// naturale su “Original name” e “New name”
 		sorter.setComparator(1, new NaturalOrderComparator());
 		sorter.setComparator(2, new NaturalOrderComparator());
 		table.setRowSorter(sorter);
 		
+		// opzionale: disabilita sort su “Selected” e “Status”
+		sorter.setSortable(0, false);
+		sorter.setSortable(4, false);
 		
-		//table.setDefaultRenderer(Object.class, new RenamableFileRowRenderer());
-		//table.setDefaultRenderer(String.class, new RenamableFileRowRenderer());
-		//table.setDefaultRenderer(Boolean.class, new RenamableFileRowRenderer());
+		
 
 		// --- Labels
 		infoLabel = new JLabel("No files loaded");
