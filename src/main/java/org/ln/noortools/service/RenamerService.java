@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.ln.noortools.enums.FileStatus;
 import org.ln.noortools.enums.RenameMode;
@@ -112,22 +113,36 @@ public class RenamerService {
 
     
     public void setFiles(List<RenamableFile> newFiles) {
-        // mappa selezioni correnti per path
-        Map<Path, Boolean> selectedByPath = new HashMap<>();
-        for (RenamableFile f : this.files) {
-            selectedByPath.put(f.getSource().toPath(), f.isSelected());
-        }
+    	
+    	
+    	// sostituisci solo gli oggetti, non resettiamo la selection
+    	Map<Path, Boolean> prevSelection = files.stream()
+    	        .collect(Collectors.toMap(f -> f.getSource().toPath(), RenamableFile::isSelected));
 
-        files.clear();
-        if (newFiles != null) {
-            files.addAll(newFiles);
-        }
+    	files.clear();
+    	files.addAll(newFiles);
 
-        // re-applica la selezione pre-esistente
-        for (RenamableFile f : files) {
-            Boolean sel = selectedByPath.get(f.getSource().toPath());
-            if (sel != null) f.setSelected(sel);
-        }
+    	// ripristina selection precedente
+    	for (RenamableFile f : files) {
+    	    f.setSelected(prevSelection.getOrDefault(f.getSource().toPath(), true));
+    	}
+    	
+//         // mappa selezioni correnti per path
+//        Map<Path, Boolean> selectedByPath = new HashMap<>();
+//        for (RenamableFile f : this.files) {
+//            selectedByPath.put(f.getSource().toPath(), f.isSelected());
+//        }
+//
+//        files.clear();
+//        if (newFiles != null) {
+//            files.addAll(newFiles);
+//        }
+//
+//        // re-applica la selezione pre-esistente
+//        for (RenamableFile f : files) {
+//            Boolean sel = selectedByPath.get(f.getSource().toPath());
+//            if (sel != null) f.setSelected(sel);
+//        }
 
         checkConflicts();
         notifyListeners();
@@ -146,6 +161,11 @@ public class RenamerService {
         boolean conflict = false;
 
         for (RenamableFile f : files) {
+        	
+            if (!f.isSelected()) {
+                f.setFileStatus(FileStatus.OK); // o NONE, se aggiungi un enum
+                continue;
+            }
             String oldName = f.getSource().getName();
             String newName = f.getDestinationName();
 

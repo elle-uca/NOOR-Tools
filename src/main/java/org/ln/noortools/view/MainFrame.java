@@ -28,10 +28,11 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import org.ln.noortools.i18n.I18n;
@@ -234,36 +235,32 @@ public class MainFrame extends JFrame {
 		renamerService.addListener(tableModel);
 		table = new JTable(tableModel);
 		table.putClientProperty( "Table.alternateRowColor", null );
-
-
-		
 		tableScrollPane.setViewportView(table);
-		table.setAutoCreateRowSorter(true);
-		table.getColumnModel().getColumn(4).setCellRenderer(new StatusCellRenderer());
-		table.getColumnModel().getColumn(2).setCellRenderer(new NewNameCellRenderer());
+		
+		for (int i = 1; i < table.getColumnCount(); i++) { // skip col 0
+		    table.getColumnModel().getColumn(i).setCellRenderer(new DisabledRowRenderer());
+		}		
+		
+//		table.getColumnModel().getColumn(4).setCellRenderer(new StatusCellRenderer());
+//		table.getColumnModel().getColumn(2).setCellRenderer(new NewNameCellRenderer());
 		
 		
-//		TableRowSorter<?> sorter = new TableRowSorter<>(tableModel);
-//		sorter.setComparator(1, new NaturalOrderComparator());
-//		sorter.setComparator(2, new NaturalOrderComparator());
-//		table.setRowSorter(sorter);
 
-		table.setAutoCreateRowSorter(true);
+		TableRowSorter<RenamableFileTableModel> sorter =
+		        new TableRowSorter<>(tableModel);
 
-		TableRowSorter<TableModel> sorter =
-		        (TableRowSorter<TableModel>) table.getRowSorter();
-
-		// naturale su “Original name” e “New name”
+		// ✅ Sorting naturale su Original name e New name
 		sorter.setComparator(1, new NaturalOrderComparator());
 		sorter.setComparator(2, new NaturalOrderComparator());
+
+		// ✅ Sposta i non selezionati in fondo
+		sorter.setComparator(0, (Boolean a, Boolean b) -> {
+		    // true deve venire PRIMA → selezionati in alto
+		    return Boolean.compare(!a, !b);
+		});
+
 		table.setRowSorter(sorter);
 		
-		// opzionale: disabilita sort su “Selected” e “Status”
-		sorter.setSortable(0, false);
-		sorter.setSortable(4, false);
-		
-		
-
 		// --- Labels
 		infoLabel = new JLabel("No files loaded");
 		fileInfoLabel = new JLabel("No file selected");

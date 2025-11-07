@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.ln.noortools.enums.FileStatus;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.service.RenamerServiceListener;
 
@@ -33,54 +34,46 @@ public class RenamableFileTableModel extends AbstractTableModel implements Renam
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         return switch (columnIndex) {
-            case 0 -> Boolean.class;        // checkbox
-            case 4 -> org.ln.noortools.enums.FileStatus.class; // SEMPRE l’enum
-            default -> String.class;
+            case 0 -> Boolean.class;      // Selected
+            case 4 -> FileStatus.class;   // Status
+            default -> String.class;      // Original, New name, Path
         };
     }
     
-//    @Override
-//    public Object getValueAt(int rowIndex, int columnIndex) {
-//    	if (rowIndex >= data.size()) {
-//    		return switch (columnIndex) {
-//    		case 0 -> Boolean.FALSE; // checkbox spento di default
-//    		default -> "";           // stringa vuota per le altre colonne
-//    		};
-//    	}
-//    	
-//    	RenamableFile file = data.get(rowIndex);
-//
-//    	return switch (columnIndex) {
-//    	case 0 -> file.isSelected();
-//    	case 1 -> file.getSource().getName();
-//    	case 2 -> (file.getDestinationName() == null || 
-//    			file.getDestinationName().isEmpty()) ? 
-//    			file.getSource().getName() : 
-//    			file.getDestinationName();
-//    	case 3 -> file.getSource().getParent();
-//    	case 4 -> file.getFileStatus();
-//    	default -> "";
-//    	};
-//    }
-
     @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        RenamableFile f = data.get(rowIndex);
-        boolean active = f.isSelected();
+    public Object getValueAt(int row, int col) {
+        RenamableFile f = data.get(row);
 
-        return switch (columnIndex) {
+        return switch (col) {
             case 0 -> f.isSelected();
             case 1 -> f.getSource().getName();
-            case 2 -> active
-                    ? (f.getDestinationName() == null || f.getDestinationName().isBlank()
+            case 2 -> (f.getDestinationName() == null || f.getDestinationName().isBlank())
                         ? f.getSource().getName()
-                        : f.getDestinationName())
-                    : "";          // riga disattiva → vuoto
-            case 3 -> active ? f.getSource().getParent() : ""; // vuoto se disattiva
-            case 4 -> active ? f.getFileStatus() : null;        // NULL (non String!)
+                        : f.getDestinationName();
+            case 3 -> f.getSource().getParent();
+            case 4 -> f.getFileStatus(); // ✅ sempre FileStatus
             default -> "";
         };
     }
+
+//    @Override
+//    public Object getValueAt(int rowIndex, int columnIndex) {
+//        RenamableFile f = data.get(rowIndex);
+//        boolean active = f.isSelected();
+//
+//        return switch (columnIndex) {
+//            case 0 -> f.isSelected();
+//            case 1 -> f.getSource().getName();
+//            case 2 -> active
+//                    ? (f.getDestinationName() == null || f.getDestinationName().isBlank()
+//                        ? f.getSource().getName()
+//                        : f.getDestinationName())
+//                    : "";          // riga disattiva → vuoto
+//            case 3 -> active ? f.getSource().getParent() : ""; // vuoto se disattiva
+//            case 4 -> active ? f.getFileStatus() : null;        // NULL (non String!)
+//            default -> "";
+//        };
+//    }
     
 
     
@@ -103,13 +96,11 @@ public class RenamableFileTableModel extends AbstractTableModel implements Renam
     
     
     @Override
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        if (columnIndex == 0 && rowIndex < data.size() && aValue instanceof Boolean) {
-            RenamableFile file = data.get(rowIndex);
-            file.setSelected((Boolean) aValue);
-
-            // re-eval new name or empty view
-            fireTableRowsUpdated(rowIndex, rowIndex);
+    public void setValueAt(Object aValue, int row, int col) {
+        if (col == 0 && row >= 0 && row < data.size()) {
+            boolean sel = (Boolean) aValue;
+            data.get(row).setSelected(sel);
+            fireTableRowsUpdated(row, row);
         }
     }
     
@@ -117,7 +108,7 @@ public class RenamableFileTableModel extends AbstractTableModel implements Renam
 	public void onFilesUpdated(List<RenamableFile> updatedFiles) {
         this.data = new ArrayList<>(updatedFiles);
         fireTableDataChanged(); // 🔄 refresh JTable
-        System.out.println("onFilesUpdated");
+        //System.out.println("onFilesUpdated");
     }		
 	
 	
