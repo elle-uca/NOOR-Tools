@@ -24,6 +24,7 @@ public class RandN extends AbstractTag {
     public RandN(I18n i18n, Object... arg) {
         super(i18n, arg);
         this.tagName = "RandN";
+        this.type = TagType.NUMERIC;
     }
 
     @Override

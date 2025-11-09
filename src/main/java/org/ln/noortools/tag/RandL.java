@@ -25,6 +25,7 @@ public class RandL extends AbstractTag {
     public RandL(I18n i18n, Object... arg) {
         super(i18n, arg);
         this.tagName = "RandL";
+        this.type = TagType.STRING;
     }
 
     @Override

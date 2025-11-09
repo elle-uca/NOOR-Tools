@@ -21,6 +21,7 @@ public class Subs extends AbstractTag {
     public Subs(I18n i18n, Object... arg) {
         super(i18n, arg);
         this.tagName = "Subs";
+        this.type = TagType.STRING;
     }
 
     @Override

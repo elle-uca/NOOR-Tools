@@ -17,6 +17,7 @@ public class IncL extends AbstractTag {
     public IncL(I18n i18n, Object... arg) {
         super(i18n, arg);
         this.tagName = "IncL";
+        this.type = TagType.STRING;
     }
 
     @Override

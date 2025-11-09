@@ -17,12 +17,22 @@ import org.ln.noortools.i18n.I18n;
  * @author Luca Noale
  */
 public abstract class AbstractTag {
+	
+	public enum TagType {
+	    NUMERIC,
+	    STRING,
+	    DATE_TIME,
+	    AUDIO,
+	    CHECKSUM
+	}
 
     // ============================================================
     // 🔹 Core properties
     // ============================================================
 
     protected String tagName;
+    
+    protected TagType type;
 
     protected int start;
     protected int step;
@@ -160,6 +170,8 @@ public abstract class AbstractTag {
         return rawArgs;
     }
 
+    public TagType getType() { return type; }
+    
     // ============================================================
     // 🏷️ Tag display helpers
     // ============================================================
@@ -185,6 +197,8 @@ public abstract class AbstractTag {
         return sb.toString();
     }
 
+    
+    
     @Override
     public String toString() {
         return getTagString() + " - " + getDescription();

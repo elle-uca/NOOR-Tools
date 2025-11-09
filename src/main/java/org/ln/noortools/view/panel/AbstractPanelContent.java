@@ -18,6 +18,8 @@ import javax.swing.event.DocumentListener;
 import org.ln.noortools.enums.RenameMode;
 import org.ln.noortools.i18n.I18n;
 
+import jakarta.annotation.PostConstruct;
+
 /**
  * Base class for all accordion panel contents.
  * Provides:
@@ -56,22 +58,27 @@ public abstract class AbstractPanelContent extends JPanel
         // layout base con area per i controlli + combo in basso
         setLayout(new BorderLayout());
 
-        JPanel contentArea = new JPanel(); 
-        contentArea.setLayout(new GridBagLayout()); // i figli concreti useranno GridBag o MigLayout
-        add(contentArea, BorderLayout.CENTER);
-
-        // pannello footer con combo
-        JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        footer.add(new JLabel("Rename Mode:"));
-        footer.add(modeCombo);
-        add(footer, BorderLayout.SOUTH);
-
-        // delega a sottoclasse per costruire controlli specifici
-        initComponents(contentArea);
+       
 
         // Build UI
         //initComponents();
     }
+	 
+	 @PostConstruct
+	 private void setupUI() {
+		 JPanel contentArea = new JPanel(); 
+	        contentArea.setLayout(new GridBagLayout()); // i figli concreti useranno GridBag o MigLayout
+	        add(contentArea, BorderLayout.CENTER);
+
+	        // pannello footer con combo
+	        JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+	        footer.add(new JLabel("Rename Mode:"));
+	        footer.add(modeCombo);
+	        add(footer, BorderLayout.SOUTH);
+
+	        // delega a sottoclasse per costruire controlli specifici
+	        initComponents(contentArea);
+	 }
 	 
 	    /** chiamata da SlidingPanel subito dopo la creazione */
 	    public void setAccordion(AccordionPanel accordion) {

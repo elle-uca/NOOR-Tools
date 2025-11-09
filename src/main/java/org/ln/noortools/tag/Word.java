@@ -24,6 +24,7 @@ public class Word extends AbstractTag {
     public Word(I18n i18n, Object... arg) {
         super(i18n, arg);
         this.tagName = "Word";
+        this.type = TagType.STRING;
     }
 
     @Override

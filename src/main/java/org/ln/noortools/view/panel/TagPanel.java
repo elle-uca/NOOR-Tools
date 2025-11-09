@@ -1,18 +1,26 @@
 package org.ln.noortools.view.panel;
 
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
@@ -38,6 +46,8 @@ public class TagPanel extends AbstractPanelContent {
 	private JList<AbstractTag> tagList;
 	private JScrollPane tagListScrollPane;
 	private JLabel tagLabel;
+	private JTextField searchField;
+	private JPanel categoryBar;
 	//private FillOptionsPanel fill;
 	
 	  private final TagListModel tagListModel; // 👈 injected by Spring
@@ -46,6 +56,7 @@ public class TagPanel extends AbstractPanelContent {
         super(i18n);
         this.renamerService = renamerService;
         this.tagListModel = tagListModel; // ✅ use injected model
+        
 	}
 	    
 	    // 2) Imposta il model DOPO che Spring ha iniettato tutto (e dopo il costruttore)
@@ -53,6 +64,15 @@ public class TagPanel extends AbstractPanelContent {
 	    private void wireModel() {
 	        tagList.setModel(tagListModel);
 	        tagList.setCellRenderer(new TagListCellRenderer());  // 👈 AGGIUNGI QUESTO
+	        
+	        searchField.getDocument().addDocumentListener(new DocumentListener() {
+	            private void go() {
+	                tagListModel.setQuery(searchField.getText());
+	            }
+	            @Override public void insertUpdate(DocumentEvent e) { go(); }
+	            @Override public void removeUpdate(DocumentEvent e) { go(); }
+	            @Override public void changedUpdate(DocumentEvent e) { go(); }
+	        });
 	    
 	        // opzionale: revalidate/repaint se serve
 	        tagList.revalidate();
@@ -79,7 +99,7 @@ public class TagPanel extends AbstractPanelContent {
                 BorderFactory.createLineBorder(new Color(200, 200, 200)),
                 new EmptyBorder(5, 5, 5, 5)
         ));
-
+        searchField = new JTextField();
         // 🔹 Lista tag
         // ⚠️ usare un modello temporaneo per evitare null
         tagList = new JList<>(new DefaultListModel<>());
@@ -110,11 +130,24 @@ public class TagPanel extends AbstractPanelContent {
                 }
             }
         });
+        // ✅ 1. Crea la barra categorie PRIMA
+        categoryBar = new JPanel(new MigLayout("insets 0, gap 6"));
+        categoryBar.putClientProperty("JPanel.style", "rounded");
+        buildCategoryButtons();
+        JScrollPane filterScroll = new JScrollPane(categoryBar);
+        filterScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        filterScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        filterScroll.setBorder(BorderFactory.createEmptyBorder());
+        filterScroll.getHorizontalScrollBar().setUnitIncrement(12); // scorrimento fluido
+        filterScroll.setOpaque(false);
+        filterScroll.getViewport().setOpaque(false);
 
         // 🔹 Aggiunta dei componenti con MigLayout
         contentArea.add(tagLabel, "wrap");
         contentArea.add(renameField, "growx, h 28!, wrap");
-        contentArea.add(scrollPane, "grow, push, h 250!");
+        contentArea.add(searchField, "growx, h 28!, wrap");
+        contentArea.add(filterScroll,  "growx, h 32!, wrap");
+        contentArea.add(scrollPane, "grow, push, h 300!");
 		
 	}
 
@@ -136,7 +169,103 @@ public class TagPanel extends AbstractPanelContent {
 	}
 
 
+//	private JPanel createTypeFilterBar() {
+//	    JPanel p = new JPanel(new MigLayout("insets 0, gap 8"));
+//	    p.setOpaque(false);
+//
+//	    p.add(makeTypeButton(" ✦  All", null));
+//	    p.add(makeTypeButton(" #  Numeric", TagType.NUMERIC));
+//	    p.add(makeTypeButton(" \"  String", TagType.STRING));
+//	    p.add(makeTypeButton(" 🕒 Date / Time", TagType.DATE_TIME));
+//	    p.add(makeTypeButton(" 🎧 Audio", TagType.AUDIO));
+//	    p.add(makeTypeButton(" 🔐 Checksum", TagType.CHECKSUM));
+//
+//	    return p;
+//	}
+	
+	private void buildCategoryButtons() {
+	    categoryBar.removeAll();
+
+	    categoryBar.add(createCategoryButton(" All ", null, "/icons/infinite.png"));
+	    categoryBar.add(createCategoryButton("Numeric", AbstractTag.TagType.NUMERIC, "/icons/numeri.png"));
+	    categoryBar.add(createCategoryButton("String", AbstractTag.TagType.STRING, "/icons/string.png"));
+	    categoryBar.add(createCategoryButton("Date/Time", AbstractTag.TagType.DATE_TIME, "/icons/date-time.png"));
+	    categoryBar.add(createCategoryButton("Audio", AbstractTag.TagType.AUDIO, "/icons/audio.png"));
+	    categoryBar.add(createCategoryButton("Checksum", AbstractTag.TagType.CHECKSUM, "/icons/hashtag.png"));
+
+	    categoryBar.revalidate();
+	    categoryBar.repaint();
+	}
+
+	private Icon getScaledIcon(String path) {
+			ImageIcon originalIcon = new ImageIcon(getClass().getResource(path)); 
+        
+//        if (originalIcon.getImageLoadStatus() == MediaTracker.ERRORED) {
+//             System.err.println("Errore: Impossibile caricare l'immagine. Controlla il percorso.");
+//             // Usa un'icona di fallback o termina
+//             return; 
+//        }
+		// 2. SCALA L'IMMAGINE ORIGINALE
+        // Otteniamo l'oggetto Image sottostante
+        Image originalImage = originalIcon.getImage(); 
+        
+        // Usiamo getScaledInstance per ridimensionare l'immagine a 16x16.
+        // Image.SCALE_SMOOTH è un algoritmo di scalatura di alta qualità.
+        Image scaledImage = originalImage.getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+
+        // 3. CREA LA NUOVA ICONA SCALATA
+        // Creiamo una nuova ImageIcon dall'Image ridimensionata
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+	    return scaledIcon;
+	}
 
 
+	private JButton createCategoryButton(String text, AbstractTag.TagType type, String icon) {
+	    JButton b = new JButton(text);
 
+	    // Layout estetico
+	    b.putClientProperty("JButton.buttonType", "roundRect"); // pill style FlatLaf
+	    b.setFocusPainted(false);
+
+	    b.setBorder(BorderFactory.createEmptyBorder(4, 14, 4, 14));
+
+	    // Testo
+	    b.setFont(b.getFont().deriveFont(12f));
+	    b.setIcon(getScaledIcon(icon));
+
+	    // Stato selezionato o meno
+	    boolean selected = tagListModel.getTypeFilter().contains(type);
+
+	    Color base = UIManager.getColor("Component.accentColor");
+	    Color bg = selected
+	            ? com.formdev.flatlaf.util.ColorFunctions.tint(base, 0.70f) // accent tenue
+	            : UIManager.getColor("Panel.background");
+
+	    b.setBackground(bg);
+	    b.setForeground(selected ? Color.BLACK : UIManager.getColor("Label.foreground"));
+
+	    // Hover SOFT (senza rompere dark/light)
+	    b.addMouseListener(new java.awt.event.MouseAdapter() {
+	        @Override public void mouseEntered(MouseEvent e) {
+	            if (!selected) {
+	                b.setBackground(com.formdev.flatlaf.util.ColorFunctions.tint(base, 0.85f));
+	            }
+	        }
+	        @Override public void mouseExited(MouseEvent e) {
+	            b.setBackground(bg);
+	        }
+	    });
+
+	    b.addActionListener(e -> {
+	        tagListModel.setSingleType(type);
+	        refreshCategoryButtons(); // aggiornamento UI per stato selezionato
+	    });
+
+	    return b;
+	}
+	private void refreshCategoryButtons() {
+	    buildCategoryButtons();
+	}
+	
 }

@@ -23,6 +23,7 @@ public class IncR extends AbstractTag {
     public IncR(I18n i18n, Object... arg) {
         super(i18n, arg);
         this.tagName = "IncR";
+        this.type = TagType.NUMERIC;
     }
 
     @Override

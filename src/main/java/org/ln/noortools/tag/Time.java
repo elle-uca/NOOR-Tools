@@ -21,6 +21,7 @@ public class Time extends AbstractTag {
     public Time(I18n i18n, Object... args) {
         super(i18n, args);
         this.tagName = "Time";
+        this.type = TagType.DATE_TIME;
     }
 
     @Override
