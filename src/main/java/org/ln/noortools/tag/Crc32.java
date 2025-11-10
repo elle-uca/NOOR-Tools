@@ -1,9 +1,7 @@
 package org.ln.noortools.tag;
 
-import java.nio.file.Path;
-
+import org.ln.noortools.enums.ChecksumAlg;
 import org.ln.noortools.i18n.I18n;
-import org.ln.noortools.util.HashUtils;
 
 /**
  * Tag <Crc32>
@@ -12,25 +10,18 @@ import org.ln.noortools.util.HashUtils;
  *   
  *    Author: Luca Noale
  */
-public class Crc32 extends AbstractTag {
+public class Crc32 extends AbstractChecksumTag {
 
     public Crc32(I18n i18n, Object... arg) {
-        super(i18n, arg);
+        super(i18n, ChecksumAlg.CRC32, arg);
         this.tagName = "Crc32";
         this.type = TagType.CHECKSUM;
     }
-
-    @Override
-    public void init() {
-        newClear();
-        for (String old : oldNames) {
-            try {
-                newAdd(HashUtils.crc32(Path.of(old)));
-            } catch (Exception e) {
-                newAdd("ERR");
-            }
-        }
-    }
+    
+//    @Override
+//    public void init() {
+//
+//    }
 
     @Override
     public String getDescription() {
