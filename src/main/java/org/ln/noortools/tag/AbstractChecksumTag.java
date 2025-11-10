@@ -8,6 +8,8 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HexFormat;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.CRC32;
 
 import org.ln.noortools.i18n.I18n;
@@ -19,6 +21,7 @@ public abstract class AbstractChecksumTag extends AbstractTag implements FileAwa
 
     private final ChecksumAlg algorithm;
     private List<RenamableFile> filesCtx = List.of();
+    private static final Map<String, String> checksumCache = new ConcurrentHashMap<>();
 
     protected AbstractChecksumTag(I18n i18n, ChecksumAlg alg, Object... args) {
         super(i18n, args);
@@ -37,14 +40,20 @@ public abstract class AbstractChecksumTag extends AbstractTag implements FileAwa
         int cut = getIntArg(0, 0); // <Md5:8> → primi 8 caratteri
 
         for (RenamableFile rf : filesCtx) {
+        	String result;
+        	String key = cacheKey(rf);
+        	
+        	result = checksumCache.get(key);
+        	if (result == null) {
+        	
             try (InputStream in = Files.newInputStream(rf.getSource().toPath())) {
 
-                String result = switch (algorithm) {
+                result = switch (algorithm) {
                     case CRC32 -> computeCRC32(in);
                     case MD5 -> computeDigest("MD5", in);
                     case SHA256 -> computeDigest("SHA-256", in);
                 };
-
+                checksumCache.put(key, result);
                 if (cut > 0 && cut < result.length())
                     result = result.substring(0, cut);
 
@@ -53,7 +62,7 @@ public abstract class AbstractChecksumTag extends AbstractTag implements FileAwa
             } catch (Exception e) {
                 newNames.add("");
             }
-        }
+        }}
     }
 
     private String computeCRC32(InputStream in) throws Exception {
@@ -72,6 +81,10 @@ public abstract class AbstractChecksumTag extends AbstractTag implements FileAwa
         return HexFormat.of().formatHex(md.digest());
     }
 
+    private String cacheKey(RenamableFile rf) {
+        var f = rf.getSource();
+        return f.getAbsolutePath() + "|" + f.length() + "|" + f.lastModified() + "|" + algorithm;
+    }
 
 }
 

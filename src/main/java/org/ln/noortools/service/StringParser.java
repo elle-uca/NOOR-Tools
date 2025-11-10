@@ -55,14 +55,14 @@ public class StringParser {
      // 3️⃣ Initialize all tag objects
         for (Object comp : components) {
             if (comp instanceof AbstractTag tag) {
+                tag.setOldNames(oldNames);
+                tag.setNewNames(newNames);
 
-                // ✅ SE IL TAG È File-Aware, PASSAGLI I FILE
+                // NEW: passa la lista dei file ai tag che ne hanno bisogno
                 if (tag instanceof FileAwareTag fat) {
                     fat.setFilesContext(files);
                 }
 
-                tag.setOldNames(oldNames);
-                tag.setNewNames(newNames);
                 tag.init();
             }
         }
@@ -133,9 +133,12 @@ public class StringParser {
     private static AbstractTag createTag(String token) {
         try {
             // 1️⃣ Extract tag class name
-            Matcher nameM = Pattern.compile("(?<=<)[a-zA-Z]+(?=:)").matcher(token);
-            if (!nameM.find()) return null;
-            String className = nameM.group();
+        	Matcher nameM = Pattern.compile("(?<=<)[A-Za-z][A-Za-z0-9_]*(?=[:>])").matcher(token);
+        	if (!nameM.find()) return null;
+        	String className = nameM.group();
+//            Matcher nameM = Pattern.compile("(?<=<)[a-zA-Z]+(?=:)").matcher(token);
+//            if (!nameM.find()) return null;
+//            String className = nameM.group();
 
             // 2️⃣ Extract numeric parameters (e.g., :1, :2)
             Matcher argsM = Pattern.compile("(?<=:)\\d+(?=[>:])").matcher(token);
