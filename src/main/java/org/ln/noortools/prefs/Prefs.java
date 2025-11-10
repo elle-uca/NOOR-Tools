@@ -96,10 +96,28 @@ public class Prefs {
     }
 
     public static String getProp(String key, String def) {
-        if ("language".equals(key)) return getInstance().getLanguage();
-        if ("theme".equals(key)) return getInstance().getTheme();
-        if ("fill.value".equals(key)) return String.valueOf(getInstance().getFillValue());
-        return def;
+        if (key == null || key.isBlank()) {
+            return def;
+        }
+
+        Prefs prefs = getInstance();
+
+        // Normalise legacy keys (e.g. FILL_VALUE → fill.value)
+        String normalized = key.trim()
+                .toLowerCase()
+                .replace('_', '.');
+
+        // Allow callers to prefix with "app." without breaking lookups
+        if (normalized.startsWith("app.")) {
+            normalized = normalized.substring(4);
+        }
+
+        return switch (normalized) {
+            case "language" -> prefs.getLanguage();
+            case "theme" -> prefs.getTheme();
+            case "fill.value" -> String.valueOf(prefs.getFillValue());
+            default -> def;
+        };
     }
 
     public static void saveWindow(int w, int h) {
