@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.function.Function;
 
 import org.ln.noortools.enums.FileStatus;
 import org.ln.noortools.enums.RenameMode;
@@ -77,38 +78,36 @@ public class RenamerService {
             throw new IllegalArgumentException("Unknown rule: " + ruleName);
         }
 
-        // 🔥 1) Salva lo stato dei selected
-        Map<String, Boolean> selectionMap = new HashMap<>();
+        // 🔥 1) Applica la regola solo ai file selezionati
+        List<RenamableFile> selectedFiles = new ArrayList<>();
         for (RenamableFile f : files) {
-            selectionMap.put(f.getSource().getAbsolutePath(), f.isSelected());
-        }
-
-        // 2) Applica la regola SOLO ai file selezionati
-        List<RenamableFile> active = new ArrayList<>();
-        List<RenamableFile> inactive = new ArrayList<>();
-
-        for (RenamableFile f : files) {
-            if (f.isSelected()) active.add(f);
-            else inactive.add(f);
-        }
-
-        List<RenamableFile> updatedActive = service.applyRule(active, mode, params);
-
-        // 3) Ricombina attivi + inattivi
-        List<RenamableFile> result = new ArrayList<>();
-        result.addAll(updatedActive);
-        result.addAll(inactive);
-
-        // 🔥 4) Ripristina il flag selected su ogni file
-        for (RenamableFile f : result) {
-            Boolean sel = selectionMap.get(f.getSource().getAbsolutePath());
-            if (sel != null) {
-                f.setSelected(sel);
+            if (f.isSelected()) {
+                selectedFiles.add(f);
             }
         }
 
-        // 5) Aggiorna modello
-        setFiles(result);
+        if (selectedFiles.isEmpty()) {
+            setFiles(new ArrayList<>(files));
+            return;
+        }
+
+        List<RenamableFile> updatedFiles = service.applyRule(selectedFiles, mode, params);
+
+        Map<Path, RenamableFile> updatedByPath = updatedFiles.stream()
+                .collect(Collectors.toMap(
+                        f -> f.getSource().toPath(),
+                        Function.identity(),
+                        (existing, replacement) -> replacement));
+
+        // 3) Ricombina preservando l'ordine originale
+        List<RenamableFile> merged = new ArrayList<>(files.size());
+        for (RenamableFile current : files) {
+            RenamableFile replacement = updatedByPath.get(current.getSource().toPath());
+            merged.add(replacement != null ? replacement : current);
+        }
+
+        // 4) Aggiorna modello
+        setFiles(merged);
     }
 
     
