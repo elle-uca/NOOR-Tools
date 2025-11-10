@@ -100,8 +100,6 @@ public class Prefs {
             return def;
         }
 
-        Prefs prefs = getInstance();
-
         // Normalise legacy keys (e.g. FILL_VALUE → fill.value)
         String normalized = key.trim()
                 .toLowerCase()
@@ -112,12 +110,16 @@ public class Prefs {
             normalized = normalized.substring(4);
         }
 
-        return switch (normalized) {
-            case "language" -> prefs.getLanguage();
-            case "theme" -> prefs.getTheme();
-            case "fill.value" -> String.valueOf(prefs.getFillValue());
-            default -> def;
-        };
+        switch (normalized) {
+            case "language":
+                return getInstance().getLanguage();
+            case "theme":
+                return getInstance().getTheme();
+            case "fill.value":
+                return String.valueOf(getInstance().getFillValue());
+            default:
+                return def;
+        }
     }
 
     public static void saveWindow(int w, int h) {
