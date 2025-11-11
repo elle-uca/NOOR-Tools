@@ -36,7 +36,7 @@ public abstract class AbstractChecksumTag extends AbstractTag implements FileAwa
 
     @Override
     public void init() {
-        newNames = new ArrayList<>(filesCtx.size());
+        this.newNames = new ArrayList<>(filesCtx.size());
         int cut = getIntArg(0, 0); // <Md5:8> → primi 8 caratteri
 
         for (RenamableFile rf : filesCtx) {
@@ -63,6 +63,13 @@ public abstract class AbstractChecksumTag extends AbstractTag implements FileAwa
                 newNames.add("");
             }
         }}
+    }
+    
+    @Override
+    public String getNewName(int index) {
+        if (newNames == null || index >= newNames.size())
+            return "";
+        return newNames.get(index);
     }
 
     private String computeCRC32(InputStream in) throws Exception {

@@ -50,7 +50,8 @@ public class StringParser {
 
         // 2️⃣ Prepare name lists for tag initialization
         List<String> oldNames = getOldStrings(files, mode);
-        List<String> newNames = getNewStrings(files, mode);
+        //List<String> newNames = getNewStrings(files, mode);
+        List<String> newNames = new ArrayList<>(oldNames);
 
      // 3️⃣ Initialize all tag objects
         for (Object comp : components) {
@@ -61,6 +62,7 @@ public class StringParser {
                 // NEW: passa la lista dei file ai tag che ne hanno bisogno
                 if (tag instanceof FileAwareTag fat) {
                     fat.setFilesContext(files);
+                   
                 }
 
                 tag.init();
@@ -124,6 +126,32 @@ public class StringParser {
         return parts;
     }
 
+//    private static List<Object> tokenize(String template) {
+//        List<Object> parts = new ArrayList<>();
+//
+//        // Riconosce correttamente:
+//        // <Md5>
+//        // <Sha256:8>
+//        // <Crc32>-TEST
+//        // <Md5>_copy
+//        Matcher m = Pattern.compile(
+//                "<[A-Za-z][A-Za-z0-9_]*(?::\\d+)?>|[^<]+"
+//        ).matcher(template);
+//
+//        while (m.find()) {
+//            String token = m.group();
+//            if (token.startsWith("<") && token.endsWith(">")) {
+//                AbstractTag tag = createTag(token);
+//                if (tag != null) parts.add(tag);
+//            } else {
+//                parts.add(token);
+//            }
+//        }
+//
+//        return parts;
+//    }
+
+    
     /**
      * Dynamically creates a tag instance (e.g., <DecN:1> or <RandN:2>).
      * Uses reflection and retrieves I18n from Spring.

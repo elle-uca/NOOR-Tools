@@ -1,6 +1,5 @@
 package org.ln.noortools.tag;
 
-import org.ln.noortools.enums.ChecksumAlg;
 import org.ln.noortools.i18n.I18n;
 
 /**
@@ -18,10 +17,7 @@ public class Crc32 extends AbstractChecksumTag {
         this.type = TagType.CHECKSUM;
     }
     
-//    @Override
-//    public void init() {
-//
-//    }
+
 
     @Override
     public String getDescription() {

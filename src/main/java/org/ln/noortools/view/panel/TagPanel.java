@@ -146,9 +146,8 @@ public class TagPanel extends AbstractPanelContent {
         contentArea.add(tagLabel, "wrap");
         contentArea.add(renameField, "growx, h 28!, wrap");
         contentArea.add(searchField, "growx, h 28!, wrap");
-        contentArea.add(filterScroll,  "growx, h 32!, wrap");
+        contentArea.add(filterScroll,  "growx, h 40!, wrap");
         contentArea.add(scrollPane, "grow, push, h 300!");
-		
 	}
 
 
@@ -165,23 +164,10 @@ public class TagPanel extends AbstractPanelContent {
 		List<RenamableFile> updated =
 			    StringParser.parse(renameField.getText(), renamerService.getFiles(), getRenameMode());
 		renamerService.setFiles(updated);
-		
+		//renamerService.updateDestinationNames(updated);	
 	}
 
 
-//	private JPanel createTypeFilterBar() {
-//	    JPanel p = new JPanel(new MigLayout("insets 0, gap 8"));
-//	    p.setOpaque(false);
-//
-//	    p.add(makeTypeButton(" ✦  All", null));
-//	    p.add(makeTypeButton(" #  Numeric", TagType.NUMERIC));
-//	    p.add(makeTypeButton(" \"  String", TagType.STRING));
-//	    p.add(makeTypeButton(" 🕒 Date / Time", TagType.DATE_TIME));
-//	    p.add(makeTypeButton(" 🎧 Audio", TagType.AUDIO));
-//	    p.add(makeTypeButton(" 🔐 Checksum", TagType.CHECKSUM));
-//
-//	    return p;
-//	}
 	
 	private void buildCategoryButtons() {
 	    categoryBar.removeAll();
@@ -221,50 +207,6 @@ public class TagPanel extends AbstractPanelContent {
 	}
 
 
-//	private JButton createCategoryButton(String text, AbstractTag.TagType type, String icon) {
-//	    JButton b = new JButton(text);
-//
-//	    // Layout estetico
-//	    b.putClientProperty("JButton.buttonType", "roundRect"); // pill style FlatLaf
-//	    b.setFocusPainted(false);
-//
-//	    b.setBorder(BorderFactory.createEmptyBorder(4, 14, 4, 14));
-//
-//	    // Testo
-//	    b.setFont(b.getFont().deriveFont(12f));
-//	    b.setIcon(getScaledIcon(icon));
-//
-//	    // Stato selezionato o meno
-//	    boolean selected = tagListModel.getTypeFilter().contains(type);
-//
-//	    Color base = UIManager.getColor("Component.accentColor");
-//	    
-//	    Color bg = selected
-//	            ? com.formdev.flatlaf.util.ColorFunctions.tint(base, 0.70f) // accent tenue
-//	            : UIManager.getColor("Panel.background");
-//
-//	    b.setBackground(bg);
-//	    b.setForeground(selected ? Color.BLACK : UIManager.getColor("Label.foreground"));
-//
-//	    // Hover SOFT (senza rompere dark/light)
-//	    b.addMouseListener(new java.awt.event.MouseAdapter() {
-//	        @Override public void mouseEntered(MouseEvent e) {
-//	            if (!selected) {
-//	                b.setBackground(com.formdev.flatlaf.util.ColorFunctions.tint(base, 0.85f));
-//	            }
-//	        }
-//	        @Override public void mouseExited(MouseEvent e) {
-//	            b.setBackground(bg);
-//	        }
-//	    });
-//
-//	    b.addActionListener(e -> {
-//	        tagListModel.setSingleType(type);
-//	        refreshCategoryButtons(); // aggiornamento UI per stato selezionato
-//	    });
-//
-//	    return b;
-//	}
 	
 	private JButton createCategoryButton(String text, AbstractTag.TagType type, String icon) {
 	    JButton b = new JButton(text);

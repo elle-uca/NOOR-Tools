@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.tag.AbstractTag;
+import org.ln.noortools.tag.Album;
+import org.ln.noortools.tag.Artist;
 import org.ln.noortools.tag.Crc32;
 import org.ln.noortools.tag.Date;
 import org.ln.noortools.tag.DecH;
@@ -20,6 +22,7 @@ import org.ln.noortools.tag.RandN;
 import org.ln.noortools.tag.Sha256;
 import org.ln.noortools.tag.Subs;
 import org.ln.noortools.tag.Time;
+import org.ln.noortools.tag.Title;
 import org.ln.noortools.tag.Word;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -163,8 +166,22 @@ public class TagFactory {
         return new Subs(i18n, args);
     }
     
+    
+    public AbstractTag createAudioAlbumTag(Object... args) {
+		return new Album(i18n, args);
+	}
+    
+	private AbstractTag createAudioTitleTag(Object... args) {
+		return new Title(i18n, args);
+	}
+
+	private AbstractTag createAudioArtistTag(Object... args) {
+		return new Artist(i18n, args);
+	}
+    
+    
     public List<AbstractTag> buildAllTags() {
-        // Central place to list all tags; you can move this into TagFactory as `createAllTags()`
+        // Central place to list all tags;
         List<AbstractTag> list = new ArrayList<>();
         // Numeric
         list.add(createIncNTag(1, 1));
@@ -183,7 +200,9 @@ public class TagFactory {
         list.add(createDateTag("dd-MMM-yyyy"));
         list.add(createTimeTag("HH:mm:ss"));
         // Audio
-        // list.add(f.createAudioTag(...)) // when available
+        list.add(createAudioAlbumTag());
+        list.add(createAudioArtistTag());
+        list.add(createAudioTitleTag());
         // Checksum
         list.add(createSha256Tag(8));
         list.add(createCrc32Tag());
@@ -191,6 +210,10 @@ public class TagFactory {
      
         return list;
     }
+
+
+
+
 }
 
 

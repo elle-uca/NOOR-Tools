@@ -222,6 +222,12 @@ public class RenamerService {
         notifyListeners();
     }
     
+    public void updateDestinationNames(List<RenamableFile> updated) {
+        for (int i = 0; i < files.size(); i++) {
+            files.get(i).setDestinationName(updated.get(i).getDestinationName());
+        }
+    }
+    
     public List<RenamableFile> getFiles() {
         return Collections.unmodifiableList(files);
     }
