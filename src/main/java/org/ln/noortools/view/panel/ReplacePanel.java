@@ -9,6 +9,8 @@ import javax.swing.JTextField;
 import org.ln.noortools.enums.ReplacementType;
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.service.RenamerService;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -29,6 +31,8 @@ import net.miginfocom.swing.MigLayout;
  * Author: Luca Noale
  */
 @SuppressWarnings("serial")
+@Component
+@Scope("prototype")
 public class ReplacePanel extends AbstractPanelContent {
 
     private JLabel textLabel;

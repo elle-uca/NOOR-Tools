@@ -1,6 +1,5 @@
 package org.ln.noortools.tag;
 
-import org.ln.noortools.enums.ChecksumAlg;
 import org.ln.noortools.i18n.I18n;
 
 /**

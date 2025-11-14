@@ -6,6 +6,8 @@ import javax.swing.JPanel;
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.service.RenamerService;
 import org.ln.noortools.view.IntegerSpinner;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -26,6 +28,8 @@ import net.miginfocom.swing.MigLayout;
  * Author: Luca Noale
  */
 @SuppressWarnings("serial")
+@Component
+@Scope("prototype")
 public class RemovePanel extends AbstractPanelContent {
 
     private JLabel posLabel;

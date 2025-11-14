@@ -30,7 +30,7 @@ public class Album extends AbstractAudioTag {
             }
            newAdd(value.trim());
         }
-     }
+      }
 
     @Override
     public String getDescription() {

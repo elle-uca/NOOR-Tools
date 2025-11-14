@@ -9,6 +9,8 @@ import javax.swing.SpinnerNumberModel;
 
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.service.RenamerService;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -29,6 +31,8 @@ import net.miginfocom.swing.MigLayout;
  * 
  */
 @SuppressWarnings("serial")
+@Component
+@Scope("prototype")
 public class AddPanel extends AbstractPanelContent {
 
     private final RenamerService renamerService;
@@ -56,6 +60,7 @@ public class AddPanel extends AbstractPanelContent {
 	@Override
 	protected void initComponents(JPanel contentArea) {
         textLabel = new JLabel("Text to add:");
+        textLabel = new JLabel(i18n.get("addPanel.label.text"));
         whereLabel = new JLabel("Position:");
         posSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 999, 1));
         posSpinner.setEnabled(false);
@@ -74,7 +79,7 @@ public class AddPanel extends AbstractPanelContent {
         jrbEnd.addActionListener(this);
         jrbPos.addActionListener(this);
 
-        
+        System.out.println("contentArea   "+contentArea);
         contentArea.setLayout(new MigLayout("", "[][][grow]", "20[][][][]"));
         contentArea.add(textLabel,   "cell 0 0 3 1");
         contentArea.add(renameField, "cell 0 1 3 1, growx, wrap");

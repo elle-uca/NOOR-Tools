@@ -3,7 +3,7 @@ package org.ln.noortools.tag;
 import org.ln.noortools.i18n.I18n;
 
 /**
- * Tag <IncH>
+ * Tag <IncrHex>
  * 
  * Generates a sequence of hexadecimal numbers starting from a given decimal value.
  * 
@@ -19,11 +19,11 @@ import org.ln.noortools.i18n.I18n;
  *   
  *    Author: Luca Noale
  */
-public class IncH extends AbstractTag {
+public class IncrHex extends AbstractTag {
 
-    public IncH(I18n i18n, Object... arg) {
+    public IncrHex(I18n i18n, Object... arg) {
         super(i18n, arg);
-        this.tagName = "IncH";
+        this.tagName = "IncrHex";
         this.type = TagType.NUMERIC;
     }
 

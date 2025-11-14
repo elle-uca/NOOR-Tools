@@ -23,7 +23,7 @@ public abstract class AbstractTag {
 	    STRING,
 	    DATE_TIME,
 	    AUDIO,
-	    CHECKSUM
+	    CHECKSUM, FILE_SYSTEM
 	}
 
     // ============================================================

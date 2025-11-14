@@ -1,4 +1,3 @@
-// org.ln.noortools.tag.AbstractChecksumTag
 package org.ln.noortools.tag;
 
 import java.io.InputStream;

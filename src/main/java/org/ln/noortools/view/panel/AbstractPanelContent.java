@@ -21,18 +21,38 @@ import org.ln.noortools.i18n.I18n;
 import jakarta.annotation.PostConstruct;
 
 /**
- * Base class for all accordion panel contents.
- * Provides:
- *  - shared renameField
- *  - access to parent AccordionPanel
- *  - automatic updateView() call on any input change
- * 
- * Each subclass must implement:
- *  - initComponents(): build the UI
- *  - updateView(): update preview / data when user input changes
- * 
+ * Abstract base class for all accordion panel contents used inside the renamer UI.
+ *
+ * <p>This class provides a standard structure that all panels share:
+ * <ul>
+ *   <li>A text field for rename templates</li>
+ *   <li>A combo box for selecting the {@link RenameMode}</li>
+ *   <li>A reference to the parent {@link AccordionPanel}</li>
+ *   <li>Automatic triggers that invoke {@link #updateView()} whenever the user edits inputs</li>
+ * </ul>
+ *
+ * <p>UI construction happens in two steps:
+ * <ol>
+ *   <li>The constructor initializes shared components and listeners</li>
+ *   <li>{@link #setupUI()} (invoked via {@code @PostConstruct}) creates the layout
+ *       and delegates to {@link #initComponents(JPanel)} for panel-specific controls</li>
+ * </ol>
+ *
+ * <p>Subclasses must implement:
+ * <ul>
+ *   <li>{@code initComponents(JPanel)} – to build the custom UI inside the provided panel</li>
+ *   <li>{@code updateView()} – to update preview data whenever inputs change</li>
+ * </ul>
+ *
+ * <p>The class implements {@link DocumentListener}, {@link ChangeListener}, and
+ * {@link ActionListener} in order to capture every possible user action that should refresh the preview.
+ *
+ * <p><b>Note:</b> {@link #setAccordion(AccordionPanel)} is called externally by
+ * the {@code PanelFactory} immediately after the panel instance is created.
+ *
  * Author: Luca Noale
  */
+
 @SuppressWarnings("serial")
 public abstract class AbstractPanelContent extends JPanel
         implements ChangeListener, DocumentListener, ActionListener {
@@ -45,7 +65,6 @@ public abstract class AbstractPanelContent extends JPanel
 
 	 public AbstractPanelContent(I18n i18n) {
 		this.i18n = i18n;
-       // this.accordion = accordion;
         this.renameField = new JTextField();
         this.modeCombo = new JComboBox<>(RenameMode.values());
         // Default: NAME_ONLY
@@ -55,19 +74,13 @@ public abstract class AbstractPanelContent extends JPanel
         // Hook changes
         renameField.getDocument().addDocumentListener(this);
         
-        // layout base con area per i controlli + combo in basso
         setLayout(new BorderLayout());
-
-       
-
-        // Build UI
-        //initComponents();
     }
 	 
 	 @PostConstruct
-	 private void setupUI() {
+	 private void setupUI(){ 
 		 JPanel contentArea = new JPanel(); 
-	        contentArea.setLayout(new GridBagLayout()); // i figli concreti useranno GridBag o MigLayout
+	        contentArea.setLayout(new GridBagLayout()); 
 	        add(contentArea, BorderLayout.CENTER);
 
 	        // pannello footer con combo
@@ -75,7 +88,6 @@ public abstract class AbstractPanelContent extends JPanel
 	        footer.add(new JLabel("Rename Mode:"));
 	        footer.add(modeCombo);
 	        add(footer, BorderLayout.SOUTH);
-
 	        // delega a sottoclasse per costruire controlli specifici
 	        initComponents(contentArea);
 	 }
@@ -90,8 +102,6 @@ public abstract class AbstractPanelContent extends JPanel
 	 */
 	 protected abstract void initComponents(JPanel contentArea);
 
-//    /** Subclasses must implement component initialization */
-//    protected abstract void initComponents();
 
     /** Subclasses must implement how data is updated when inputs change */
     protected abstract void updateView();
@@ -137,8 +147,4 @@ public abstract class AbstractPanelContent extends JPanel
     }
 
 
-	protected void initComponents() {
-		// TODO Auto-generated method stub
-		
-	}
 }

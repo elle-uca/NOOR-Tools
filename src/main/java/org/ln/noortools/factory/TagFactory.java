@@ -12,7 +12,8 @@ import org.ln.noortools.tag.Date;
 import org.ln.noortools.tag.DecH;
 import org.ln.noortools.tag.DecN;
 import org.ln.noortools.tag.DecR;
-import org.ln.noortools.tag.IncH;
+import org.ln.noortools.tag.CreationDate;
+import org.ln.noortools.tag.IncrHex;
 import org.ln.noortools.tag.IncL;
 import org.ln.noortools.tag.IncN;
 import org.ln.noortools.tag.IncR;
@@ -24,6 +25,9 @@ import org.ln.noortools.tag.Subs;
 import org.ln.noortools.tag.Time;
 import org.ln.noortools.tag.Title;
 import org.ln.noortools.tag.Word;
+import org.ln.noortools.tag.WriteAlbum;
+import org.ln.noortools.tag.WriteArtist;
+import org.ln.noortools.tag.WriteTitle;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -68,8 +72,8 @@ public class TagFactory {
      * Incremental hexadecimal tag <IncH>.
      * @param args optional parameters for tag logic
      */
-    public IncH createIncHTag(Object... args) {
-        return new IncH(i18n, args);
+    public IncrHex createIncHTag(Object... args) {
+        return new IncrHex(i18n, args);
     }
  
     /**
@@ -166,19 +170,35 @@ public class TagFactory {
         return new Subs(i18n, args);
     }
     
-    
-    public AbstractTag createAudioAlbumTag(Object... args) {
+    public Album createAudioAlbumTag(Object... args) {
 		return new Album(i18n, args);
 	}
     
-	private AbstractTag createAudioTitleTag(Object... args) {
+    public WriteAlbum createAudioWriteAlbumTag(Object... args) {
+		return new WriteAlbum(i18n, args);
+	}
+    
+	private Title createAudioTitleTag(Object... args) {
 		return new Title(i18n, args);
 	}
 
-	private AbstractTag createAudioArtistTag(Object... args) {
+	private Artist createAudioArtistTag(Object... args) {
 		return new Artist(i18n, args);
 	}
     
+	
+	private WriteTitle createAudioWriteTitleTag(Object... args) {
+		return new WriteTitle(i18n, args);
+	}
+
+	private WriteArtist createAudioWriteArtistTag(Object... args) {
+		return new WriteArtist(i18n, args);
+	}
+	
+	private CreationDate createFileCreationTag(Object... args) {
+		// TODO Auto-generated method stub
+		return new CreationDate(i18n, args);
+	}
     
     public List<AbstractTag> buildAllTags() {
         // Central place to list all tags;
@@ -197,12 +217,16 @@ public class TagFactory {
         list.add(createWordTag(1, 1));
         list.add(createRandLTag(4, 1));
         // Date/Time
-        list.add(createDateTag("dd-MMM-yyyy"));
-        list.add(createTimeTag("HH:mm:ss"));
+        list.add(createDateTag("dd-mmmm-yyyy"));
+        list.add(createTimeTag("hh:nn:ss"));
         // Audio
         list.add(createAudioAlbumTag());
         list.add(createAudioArtistTag());
         list.add(createAudioTitleTag());
+        list.add(createAudioWriteAlbumTag("Name"));
+        list.add(createAudioWriteArtistTag("Name"));
+        list.add(createAudioWriteTitleTag("Name"));
+        list.add(createFileCreationTag());
         // Checksum
         list.add(createSha256Tag(8));
         list.add(createCrc32Tag());
@@ -210,6 +234,10 @@ public class TagFactory {
      
         return list;
     }
+
+
+
+
 
 
 

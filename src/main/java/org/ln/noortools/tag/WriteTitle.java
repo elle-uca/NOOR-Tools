@@ -5,11 +5,11 @@ import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.util.AudioUtil;
 
-public class WriteAlbum extends AbstractAudioTag implements ActionTag {
+public class WriteTitle extends AbstractAudioTag implements ActionTag {
 
-    public WriteAlbum(I18n i18n, Object... arg) {
+    public WriteTitle(I18n i18n, Object... arg) {
         super(i18n, arg);
-        this.tagName = "WriteAlbum";
+        this.tagName = "WriteTitle";
     }
     
     @Override
@@ -24,7 +24,9 @@ public class WriteAlbum extends AbstractAudioTag implements ActionTag {
         	newAdd(newName);
         }
     }
-
+    
+    
+    
     /**
      * Fase di AZIONE REALE (scrive davvero sul file)
      * Chiamata dopo che l’utente ha premuto "Rinomina".
@@ -35,16 +37,14 @@ public class WriteAlbum extends AbstractAudioTag implements ActionTag {
     	if (newName.isEmpty()) newName = "Unknown";
 
     	for (RenamableFile rf : filesCtx) {
-    		AudioUtil.writeTag(rf, FieldKey.ALBUM, newName);
+    		AudioUtil.writeTag(rf, FieldKey.TITLE, newName);
     	}
     }
 
-    
-    
 
 
     @Override
     public String getDescription() {
-        return "Writes a new Album tag into the audio file";
+        return "Writes a new Title tag into the audio file";
     }
 }
