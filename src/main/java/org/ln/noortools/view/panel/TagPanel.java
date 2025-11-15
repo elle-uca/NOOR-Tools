@@ -42,15 +42,15 @@ import net.miginfocom.swing.MigLayout;
 @Scope("prototype")
 public class TagPanel extends AbstractPanelContent {
 
+	private final TagListModel tagListModel; // 👈 injected by Spring
 	private final RenamerService renamerService;
 	private JList<AbstractTag> tagList;
-	private JScrollPane tagListScrollPane;
 	private JLabel tagLabel;
 	private JTextField searchField;
 	private JPanel categoryBar;
 	//private FillOptionsPanel fill;
 	
-	  private final TagListModel tagListModel; // 👈 injected by Spring
+	  
 	    
 	public TagPanel(I18n i18n, RenamerService renamerService, TagListModel tagListModel) {
         super(i18n);
@@ -178,11 +178,14 @@ public class TagPanel extends AbstractPanelContent {
 	    categoryBar.add(createCategoryButton("Date/Time", AbstractTag.TagType.DATE_TIME, "/icons/date-time.png"));
 	    categoryBar.add(createCategoryButton("Audio", AbstractTag.TagType.AUDIO, "/icons/audio.png"));
 	    categoryBar.add(createCategoryButton("Checksum", AbstractTag.TagType.CHECKSUM, "/icons/hashtag.png"));
+	    categoryBar.add(createCategoryButton("FileSystem", AbstractTag.TagType.FILE_SYSTEM, "/icons/os-info.png"));
 
 	    categoryBar.revalidate();
 	    categoryBar.repaint();
 	}
 
+	
+	// Da eliminare
 	private Icon getScaledIcon(String path) {
 			ImageIcon originalIcon = new ImageIcon(getClass().getResource(path)); 
         

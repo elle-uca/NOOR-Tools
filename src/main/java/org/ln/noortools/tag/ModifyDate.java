@@ -1,35 +1,31 @@
 package org.ln.noortools.tag;
 
-import java.nio.file.Files;
-import java.nio.file.attribute.BasicFileAttributes;
-
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
+import org.ln.noortools.util.DateTimeFormatMapper;
+import org.ln.noortools.util.FileMetadataUtil;
 
 public class ModifyDate extends AbstractFsTag {
     
 	public ModifyDate(I18n i18n, Object... arg) {
         super(i18n, arg);
         this.tagName = "ModifyDate";
-        this.type = TagType.DATE_TIME;
     }
 
+	
     @Override
     public void init() {
+    	String pattern = DateTimeFormatMapper.toJavaPattern(
+    			getStringArg(0, "yyyy-mm-dd hh:nn"));
         newClear();
         for (RenamableFile rf : filesCtx) {
-            try {
-                BasicFileAttributes attrs = Files.readAttributes(
-                    rf.getSource().toPath(),
-                    BasicFileAttributes.class
-                );
-                String value = attrs.lastModifiedTime().toString().replace("T", " ").replace("Z","");
-                newAdd(value);
-            } catch (Exception e) {
-                newAdd("");
-            }
+            var dt = FileMetadataUtil.getModificationDate(rf.getSource().toPath());
+            String formatted = DateTimeFormatMapper.format(dt, pattern);
+            newAdd(formatted);
         }
     }
+	
+
 
 	@Override
 	public String getDescription() {

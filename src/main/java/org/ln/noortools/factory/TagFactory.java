@@ -8,16 +8,18 @@ import org.ln.noortools.tag.AbstractTag;
 import org.ln.noortools.tag.Album;
 import org.ln.noortools.tag.Artist;
 import org.ln.noortools.tag.Crc32;
+import org.ln.noortools.tag.CreationDate;
 import org.ln.noortools.tag.Date;
 import org.ln.noortools.tag.DecH;
 import org.ln.noortools.tag.DecN;
 import org.ln.noortools.tag.DecR;
-import org.ln.noortools.tag.CreationDate;
-import org.ln.noortools.tag.IncrHex;
+import org.ln.noortools.tag.FileOwner;
 import org.ln.noortools.tag.IncL;
 import org.ln.noortools.tag.IncN;
 import org.ln.noortools.tag.IncR;
+import org.ln.noortools.tag.IncrHex;
 import org.ln.noortools.tag.Md5;
+import org.ln.noortools.tag.ModifyDate;
 import org.ln.noortools.tag.RandL;
 import org.ln.noortools.tag.RandN;
 import org.ln.noortools.tag.Sha256;
@@ -27,6 +29,9 @@ import org.ln.noortools.tag.Title;
 import org.ln.noortools.tag.Word;
 import org.ln.noortools.tag.WriteAlbum;
 import org.ln.noortools.tag.WriteArtist;
+import org.ln.noortools.tag.WriteCreationDate;
+import org.ln.noortools.tag.WriteModifyDate;
+import org.ln.noortools.tag.WriteOwner;
 import org.ln.noortools.tag.WriteTitle;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -195,9 +200,29 @@ public class TagFactory {
 		return new WriteArtist(i18n, args);
 	}
 	
-	private CreationDate createFileCreationTag(Object... args) {
-		// TODO Auto-generated method stub
+	private CreationDate createCreationDateTag(Object... args) {
 		return new CreationDate(i18n, args);
+	}
+	
+	private ModifyDate createModifyDateTag(Object... args) {
+		return new ModifyDate(i18n, args);
+	}
+	
+	private FileOwner createFileOwnerTag(Object... args) {
+		return new FileOwner(i18n, args);
+	}
+	
+
+    private WriteCreationDate createWriteCreationDateTag(Object... args) {
+		return new WriteCreationDate(i18n, args);
+	}
+	
+	private WriteModifyDate createWriteModifyDateTag(Object... args) {
+		return new WriteModifyDate(i18n, args);
+	}
+	
+	private WriteOwner createWriteOwnerTag(Object... args) {
+		return new WriteOwner(i18n, args);
 	}
     
     public List<AbstractTag> buildAllTags() {
@@ -217,7 +242,7 @@ public class TagFactory {
         list.add(createWordTag(1, 1));
         list.add(createRandLTag(4, 1));
         // Date/Time
-        list.add(createDateTag("dd-mmmm-yyyy"));
+        list.add(createDateTag("yyyy-mm-dd"));
         list.add(createTimeTag("hh:nn:ss"));
         // Audio
         list.add(createAudioAlbumTag());
@@ -226,15 +251,21 @@ public class TagFactory {
         list.add(createAudioWriteAlbumTag("Name"));
         list.add(createAudioWriteArtistTag("Name"));
         list.add(createAudioWriteTitleTag("Name"));
-        list.add(createFileCreationTag());
+        
         // Checksum
         list.add(createSha256Tag(8));
         list.add(createCrc32Tag());
         list.add(createMd5Tag());
+        // FileSystem
+        list.add(createCreationDateTag());
+        list.add(createModifyDateTag());
+        list.add(createFileOwnerTag());
+        list.add(createWriteCreationDateTag());
+        list.add(createWriteModifyDateTag());
+        list.add(createWriteOwnerTag());
      
         return list;
     }
-
 
 
 

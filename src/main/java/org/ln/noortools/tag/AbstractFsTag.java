@@ -2,6 +2,7 @@ package org.ln.noortools.tag;
 
 import java.nio.file.Files;
 import java.nio.file.attribute.FileTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.ln.noortools.i18n.I18n;
@@ -9,9 +10,7 @@ import org.ln.noortools.model.RenamableFile;
 
 public abstract class AbstractFsTag extends AbstractTag implements FileAwareTag {
 
-   
-
-    
+     
 	protected List<RenamableFile> filesCtx = List.of();
 
     protected AbstractFsTag(I18n i18n, Object... args) {
@@ -32,6 +31,11 @@ public abstract class AbstractFsTag extends AbstractTag implements FileAwareTag 
             name = name.substring(0, dot);
         }
         return name.trim();
+    }
+    
+    protected LocalDateTime parseDateTime(String arg) {
+        // TODO: parse formati supportati
+        return LocalDateTime.parse(arg); // placeholder
     }
     
     /** Utility per scrivere FileTime */

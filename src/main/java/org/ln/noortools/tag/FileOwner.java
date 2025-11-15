@@ -10,7 +10,6 @@ public class FileOwner extends AbstractFsTag {
 	public FileOwner(I18n i18n, Object... arg) {
         super(i18n, arg);
         this.tagName = "FileOwner";
-        this.type = TagType.DATE_TIME;
     }
 
     @Override

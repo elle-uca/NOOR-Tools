@@ -5,11 +5,11 @@ import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.util.DateTimeFormatMapper;
 import org.ln.noortools.util.FileMetadataUtil;
 
-public class CreationDate extends AbstractFsTag {
+public class AccessDate extends AbstractFsTag {
     
-	public CreationDate(I18n i18n, Object... arg) {
+	public AccessDate(I18n i18n, Object... arg) {
         super(i18n, arg);
-        this.tagName = "CreationDate";
+        this.tagName = "AccessDate";
     }
 
     @Override
@@ -18,7 +18,7 @@ public class CreationDate extends AbstractFsTag {
     			getStringArg(0, "yyyy-mm-dd hh:nn"));
         newClear();
         for (RenamableFile rf : filesCtx) {
-            var dt = FileMetadataUtil.getCreationDate(rf.getSource().toPath());
+            var dt = FileMetadataUtil.getAccessDate(rf.getSource().toPath());
             String formatted = DateTimeFormatMapper.format(dt, pattern);
             newAdd(formatted);
         }
@@ -26,6 +26,6 @@ public class CreationDate extends AbstractFsTag {
 
 	@Override
 	public String getDescription() {
-		return "Returns file creation timestamp";
+		return "Returns file last access timestamp";
 	}
 }

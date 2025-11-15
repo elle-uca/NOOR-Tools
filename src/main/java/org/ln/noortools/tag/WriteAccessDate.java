@@ -7,24 +7,21 @@ import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.util.FileMetadataUtil;
 
-public class WriteModifyDate extends AbstractFsTag implements ActionTag{
+public class WriteAccessDate extends AbstractFsTag implements ActionTag{
 	
 	private LocalDateTime targetDate;
 
-    public WriteModifyDate(I18n i18n, Object... args) {
+    public WriteAccessDate(I18n i18n, Object... args) {
         super(i18n, args);
-        this.tagName = "WriteModifyDate";
+        this.tagName = "WriteAccessDate";
     }
 
     @Override
     public void init() {
-        // 1) calcoli la data da scrivere (param o default)
         String arg = getStringArg(0, "").trim();
         if (!arg.isEmpty()) {
-            // parse arg → targetDate (gestione errori a parte)
             targetDate = parseDateTime(arg);
         } else {
-            // ad es. default = data attuale, o nulla se vuoi obbligare il param
             targetDate = LocalDateTime.now();
         }
         newClear();
@@ -39,7 +36,7 @@ public class WriteModifyDate extends AbstractFsTag implements ActionTag{
    public void performAction() {
         for (RenamableFile rf : filesCtx) {
             try {
-                FileMetadataUtil.setModificationDate(rf.getSource().toPath(), targetDate);
+                FileMetadataUtil.setAccessDate(rf.getSource().toPath(), targetDate);
                 // e alla fine il tuo AudioFileIO.write(...) / log ecc. se serve
             } catch (IOException e) {
                 System.err.println("[WriteCreationDate] Cannot update creation date: "
@@ -47,7 +44,6 @@ public class WriteModifyDate extends AbstractFsTag implements ActionTag{
             }
         }
     }
-    
     
 //    @Override
 //    public void performAction() {

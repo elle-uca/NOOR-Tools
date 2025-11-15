@@ -26,7 +26,7 @@ public class Date extends AbstractTag {
 
     @Override
     public void init() {
-        String pattern = getStringArg(0, "dd-mmm-yyyy"); // default custom
+        String pattern = getStringArg(0, "yyyy-mm-dd"); // default custom
         String javaPattern = DateTimeFormatMapper.toJavaPattern(pattern);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(javaPattern);

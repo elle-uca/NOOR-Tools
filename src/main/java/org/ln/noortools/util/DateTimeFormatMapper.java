@@ -1,5 +1,6 @@
 package org.ln.noortools.util;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -62,5 +63,18 @@ public class DateTimeFormatMapper {
      */
     public static DateTimeFormatter formatter(String customPattern) {
         return formatter(customPattern, Locale.getDefault());
+    }
+    
+    public static String format(LocalDateTime dt, String pattern) {
+        if (dt == null) return "";
+
+        try {
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern(pattern);
+            return dt.format(fmt);
+        } catch (IllegalArgumentException ex) {
+            // Fallback se il pattern è sbagliato
+            DateTimeFormatter fallback = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            return dt.format(fallback);
+        }
     }
 }
