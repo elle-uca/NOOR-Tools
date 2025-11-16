@@ -73,7 +73,6 @@ public class WriteArtist extends AbstractAudioTag implements ActionTag {
 
 	@Override
 	public String getActionDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Writes a new Artist tag into the audio file";
 	}
 }

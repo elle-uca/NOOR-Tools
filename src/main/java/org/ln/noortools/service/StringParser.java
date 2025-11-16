@@ -14,6 +14,7 @@ import org.ln.noortools.enums.RenameMode;
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.tag.AbstractTag;
+import org.ln.noortools.tag.ActionTag;
 import org.ln.noortools.tag.FileAwareTag;
 
 /**
@@ -66,9 +67,13 @@ public class StringParser {
                 // NEW: passa la lista dei file ai tag che ne hanno bisogno
                 if (tag instanceof FileAwareTag fat) {
                     fat.setFilesContext(files);
-                   
                 }
 
+                if (tag instanceof ActionTag at) {
+                    ActionManager am = SpringContext.getBean(ActionManager.class);
+                    am.registerActionTag(at);
+                }
+                
                 tag.init();
             }
         }

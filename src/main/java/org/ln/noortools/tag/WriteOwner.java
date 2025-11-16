@@ -64,7 +64,6 @@ public class WriteOwner extends AbstractFsTag implements ActionTag{
 
 	@Override
 	public String getActionDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Changes the file owner";
 	}
 }

@@ -32,6 +32,9 @@ public class FileRenameManager {
 
     @Autowired
     private RenamerService renamerService;
+    
+    @Autowired
+    private ActionManager actionManager;
 
     /**
      * Represents a single rename action: (old path → new path).
@@ -86,6 +89,9 @@ public class FileRenameManager {
      * @param files The list of files with their computed destination names
      */
     public void commitRename(List<RenamableFile> files) throws IOException {
+    	
+        // 🔥 1) PRIMA DI QUALSIASI RENAME → esegui azioni con conferma
+        actionManager.executeAllIfConfirmed();
         List<RenameOperation> operations = new ArrayList<>();
 
         try {

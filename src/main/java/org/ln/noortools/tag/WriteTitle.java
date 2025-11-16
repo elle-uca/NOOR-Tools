@@ -50,7 +50,5 @@ public class WriteTitle extends AbstractAudioTag implements ActionTag {
 
 	@Override
 	public String getActionDescription() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		return "Writes a new Title tag into the audio file";	}
 }

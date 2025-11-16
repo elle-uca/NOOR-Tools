@@ -50,7 +50,6 @@ public class WriteAlbum extends AbstractAudioTag implements ActionTag {
 
 	@Override
 	public String getActionDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Writes a new Album tag into the audio file";
 	}
 }
