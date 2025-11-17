@@ -36,7 +36,7 @@ import javax.swing.table.TableRowSorter;
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.service.FileRenameManager;
-import org.ln.noortools.service.RenamerService;
+import org.ln.noortools.service.ruleservice.RenamerService;
 import org.ln.noortools.util.SwingUtil;
 import org.ln.noortools.view.panel.AccordionFactory;
 import org.ln.noortools.view.panel.AccordionPanel;

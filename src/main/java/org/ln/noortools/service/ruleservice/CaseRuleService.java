@@ -1,4 +1,4 @@
-package org.ln.noortools.service;
+package org.ln.noortools.service.ruleservice;
 
 import org.ln.noortools.enums.ModeCase;
 import org.ln.noortools.util.StringCaseUtil;

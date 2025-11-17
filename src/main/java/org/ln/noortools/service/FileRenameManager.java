@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.ln.noortools.enums.FileStatus;
 import org.ln.noortools.model.RenamableFile;
+import org.ln.noortools.service.ruleservice.RenamerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

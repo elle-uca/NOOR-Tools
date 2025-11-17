@@ -19,6 +19,7 @@ public class RenamableFile {
     private FileStatus fileStatus;          // status (OK, KO, etc.)
     private String destinationName;         // new name without path
     private boolean selected = true;        // default = selected
+    private String description;
 
     public RenamableFile(String string) {
 		this(new File(string));
@@ -27,6 +28,7 @@ public class RenamableFile {
     public RenamableFile(File source) {
         this.source = Objects.requireNonNull(source, "source file cannot be null");
         this.destinationName = "";
+        this.description = "";
         this.fileStatus = source.exists() ? FileStatus.OK : FileStatus.KO;
     }
 
@@ -74,7 +76,16 @@ public class RenamableFile {
         this.selected = selected;
     }
 
-    public String getSafeDestinationName() {
+     
+    public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getSafeDestinationName() {
         return (destinationName == null || destinationName.isBlank())
                 ? source.getName()
                 : destinationName;

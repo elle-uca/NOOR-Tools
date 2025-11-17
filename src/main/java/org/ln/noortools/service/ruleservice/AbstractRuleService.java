@@ -1,4 +1,4 @@
-package org.ln.noortools.service;
+package org.ln.noortools.service.ruleservice;
 
 import java.io.File;
 import java.util.ArrayList;

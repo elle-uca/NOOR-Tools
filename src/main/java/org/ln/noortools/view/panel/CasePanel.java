@@ -6,7 +6,7 @@ import javax.swing.JRadioButton;
 
 import org.ln.noortools.enums.ModeCase;
 import org.ln.noortools.i18n.I18n;
-import org.ln.noortools.service.RenamerService;
+import org.ln.noortools.service.ruleservice.RenamerService;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 

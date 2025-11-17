@@ -1,4 +1,4 @@
-package org.ln.noortools.service;
+package org.ln.noortools.service.ruleservice;
 
 import org.ln.noortools.enums.ReplacementType;
 import org.springframework.stereotype.Service;
