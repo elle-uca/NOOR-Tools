@@ -37,10 +37,7 @@ public class RandN extends AbstractTag {
         }
     }
 
-    @Override
-    public String getDescription() {
-        return i18n.get("tag.randn.description") ;
-    }
+
 
     /**
      * Generates a random number with a fixed number of digits.
@@ -63,5 +60,15 @@ public class RandN extends AbstractTag {
         }
 
         return RANDOM.nextInt(upperBound - lowerBound + 1) + lowerBound;
+    }
+    
+    @Override
+    public String getDescription() {
+        return i18n.get("tag.randn.description") ;
+    }
+    
+    @Override
+    public String getActionDescription() {
+        return i18n.get("tag.randn.description") ;
     }
 }

@@ -3,6 +3,7 @@ package org.ln.noortools.tag;
 import org.jaudiotagger.tag.FieldKey;
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
+import org.ln.noortools.service.ActionTag;
 import org.ln.noortools.util.AudioUtil;
 
 public class WriteTitle extends AbstractAudioTag implements ActionTag {

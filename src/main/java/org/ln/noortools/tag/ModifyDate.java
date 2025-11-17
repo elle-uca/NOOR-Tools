@@ -26,9 +26,13 @@ public class ModifyDate extends AbstractFsTag {
     }
 	
 
-
 	@Override
 	public String getDescription() {
+		return "Returns last modified timestamp";
+	}
+
+	@Override
+	public String getActionDescription() {
 		return "Returns last modified timestamp";
 	}
 }

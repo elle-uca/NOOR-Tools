@@ -41,4 +41,9 @@ public class Date extends AbstractTag {
     public String getDescription() {
         return "Current date with custom format (default: yyyy-mm-dd)";
     }
+    
+    @Override
+    public String getActionDescription() {
+        return "Current date with custom format (default: yyyy-mm-dd)";
+    }
 }

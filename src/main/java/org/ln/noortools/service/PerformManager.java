@@ -10,7 +10,7 @@ import org.ln.noortools.view.dialog.ActionLogDialog;
 import org.springframework.stereotype.Component;
 
 /**
- * Manager responsible for collecting and executing ActionTag instances.
+ * Manager responsible for collecting and executing PerformTag instances.
  *
  * Ensures:
  *  - no actions are executed during preview
@@ -20,20 +20,20 @@ import org.springframework.stereotype.Component;
  * Author: Luca Noale
  */
 @Component
-public class ActionManager {
+public class PerformManager {
 
-    private final List<ActionTag> actionTags = new ArrayList<>();
+    private final List<PerformTag> performTags = new ArrayList<>();
 
     /** Called by StringParser each time it creates a tag */
-    public void registerActionTag(ActionTag tag) {
+    public void registerActionTag(PerformTag tag) {
         if (tag != null) {
-            actionTags.add(tag);
+            performTags.add(tag);
         }
     }
 
     /** Clears previously registered actions (called before new preview generation) */
     public void reset() {
-        actionTags.clear();
+        performTags.clear();
     }
 
     /**
@@ -46,7 +46,7 @@ public class ActionManager {
      */
     public void executeAllIfConfirmed() {
 
-        if (actionTags.isEmpty()) {
+        if (performTags.isEmpty()) {
             return; // nothing to do
         }
 
@@ -54,7 +54,7 @@ public class ActionManager {
         StringBuilder sb = new StringBuilder();
         sb.append("The following actions will be executed:\n\n");
 
-        for (ActionTag t : actionTags) {
+        for (PerformTag t : performTags) {
             sb.append("• ").append(t.getActionDescription()).append("\n");
         }
 
@@ -67,16 +67,16 @@ public class ActionManager {
         StringBuilder resultLog = new StringBuilder();
         resultLog.append("EXECUTION REPORT\n\n");
 
-        for (ActionTag t : actionTags) {
-            try {
-                t.performAction();
-                resultLog.append("[OK] ").append(t.getActionDescription()).append("\n");
-            } catch (Exception ex) {
-                resultLog.append("[ERROR] ")
-                         .append(t.getActionDescription())
-                         .append(" → ").append(ex.getMessage()).append("\n");
-            }
-        }
+//        for (PerformTag t : performTags) {
+//            try {
+//                t.performAction();
+//                resultLog.append("[OK] ").append(t.getActionDescription()).append("\n");
+//            } catch (Exception ex) {
+//                resultLog.append("[ERROR] ")
+//                         .append(t.getActionDescription())
+//                         .append(" → ").append(ex.getMessage()).append("\n");
+//            }
+//        }
 
         // 4) Show final log
         SwingUtilities.invokeLater(() ->

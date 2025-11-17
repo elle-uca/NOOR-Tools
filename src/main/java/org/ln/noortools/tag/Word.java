@@ -42,10 +42,7 @@ public class Word extends AbstractTag {
         }
     }
 
-    @Override
-    public String getDescription() {
-        return i18n.get("tag.word.description");
-    }
+
 
     /**
      * Splits a string into substrings using a delimiter regex.
@@ -91,5 +88,16 @@ public class Word extends AbstractTag {
         String regex = "[" + delimiterChars.replaceAll("([\\\\\\]\\[\\-])", "\\\\$1") + "]";
 
         return extractSubstringsByDelimiters(inputString, regex);
+    }
+    
+    
+    @Override
+    public String getDescription() {
+        return i18n.get("tag.word.description");
+    }
+    
+    @Override
+    public String getActionDescription() {
+        return i18n.get("tag.word.description");
     }
 }

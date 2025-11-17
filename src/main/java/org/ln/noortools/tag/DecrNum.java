@@ -17,21 +17,18 @@ import org.ln.noortools.util.NumberSequenceUtil;
  * 
  * Author: Luca Noale
  */
-public class DecN extends AbstractTag {
+public class DecrNum extends AbstractTag {
 
 	/**
 	 * @param arg
 	 */
-	public DecN(I18n i18n, Object...arg) {
+	public DecrNum(I18n i18n, Object...arg) {
 		super(i18n, arg);
-		this.tagName = "DecN";
+		this.tagName = "DecrNum";
 		this.type = TagType.NUMERIC;
 	}
 
-	@Override
-	public String getDescription() {
-		return i18n.get("tag.decn.description");
-	}
+
 
 	@Override
 	public void init() {
@@ -42,5 +39,14 @@ public class DecN extends AbstractTag {
 				start, step, oldSize(), false));
 	}
 
-
+	@Override
+	public String getDescription() {
+		return i18n.get("tag.decn.description");
+	}
+	
+	@Override
+	public String getActionDescription() {
+		return i18n.get("tag.decn.description");
+	}
+	
 }

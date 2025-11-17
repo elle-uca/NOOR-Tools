@@ -10,12 +10,12 @@ import org.ln.noortools.tag.Artist;
 import org.ln.noortools.tag.Crc32;
 import org.ln.noortools.tag.CreationDate;
 import org.ln.noortools.tag.Date;
-import org.ln.noortools.tag.DecH;
-import org.ln.noortools.tag.DecN;
+import org.ln.noortools.tag.DecrHex;
+import org.ln.noortools.tag.DecrNum;
 import org.ln.noortools.tag.DecR;
 import org.ln.noortools.tag.FileOwner;
 import org.ln.noortools.tag.IncL;
-import org.ln.noortools.tag.IncN;
+import org.ln.noortools.tag.IncrNum;
 import org.ln.noortools.tag.IncR;
 import org.ln.noortools.tag.IncrHex;
 import org.ln.noortools.tag.Md5;
@@ -61,16 +61,16 @@ public class TagFactory {
      * Incremental numeric tag <IncN>.
      * @param args optional parameters for tag logic
      */
-    public IncN createIncNTag(Object... args) {
-        return new IncN(i18n, args);
+    public IncrNum createIncNTag(Object... args) {
+        return new IncrNum(i18n, args);
     }
     
     /**
      * Decremental numeric tag <DecN>.
      * @param args optional parameters for tag logic
      */
-    public DecN createDecNTag(Object... args) {
-        return new DecN(i18n, args);
+    public DecrNum createDecNTag(Object... args) {
+        return new DecrNum(i18n, args);
     }
 
     /**
@@ -85,8 +85,8 @@ public class TagFactory {
      * Decremental hexadecimal tag <DecH>.
      * @param args optional parameters for tag logic
      */
-    public DecH createDecHTag(Object... args) {
-        return new DecH(i18n, args);
+    public DecrHex createDecHTag(Object... args) {
+        return new DecrHex(i18n, args);
     }
     
 

@@ -28,4 +28,9 @@ public class AccessDate extends AbstractFsTag {
 	public String getDescription() {
 		return "Returns file last access timestamp";
 	}
+
+	@Override
+	public String getActionDescription() {
+		return "Returns file last access timestamp";
+	}
 }

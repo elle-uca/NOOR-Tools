@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
+import org.ln.noortools.service.FileAwareTag;
 
 public abstract class AbstractAudioTag extends AbstractTag implements FileAwareTag {
 

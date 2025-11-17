@@ -1,10 +1,10 @@
-package org.ln.noortools.tag;
+package org.ln.noortools.service;
 
 /**
  * Tag that performs a side-effect action when the rename is executed
  * (e.g. writing metadata to file system or audio/photo tags).
  */
-public interface ActionTag {
+public interface PerformTag {
 
     /**
      * Human-readable description of the action,
@@ -16,5 +16,5 @@ public interface ActionTag {
      * Executes the action on the given files.
      * This is called only when the user confirms the rename.
      */
-    void performAction();
+    //void performAction();
 }

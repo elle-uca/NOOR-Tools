@@ -34,5 +34,10 @@ public class Md5 extends AbstractChecksumTag {
     public String getDescription() {
         return i18n.get("tag.md5.description");
     }
+    
+    @Override
+    public String getActionDescription() {
+        return i18n.get("tag.md5.description");
+    }
 }
 

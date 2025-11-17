@@ -13,6 +13,7 @@ import java.util.zip.CRC32;
 
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
+import org.ln.noortools.service.FileAwareTag;
 
 public abstract class AbstractChecksumTag extends AbstractTag implements FileAwareTag {
 

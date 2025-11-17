@@ -37,10 +37,7 @@ public class Subs extends AbstractTag {
         }
     }
 
-    @Override
-    public String getDescription() {
-        return "Subs";//i18n.get("tag.subs.description");
-    }
+
 
     /**
      * Safely extracts a substring of the given string.
@@ -67,5 +64,15 @@ public class Subs extends AbstractTag {
         }
 
         return str.substring(start, end);
+    }
+    
+    @Override
+    public String getDescription() {
+        return "Subs";//i18n.get("tag.subs.description");
+    }
+    
+    @Override
+    public String getActionDescription() {
+        return "Subs";//i18n.get("tag.subs.description");
     }
 }

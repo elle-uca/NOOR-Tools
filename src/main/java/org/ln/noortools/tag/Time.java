@@ -40,4 +40,9 @@ public class Time extends AbstractTag {
     public String getDescription() {
         return "Current time with custom format (default: hh:nn:ss)";
     }
+    
+    @Override
+    public String getActionDescription() {
+        return "Current time with custom format (default: hh:nn:ss)";
+    }
 }

@@ -21,4 +21,10 @@ public class TagHeader extends AbstractTag {
 		// TODO Auto-generated method stub
 		return "Header  "+type;
 	}
+	
+	@Override
+	public String getActionDescription() {
+		// TODO Auto-generated method stub
+		return "Header  "+type;
+	}
 }

@@ -33,5 +33,10 @@ public class Genre extends AbstractTag {
     public String getDescription() {
         return i18n.get("tag.genre.description");
     }
+    
+    @Override
+    public String getActionDescription() {
+        return i18n.get("tag.genre.description");
+    }
 }
 

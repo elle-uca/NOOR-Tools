@@ -44,5 +44,11 @@ public class IncR extends AbstractTag {
     public String getDescription() {
         return i18n.get("tag.incr.description");
     }
+    
+
+    @Override
+    public String getActionDescription() {
+        return i18n.get("tag.incr.description");
+    }
 
 }

@@ -14,14 +14,14 @@ import org.ln.noortools.util.NumberSequenceUtil;
  * 
  * Author: Luca Noale
  */
-public class IncN extends AbstractTag {
+public class IncrNum extends AbstractTag {
 	
 	/**
 	 * @param arg
 	 */
-	public IncN(I18n i18n, Object...arg) {
+	public IncrNum(I18n i18n, Object...arg) {
 		super(i18n, arg);
-		this.tagName = "IncN";
+		this.tagName = "IncrNum";
 		this.type = TagType.NUMERIC;
 	}
 
@@ -39,5 +39,8 @@ public class IncN extends AbstractTag {
 		return i18n.get("tag.incn.description");
 	}
 
-
+	@Override
+	public String getActionDescription() {
+		return i18n.get("tag.incn.description");
+	}
 }

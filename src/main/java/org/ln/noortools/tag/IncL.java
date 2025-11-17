@@ -26,12 +26,8 @@ public class IncL extends AbstractTag {
         setNewNames(generateLabelsFrom(toLabel(start), oldSize()));
     }
 
-    @Override
-    public String getDescription() {
-    	i18n.get("tag.incl.description");
-        return "An incremental string label";
-    }
-
+    
+    
     /**
      * Converts a label like "ABJ" into a numeric index.
      * Example: A=1, B=2, ..., Z=26, AA=27, AB=28 ...
@@ -82,5 +78,20 @@ public class IncL extends AbstractTag {
             result.add(label);
         }
         return result;
+    }
+    
+    
+
+    @Override
+    public String getDescription() {
+    	i18n.get("tag.incl.description");
+        return "An incremental string label";
+    }
+
+    
+    @Override
+    public String getActionDescription() {
+    	i18n.get("tag.incl.description");
+        return "An incremental string label";
     }
 }

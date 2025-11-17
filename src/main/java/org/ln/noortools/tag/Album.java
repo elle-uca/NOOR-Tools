@@ -36,5 +36,10 @@ public class Album extends AbstractAudioTag {
     public String getDescription() {
     	return i18n.get("tag.album.description");
     }
+    
+    @Override
+    public String getActionDescription() {
+    	return i18n.get("tag.album.description");
+    }
 }
 

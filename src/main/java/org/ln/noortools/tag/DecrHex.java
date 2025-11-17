@@ -20,11 +20,11 @@ import org.ln.noortools.i18n.I18n;
  *
  * Author: Luca Noale
  */
-public class DecH extends AbstractTag {
+public class DecrHex extends AbstractTag {
 
-    public DecH(I18n i18n, Object... arg) {
+    public DecrHex(I18n i18n, Object... arg) {
         super(i18n, arg);
-        this.tagName = "DecH";
+        this.tagName = "DecrHex";
         this.type = TagType.NUMERIC;
     }
 
@@ -50,6 +50,11 @@ public class DecH extends AbstractTag {
 
     @Override
     public String getDescription() {
+        return i18n.get("tag.dech.description");
+    }
+    
+    @Override
+    public String getActionDescription() {
         return i18n.get("tag.dech.description");
     }
 }

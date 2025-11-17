@@ -35,5 +35,11 @@ public class Sha256 extends AbstractChecksumTag  {
     public String getDescription() {
         return i18n.get("tag.sha256.description");
     }
+    
+    
+    @Override
+    public String getActionDescription() {
+        return i18n.get("tag.sha256.description");
+    }
 }
 

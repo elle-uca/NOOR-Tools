@@ -14,8 +14,6 @@ import org.ln.noortools.enums.RenameMode;
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.tag.AbstractTag;
-import org.ln.noortools.tag.ActionTag;
-import org.ln.noortools.tag.FileAwareTag;
 
 /**
  * Parses a rename template containing tags (e.g., <IncN:1>)
@@ -62,7 +60,7 @@ public class StringParser {
 //                tag.setOldNames(oldNames);
 //                tag.setNewNames(newNames);
             	tag.setOldNames(new ArrayList<>(oldNames));   // opzionale
-            	tag.setNewNames(new ArrayList<>(oldNames));   // copia separata
+            	tag.setNewNames(new ArrayList<>(newNames));   // copia separata
 
                 // NEW: passa la lista dei file ai tag che ne hanno bisogno
                 if (tag instanceof FileAwareTag fat) {

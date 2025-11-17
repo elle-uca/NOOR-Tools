@@ -38,10 +38,7 @@ public class RandL extends AbstractTag {
         }
     }
 
-    @Override
-    public String getDescription() {
-        return i18n.get("tag.randl.description") ;
-    }
+
 
     /**
      * Generates a random uppercase string of the given length.
@@ -61,5 +58,16 @@ public class RandL extends AbstractTag {
             sb.append(c);
         }
         return sb.toString();
+    }
+    
+    @Override
+    public String getDescription() {
+        return i18n.get("tag.randl.description") ;
+    }
+    
+
+    @Override
+    public String getActionDescription() {
+        return i18n.get("tag.randl.description") ;
     }
 }
