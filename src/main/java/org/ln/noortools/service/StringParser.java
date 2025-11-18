@@ -72,6 +72,11 @@ public class StringParser {
                     am.registerActionTag(at);
                 }
                 
+                if (tag instanceof PerformTag pt) {
+                    PerformManager pm = SpringContext.getBean(PerformManager.class);
+                    pm.registerActionTag(pt);
+                    System.out.println("Perform       ");                 }
+                
                 tag.init();
             }
         }

@@ -12,6 +12,7 @@ import java.util.List;
 import org.ln.noortools.enums.FileStatus;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.service.ruleservice.RenamerService;
+import org.ln.noortools.view.dialog.ActionConfirmationDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +38,11 @@ public class FileRenameManager {
     @Autowired
     private ActionManager actionManager;
 
+    
+    @Autowired
+    private PerformManager performManager;
+    
+    
     /**
      * Represents a single rename action: (old path → new path).
      * Stored so that it can be undone later.
@@ -92,33 +98,47 @@ public class FileRenameManager {
     public void commitRename(List<RenamableFile> files) throws IOException {
     	
         // 🔥 1) PRIMA DI QUALSIASI RENAME → esegui azioni con conferma
-        actionManager.executeAllIfConfirmed();
+       // actionManager.executeAllIfConfirmed();
+        
+        performManager.showConfirm();
+        StringBuilder sb = new StringBuilder();
+        sb.append("The following actions will be executed:\n\n");
+//        for (RenamableFile rf : files) {
+//        	 sb.append("+ file ")
+//        	 .append(rf.getSource().getName())
+//        	 .append(" renamed to  ")
+//        	 .append(rf.getDestinationName())
+//        	 .append("\n");
+//        }
+//        
+//        ActionConfirmationDialog.show(sb.toString());
         List<RenameOperation> operations = new ArrayList<>();
 
-        try {
-            for (RenamableFile rf : files) {
-            	
-                if (!rf.isSelected()) continue; // ❗ skip non selected
-            	
-                Path oldPath = rf.getSource().toPath();
-                Path newPath = oldPath.resolveSibling(rf.getDestinationName());
-
-                // If name did not change → skip
-                if (oldPath.equals(newPath)) continue;
-
-                Files.move(oldPath, newPath, StandardCopyOption.REPLACE_EXISTING);
-                rf.setFileStatus(FileStatus.OK);
-                operations.add(new RenameOperation(oldPath, newPath));
-            }
-
-            // Save batch for undo
-            history.push(operations);
-            notifyUndoStateChanged();
-
-        } catch (IOException e) {
-            rollback(operations);
-            throw e;
-        }
+//        try {
+//            for (RenamableFile rf : files) {
+//            	
+//               // if (!rf.isSelected()) continue; // ❗ skip non selected
+//            	
+//                Path oldPath = rf.getSource().toPath();
+//                Path newPath = oldPath.resolveSibling(rf.getDestinationName());
+//
+//                // If name did not change → skip
+//                if (oldPath.equals(newPath)) continue;
+//
+//                Files.move(oldPath, newPath, StandardCopyOption.REPLACE_EXISTING);
+//                rf.setFileStatus(FileStatus.OK);
+//                operations.add(new RenameOperation(oldPath, newPath));
+//            }
+//
+//            performManager.reset();
+//            // Save batch for undo
+//            history.push(operations);
+//            notifyUndoStateChanged();
+//
+//        } catch (IOException e) {
+//            rollback(operations);
+//            throw e;
+//        }
     }
 
 

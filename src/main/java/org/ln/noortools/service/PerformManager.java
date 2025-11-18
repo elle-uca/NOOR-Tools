@@ -36,6 +36,23 @@ public class PerformManager {
         performTags.clear();
     }
 
+    
+    public void showConfirm() {
+        if (performTags.isEmpty()) {
+            return; // nothing to do
+        }
+        
+        // 1) Build confirmation message
+        StringBuilder sb = new StringBuilder();
+        sb.append("The following actions will be executed:\n\n");
+
+        for (PerformTag t : performTags) {
+            sb.append("+ ").append(t.getActionDescription()).append("\n");
+        }
+        
+        ActionConfirmationDialog.show(sb.toString());
+    }
+    
     /**
      * Executes all registered actions with:
      *  1. Confirmation dialog
@@ -67,16 +84,16 @@ public class PerformManager {
         StringBuilder resultLog = new StringBuilder();
         resultLog.append("EXECUTION REPORT\n\n");
 
-//        for (PerformTag t : performTags) {
-//            try {
-//                t.performAction();
-//                resultLog.append("[OK] ").append(t.getActionDescription()).append("\n");
-//            } catch (Exception ex) {
-//                resultLog.append("[ERROR] ")
-//                         .append(t.getActionDescription())
-//                         .append(" → ").append(ex.getMessage()).append("\n");
-//            }
-//        }
+        for (PerformTag t : performTags) {
+            try {
+               // t.performAction();
+                resultLog.append("[OK] ").append(t.getActionDescription()).append("\n");
+            } catch (Exception ex) {
+                resultLog.append("[ERROR] ")
+                         .append(t.getActionDescription())
+                         .append(" → ").append(ex.getMessage()).append("\n");
+            }
+        }
 
         // 4) Show final log
         SwingUtilities.invokeLater(() ->
