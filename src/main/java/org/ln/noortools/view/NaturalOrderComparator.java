@@ -1,8 +1,6 @@
 package org.ln.noortools.view;
 
 import java.util.Comparator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Implements a custom Comparator for Strings that sorts them in "natural order" 
@@ -12,66 +10,60 @@ import java.util.regex.Pattern;
  * Author: Luca Noale
  */
 public class NaturalOrderComparator implements Comparator<String> {
-    
-    /**
-     * Compiled regular expression pattern to find one or more digits (\d+).
-     * This pattern is used to segment the strings into text and numeric parts.
-     */
-    private static final Pattern PATTERN = Pattern.compile("(\\d+)");
 
-    /**
-     * Compares two strings, s1 and s2, for natural order sorting.
-     * * @param s1 The first string to compare.
-     * @param s2 The second string to compare.
-     * @return A negative integer, zero, or a positive integer as the first argument 
-     * is less than, equal to, or greater than the second.
-     */
     @Override
     public int compare(String s1, String s2) {
-        // Handle null values first, treating null as 'less than' any non-null string.
         if (s1 == null) return -1;
         if (s2 == null) return 1;
 
-        // Create matchers to search for the numeric pattern in both strings.
-        Matcher m1 = PATTERN.matcher(s1);
-        Matcher m2 = PATTERN.matcher(s2);
+        int i = 0, j = 0;
+        int len1 = s1.length();
+        int len2 = s2.length();
 
-        // Indices to track where the last matched number ended in each string.
-        int lastEnd1 = 0, lastEnd2 = 0;
-        
-        // Loop as long as numbers can be found in *both* strings.
-        while (m1.find() && m2.find()) {
-            
-            // --- 1. Compare the TEXTUAL part (the segment before the current number) ---
-            
-            // Extract the text segment from the end of the last number to the start of the current number.
-            String text1 = s1.substring(lastEnd1, m1.start());
-            String text2 = s2.substring(lastEnd2, m2.start());
-            
-            // Compare the text segments case-insensitively.
-            int textCompare = text1.compareToIgnoreCase(text2);
-            
-            // If the text parts differ, return the result immediately.
-            if (textCompare != 0) return textCompare;
+        while (i < len1 && j < len2) {
+            char c1 = s1.charAt(i);
+            char c2 = s2.charAt(j);
 
-            // --- 2. Compare the NUMERIC part (the number itself) ---
-            
-            // Convert the matched number string to an integer for numerical comparison.
-            int num1 = Integer.parseInt(m1.group());
-            int num2 = Integer.parseInt(m2.group());
-            
-            // If the numbers differ, return the numerical comparison result. 
-            // This is the core of natural ordering (e.g., 2 < 10).
-            if (num1 != num2) return Integer.compare(num1, num2);
+            // If both chars are digits, compare the whole numeric chunks
+            if (Character.isDigit(c1) && Character.isDigit(c2)) {
+                int start1 = i;
+                int start2 = j;
 
-            // Update the indices to the end of the current numbers for the next iteration.
-            lastEnd1 = m1.end();
-            lastEnd2 = m2.end();
+                while (i < len1 && Character.isDigit(s1.charAt(i))) i++;
+                while (j < len2 && Character.isDigit(s2.charAt(j))) j++;
+
+                String chunk1 = s1.substring(start1, i);
+                String chunk2 = s2.substring(start2, j);
+
+                // Strip leading zeros to compare by length first
+                String trimmed1 = chunk1.replaceFirst("^0+", "");
+                String trimmed2 = chunk2.replaceFirst("^0+", "");
+
+                // If all zeros, keep one zero to avoid empty strings
+                if (trimmed1.isEmpty()) trimmed1 = "0";
+                if (trimmed2.isEmpty()) trimmed2 = "0";
+
+                if (trimmed1.length() != trimmed2.length()) {
+                    return Integer.compare(trimmed1.length(), trimmed2.length());
+                }
+
+                int numCompare = trimmed1.compareTo(trimmed2);
+                if (numCompare != 0) return numCompare;
+
+                // If numeric values are equal but lengths differ (e.g. 01 vs 1), shorter comes first
+                if (chunk1.length() != chunk2.length()) {
+                    return Integer.compare(chunk1.length(), chunk2.length());
+                }
+            } else {
+                // Case-insensitive comparison of non-digit chars
+                int cmp = Character.compare(Character.toLowerCase(c1), Character.toLowerCase(c2));
+                if (cmp != 0) return cmp;
+                i++;
+                j++;
+            }
         }
 
-        // --- 3. Compare the remaining tail of the strings ---
-        // The loop finished because one or both strings ran out of numbers.
-        // Compare the remaining parts of the strings (from the last number's end to the string's end).
-        return s1.substring(lastEnd1).compareToIgnoreCase(s2.substring(lastEnd2));
+        // If we reached the end of one string, the shorter one comes first
+        return Integer.compare(len1 - i, len2 - j);
     }
 }
