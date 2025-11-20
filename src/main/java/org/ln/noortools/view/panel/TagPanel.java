@@ -25,7 +25,6 @@ import javax.swing.event.DocumentListener;
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.service.StringParser;
-import org.ln.noortools.service.StringParser.ParseMode;
 import org.ln.noortools.service.ruleservice.RenamerService;
 import org.ln.noortools.tag.AbstractTag;
 import org.ln.noortools.view.TagListCellRenderer;
@@ -165,8 +164,8 @@ public class TagPanel extends AbstractPanelContent {
 		List<RenamableFile> updated =
 			    StringParser.parse(renameField.getText(), 
 			    		renamerService.getFiles(), 
-			    		getRenameMode(),
-			    		 ParseMode.PREVIEW
+			    		getRenameMode()
+			    		 
 			    		);
 		renamerService.setFiles(updated);
 	}
