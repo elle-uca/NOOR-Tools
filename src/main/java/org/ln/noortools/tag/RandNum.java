@@ -5,7 +5,7 @@ import java.security.SecureRandom;
 import org.ln.noortools.i18n.I18n;
 
 /**
- * Tag <RandN>
+ * Tag <RandNum>
  *
  * Generates random numbers with a fixed number of digits.
  *
@@ -17,13 +17,13 @@ import org.ln.noortools.i18n.I18n;
  *
  * Author: Luca Noale
  */
-public class RandN extends AbstractTag {
+public class RandNum extends AbstractTag {
 
     private static final SecureRandom RANDOM = new SecureRandom();
 
-    public RandN(I18n i18n, Object... arg) {
+    public RandNum(I18n i18n, Object... arg) {
         super(i18n, arg);
-        this.tagName = "RandN";
+        this.tagName = "RandNum";
         this.type = TagType.NUMERIC;
     }
 

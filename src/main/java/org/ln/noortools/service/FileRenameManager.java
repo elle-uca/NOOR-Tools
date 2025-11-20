@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-import org.ln.noortools.enums.FileStatus;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.service.ruleservice.RenamerService;
 import org.ln.noortools.view.dialog.ActionConfirmationDialog;

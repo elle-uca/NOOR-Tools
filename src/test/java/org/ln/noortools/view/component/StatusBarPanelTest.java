@@ -2,9 +2,9 @@ package org.ln.noortools.view.component;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.Locale;
 
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;

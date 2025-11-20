@@ -1,7 +1,7 @@
 package org.ln.noortools.view.panel;
 
-import java.awt.Color;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -23,6 +23,7 @@ import org.ln.noortools.view.ToolbarBuilder;
 
 import net.miginfocom.swing.MigLayout;
 
+@SuppressWarnings("serial")
 public class FileTablePanel extends JPanel {
 
     private final RenamerService renamerService;
@@ -31,7 +32,11 @@ public class FileTablePanel extends JPanel {
     private final JLabel infoLabel;
     private final JLabel fileInfoLabel;
 
-    public FileTablePanel(RenamerService renamerService, I18n i18n, Runnable onFileChooser, Runnable onDirChooser, Runnable onRename) {
+    public FileTablePanel(RenamerService renamerService, 
+    		I18n i18n, 
+    		Runnable onFileChooser, 
+    		Runnable onDirChooser, 
+    		Runnable onRename) {
         super(new BorderLayout());
         this.renamerService = renamerService;
         this.i18n = i18n;

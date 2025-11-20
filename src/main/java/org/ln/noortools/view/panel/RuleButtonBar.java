@@ -14,13 +14,16 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 /**
  * Horizontal bar with shortcuts to add rule panels inside the accordion.
  */
+@SuppressWarnings("serial")
 public class RuleButtonBar extends JPanel {
 
     private final PanelFactory panelFactory;
     private final AccordionPanel accordion;
     private final Runnable statusUpdater;
 
-    public RuleButtonBar(PanelFactory panelFactory, AccordionPanel accordion, Runnable statusUpdater) {
+    public RuleButtonBar(PanelFactory panelFactory, 
+    		AccordionPanel accordion, 
+    		Runnable statusUpdater) {
         super(new FlowLayout(FlowLayout.LEFT, 8, 6));
         this.panelFactory = panelFactory;
         this.accordion = accordion;
@@ -49,12 +52,18 @@ public class RuleButtonBar extends JPanel {
         JButton button = (JButton) e.getSource();
 
         switch (button.getActionCommand()) {
-        case "ADD" -> accordion.addPanel(button.getText(), panelFactory.createAddPanel(accordion));
-        case "REMOVE" -> accordion.addPanel(button.getText(), panelFactory.createRemovePanel(accordion));
-        case "REPLACE" -> accordion.addPanel(button.getText(), panelFactory.createReplacePanel(accordion));
-        case "CASE" -> accordion.addPanel(button.getText(), panelFactory.createCasePanel(accordion));
-        case "NEW" -> accordion.addPanel(button.getText(), panelFactory.createTagPanel(accordion));
-        default -> throw new IllegalArgumentException("Unknown command: " + button.getActionCommand());
+        case "ADD" -> accordion.addPanel(button.getText(), 
+        		panelFactory.createAddPanel(accordion));
+        case "REMOVE" -> accordion.addPanel(button.getText(), 
+        		panelFactory.createRemovePanel(accordion));
+        case "REPLACE" -> accordion.addPanel(button.getText(), 
+        		panelFactory.createReplacePanel(accordion));
+        case "CASE" -> accordion.addPanel(button.getText(), 
+        		panelFactory.createCasePanel(accordion));
+        case "NEW" -> accordion.addPanel(button.getText(), 
+        		panelFactory.createTagPanel(accordion));
+        default -> throw new IllegalArgumentException(
+        		"Unknown command: " + button.getActionCommand());
         }
 
         if (statusUpdater != null) {
