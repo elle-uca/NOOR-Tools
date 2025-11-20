@@ -56,19 +56,18 @@ public class AddPanel extends AbstractPanelContent {
         super( i18n);
         this.renamerService = renamerService;
     }
-    
-	@Override
-	protected void initComponents(JPanel contentArea) {
-        textLabel = new JLabel("Text to add:");
+
+        @Override
+        protected void initComponents(JPanel contentArea) {
         textLabel = new JLabel(i18n.get("addPanel.label.text"));
-        whereLabel = new JLabel("Position:");
+        whereLabel = new JLabel(i18n.get("addPanel.label.where"));
         posSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 999, 1));
         posSpinner.setEnabled(false);
         posSpinner.addChangeListener(this);
 
-        jrbStart = new JRadioButton("Start", true);
-        jrbEnd   = new JRadioButton("End");
-        jrbPos   = new JRadioButton("At position");
+        jrbStart = new JRadioButton(i18n.get("addPanel.radioButton.start"), true);
+        jrbEnd   = new JRadioButton(i18n.get("addPanel.radioButton.end"));
+        jrbPos   = new JRadioButton(i18n.get("addPanel.radioButton.pos"));
 
         group = new ButtonGroup();
         group.add(jrbStart);
@@ -79,7 +78,6 @@ public class AddPanel extends AbstractPanelContent {
         jrbEnd.addActionListener(this);
         jrbPos.addActionListener(this);
 
-        System.out.println("contentArea   "+contentArea);
         contentArea.setLayout(new MigLayout("", "[][][grow]", "20[][][][]"));
         contentArea.add(textLabel,   "cell 0 0 3 1");
         contentArea.add(renameField, "cell 0 1 3 1, growx, wrap");

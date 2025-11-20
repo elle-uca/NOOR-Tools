@@ -12,6 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
+import org.ln.noortools.i18n.I18n;
+
 /**
  * Status bar displayed at the bottom of the {@code MainFrame}. It exposes
  * methods to update the displayed status and to react to theme/undo actions
@@ -19,27 +21,29 @@ import javax.swing.JToggleButton;
  */
 public class StatusBarPanel extends JPanel {
 
+    private final I18n i18n;
     private final JLabel statusBarLabel;
     private final JToggleButton themeToggle;
     private final JButton undoButton;
 
-    public StatusBarPanel(ActionListener themeSwitchListener, ActionListener undoListener, Icon undoIcon) {
+    public StatusBarPanel(I18n i18n, ActionListener themeSwitchListener, ActionListener undoListener, Icon undoIcon) {
         super(new FlowLayout(FlowLayout.LEADING));
+        this.i18n = i18n;
 
-        statusBarLabel = new JLabel("🌞 Light mode — 0 rules");
+        statusBarLabel = new JLabel(i18n.get("status.initial"));
         statusBarLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         statusBarLabel.setFont(statusBarLabel.getFont().deriveFont(Font.PLAIN, 12f));
 
-        themeToggle = new JToggleButton("🌞");
+        themeToggle = new JToggleButton(i18n.get("status.theme.toggle.light"));
         if (themeSwitchListener != null) {
             themeToggle.addActionListener(themeSwitchListener);
         }
 
-        undoButton = new JButton("Undo");
+        undoButton = new JButton(i18n.get("status.undo.label"));
         undoButton.putClientProperty("JButton.buttonType", "toolBarButton");
         undoButton.putClientProperty("JButton.focusedBackground", null);
         undoButton.setIcon(undoIcon);
-        undoButton.setToolTipText("Undo last rename operation");
+        undoButton.setToolTipText(i18n.get("status.undo.tooltip"));
         undoButton.setEnabled(false);
         if (undoListener != null) {
             undoButton.addActionListener(undoListener);
@@ -65,8 +69,12 @@ public class StatusBarPanel extends JPanel {
     }
 
     public void updateThemeSymbol(boolean darkMode) {
-        themeToggle.setText(darkMode ? "🌙" : "🌞");
+        themeToggle.setText(darkMode ? i18n.get("status.theme.toggle.dark") : i18n.get("status.theme.toggle.light"));
         themeToggle.setSelected(darkMode);
+    }
+
+    public void toggleTheme() {
+        themeToggle.doClick();
     }
 
     public JLabel getStatusBarLabel() {

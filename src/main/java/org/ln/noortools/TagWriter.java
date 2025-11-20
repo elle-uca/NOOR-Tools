@@ -10,8 +10,12 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.mp4.Mp4Tag;
 import org.ln.noortools.util.AudioUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TagWriter {
+
+    private static final Logger logger = LoggerFactory.getLogger(TagWriter.class);
 
     public static void writeTags(String filePath, String newArtist, String newAlbum, String newTitle) {
         File audioFile = new File(filePath);
@@ -26,7 +30,7 @@ public class TagWriter {
             
             if (tag == null) {
                 // Se non ci sono tag, ne crea uno nuovo (dipende dal formato del file)
-                System.out.println("Nessun tag esistente trovato. Verrà creato un nuovo tag.");
+                logger.info("No existing tag found. A new tag will be created.");
                 tag = f.createDefaultTag();
             }
 //
@@ -52,11 +56,10 @@ public class TagWriter {
             // 4. Salva le modifiche sul file
             AudioFileIO.write(f);
 
-            System.out.println("Tag scritti e salvati con successo per il file: " + audioFile.getName());
-            
+            logger.info("Tags written and saved successfully for file: {}", audioFile.getName());
+
         } catch (Exception e) {
-            System.err.println("Errore durante la scrittura dei tag: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Error while writing tags", e);
         }
     }
 	
@@ -72,19 +75,18 @@ public class TagWriter {
             
             if (tag == null) {
                 // Se non ci sono tag, ne crea uno nuovo (dipende dal formato del file)
-                System.out.println("Nessun tag esistente trovato. Verrà creato un nuovo tag.");
+                logger.info("No existing tag found. A new tag will be created.");
                 tag = f.createDefaultTag();
             }
 
-            System.out.println("Album    "+tag.getFirst(org.jaudiotagger.tag.FieldKey.ALBUM));
-            System.out.println("Artist    "+tag.getFirst(org.jaudiotagger.tag.FieldKey.ARTIST));
-            System.out.println("Title    "+tag.getFirst(org.jaudiotagger.tag.FieldKey.TITLE));
+            logger.debug("Album    {}", tag.getFirst(org.jaudiotagger.tag.FieldKey.ALBUM));
+            logger.debug("Artist    {}", tag.getFirst(org.jaudiotagger.tag.FieldKey.ARTIST));
+            logger.debug("Title    {}", tag.getFirst(org.jaudiotagger.tag.FieldKey.TITLE));
 
             
             
         } catch (Exception e) {
-            System.err.println("Errore durante la lettura dei tag: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Error while reading tags", e);
         }
     }
     
@@ -101,33 +103,33 @@ public class TagWriter {
             if (audio instanceof MP3File mp3) {
                 newTag = mp3.createDefaultTag();
                 mp3.setTag(newTag);
-                System.out.println("[AudioUtil] Created ID3 tag for MP3");
+                logger.debug("[AudioUtil] Created ID3 tag for MP3");
             }
             else if (ext.endsWith(".flac")) {
-            	newTag = audio.getTagOrCreateAndSetDefault();
+                newTag = audio.getTagOrCreateAndSetDefault();
                 audio.setTag(newTag);
-                System.out.println("[AudioUtil] Created FLAC tag");
+                logger.debug("[AudioUtil] Created FLAC tag");
             }
             else if (ext.endsWith(".mp4") || ext.endsWith(".m4a") || ext.endsWith(".m4b")) {
                 newTag = new Mp4Tag();
                 audio.setTag(newTag);
-                System.out.println("[AudioUtil] Created MP4/M4A tag");
+                logger.debug("[AudioUtil] Created MP4/M4A tag");
             }
             else if (ext.endsWith(".wav")) {
                 newTag = new WavTag();
                 audio.setTag(newTag);
-                System.out.println("[AudioUtil] Created WAV tag");
+                logger.debug("[AudioUtil] Created WAV tag");
             }
             else {
                 // Formato non gestito: niente crash, solo avviso
-                System.err.println("[AudioUtil] Unsupported format for tag creation: " + ext);
+                logger.error("[AudioUtil] Unsupported format for tag creation: {}", ext);
                 return null;
             }
 
             return newTag;
 
         } catch (Exception e) {
-            System.err.println("[AudioUtil] Failed to create tag for " + audio.getFile().getName() + ": " + e.getMessage());
+            logger.error("[AudioUtil] Failed to create tag for {}: {}", audio.getFile().getName(), e.getMessage());
             return null;
         }
     }

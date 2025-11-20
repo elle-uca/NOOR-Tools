@@ -92,8 +92,8 @@ public class TagPanel extends AbstractPanelContent {
 
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		// 🔹 Etichetta
-		tagLabel = new JLabel("Available Tags");
+                // 🔹 Etichetta
+                tagLabel = new JLabel(i18n.get("tagPanel.availableTags"));
 		tagLabel.setFont(tagLabel.getFont().deriveFont(13f));
 
 		// 🔹 Campo di testo ereditato da AbstractPanelContent
@@ -175,13 +175,13 @@ public class TagPanel extends AbstractPanelContent {
 	private void buildCategoryButtons() {
 		categoryBar.removeAll();
 
-		categoryBar.add(createCategoryButton(" All ", null, "/icons/infinite.png"));
-		categoryBar.add(createCategoryButton("Numeric", AbstractTag.TagType.NUMERIC, "/icons/numeri.png"));
-		categoryBar.add(createCategoryButton("String", AbstractTag.TagType.STRING, "/icons/string.png"));
-		categoryBar.add(createCategoryButton("Date/Time", AbstractTag.TagType.DATE_TIME, "/icons/date-time.png"));
-		categoryBar.add(createCategoryButton("Audio", AbstractTag.TagType.AUDIO, "/icons/audio.png"));
-		categoryBar.add(createCategoryButton("Checksum", AbstractTag.TagType.CHECKSUM, "/icons/hashtag.png"));
-		categoryBar.add(createCategoryButton("FileSystem", AbstractTag.TagType.FILE_SYSTEM, "/icons/os-info.png"));
+                categoryBar.add(createCategoryButton(i18n.get("tagPanel.category.all"), null, "/icons/infinite.png"));
+                categoryBar.add(createCategoryButton(i18n.get("tagPanel.category.numeric"), AbstractTag.TagType.NUMERIC, "/icons/numeri.png"));
+                categoryBar.add(createCategoryButton(i18n.get("tagPanel.category.string"), AbstractTag.TagType.STRING, "/icons/string.png"));
+                categoryBar.add(createCategoryButton(i18n.get("tagPanel.category.datetime"), AbstractTag.TagType.DATE_TIME, "/icons/date-time.png"));
+                categoryBar.add(createCategoryButton(i18n.get("tagPanel.category.audio"), AbstractTag.TagType.AUDIO, "/icons/audio.png"));
+                categoryBar.add(createCategoryButton(i18n.get("tagPanel.category.checksum"), AbstractTag.TagType.CHECKSUM, "/icons/hashtag.png"));
+                categoryBar.add(createCategoryButton(i18n.get("tagPanel.category.filesystem"), AbstractTag.TagType.FILE_SYSTEM, "/icons/os-info.png"));
 
 		categoryBar.revalidate();
 		categoryBar.repaint();

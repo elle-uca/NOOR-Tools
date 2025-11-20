@@ -16,12 +16,16 @@ import org.ln.noortools.enums.FileStatus;
 import org.ln.noortools.enums.RenameMode;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.service.RenamerServiceListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RenamerService {
 
-     
+
+    private static final Logger logger = LoggerFactory.getLogger(RenamerService.class);
+
     private final List<RenamableFile> files = new ArrayList<>();
     private final List<RenamerServiceListener> listeners = new ArrayList<>();
     private final Map<String, RuleService> ruleRegistry = new HashMap<>();
@@ -33,7 +37,7 @@ public class RenamerService {
                     .replace("RuleService", "")
                     .toLowerCase();
             ruleRegistry.put(key, service);
-            System.out.println("Registered rule: " + key + " -> " + service.getClass().getName());
+            logger.info("Registered rule: {} -> {}", key, service.getClass().getName());
         }
        // this.panelFactory = panelFactory;
     }

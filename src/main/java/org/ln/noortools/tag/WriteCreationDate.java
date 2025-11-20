@@ -7,10 +7,14 @@ import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.service.ActionTag;
 import org.ln.noortools.util.FileMetadataUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WriteCreationDate extends AbstractFsTag implements ActionTag{
-	
-	private LocalDateTime targetDate;
+
+        private static final Logger logger = LoggerFactory.getLogger(WriteCreationDate.class);
+
+        private LocalDateTime targetDate;
 
     public WriteCreationDate(I18n i18n, Object... args) {
         super(i18n, args);
@@ -41,8 +45,7 @@ public class WriteCreationDate extends AbstractFsTag implements ActionTag{
                 FileMetadataUtil.setCreationDate(rf.getSource().toPath(), targetDate);
                 // e alla fine il tuo AudioFileIO.write(...) / log ecc. se serve
             } catch (IOException e) {
-                System.err.println("[WriteCreationDate] Cannot update creation date: "
-                        + rf.getSource() + " → " + e.getMessage());
+                logger.error("[WriteCreationDate] Cannot update creation date: {}", rf.getSource(), e);
             }
         }
     }

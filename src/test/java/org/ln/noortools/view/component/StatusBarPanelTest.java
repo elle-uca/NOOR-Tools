@@ -4,12 +4,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.Locale;
 
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.ln.noortools.i18n.I18n;
+import org.springframework.context.support.StaticMessageSource;
 
 class StatusBarPanelTest {
 
@@ -24,8 +27,17 @@ class StatusBarPanelTest {
         AtomicBoolean themeTriggered = new AtomicBoolean(false);
         AtomicReference<StatusBarPanel> panelRef = new AtomicReference<>();
 
+        StaticMessageSource messageSource = new StaticMessageSource();
+        messageSource.addMessage("status.initial", Locale.getDefault(), "initial");
+        messageSource.addMessage("status.theme.toggle.light", Locale.getDefault(), "🌞");
+        messageSource.addMessage("status.theme.toggle.dark", Locale.getDefault(), "🌙");
+        messageSource.addMessage("status.undo.label", Locale.getDefault(), "Undo");
+        messageSource.addMessage("status.undo.tooltip", Locale.getDefault(), "Undo tooltip");
+        I18n i18n = new I18n(messageSource);
+
         SwingUtilities.invokeAndWait(() -> panelRef.set(
                 new StatusBarPanel(
+                        i18n,
                         e -> themeTriggered.set(true),
                         e -> undoTriggered.set(true),
                         new ImageIcon())));
