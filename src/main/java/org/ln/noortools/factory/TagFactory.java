@@ -1,7 +1,11 @@
 package org.ln.noortools.factory;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.tag.AbstractTag;
@@ -15,9 +19,9 @@ import org.ln.noortools.tag.DecrNum;
 import org.ln.noortools.tag.DecR;
 import org.ln.noortools.tag.FileOwner;
 import org.ln.noortools.tag.IncL;
+import org.ln.noortools.tag.IncrHex;
 import org.ln.noortools.tag.IncrNum;
 import org.ln.noortools.tag.IncR;
-import org.ln.noortools.tag.IncrHex;
 import org.ln.noortools.tag.Md5;
 import org.ln.noortools.tag.ModifyDate;
 import org.ln.noortools.tag.RandL;
@@ -38,296 +42,92 @@ import org.springframework.stereotype.Component;
 
 /**
  * Factory for creating tag instances used by NOOR Tools.
- * 
- * This class provides Spring-managed creation of Tag objects
- * ensuring that each tag receives the {@link I18n} dependency
- * and any required initialization parameters.
  *
- * Author: Luca Noale
+ * Tags are registered dynamically in a central registry instead of being
+ * exposed via dozens of near-identical creator methods. This makes it easier
+ * to add new tags and to iterate over all available ones when populating the
+ * UI catalogue.
  */
 @Component
 @Scope("singleton")
 public class TagFactory {
 
     private final I18n i18n;
+    private final Map<String, TagRegistration> registry = new LinkedHashMap<>();
 
     public TagFactory(I18n i18n) {
         this.i18n = i18n;
+        registerDefaults();
     }
 
-    // --- Example tags ---
-
-    /**
-     * Incremental numeric tag <IncN>.
-     * @param args optional parameters for tag logic
-     */
-    public IncrNum createIncNTag(Object... args) {
-        return new IncrNum(i18n, args);
-    }
-    
-    /**
-     * Decremental numeric tag <DecN>.
-     * @param args optional parameters for tag logic
-     */
-    public DecrNum createDecNTag(Object... args) {
-        return new DecrNum(i18n, args);
+    /** Creates a tag instance by its canonical name (e.g., "IncN"). */
+    public AbstractTag create(String tagName, Object... args) {
+        TagRegistration registration = registry.get(tagName);
+        if (registration == null) {
+            return null;
+        }
+        return registration.factory.apply(safeArgs(args));
     }
 
-    /**
-     * Incremental hexadecimal tag <IncH>.
-     * @param args optional parameters for tag logic
-     */
-    public IncrHex createIncHTag(Object... args) {
-        return new IncrHex(i18n, args);
-    }
- 
-    /**
-     * Decremental hexadecimal tag <DecH>.
-     * @param args optional parameters for tag logic
-     */
-    public DecrHex createDecHTag(Object... args) {
-        return new DecrHex(i18n, args);
-    }
-    
-
-     /**
-     * Incremental Roman numeric tag <IncR>.
-     * @param args optional parameters for tag logic
-     */
-    public IncR createIncRTag(Object... args) {
-        return new IncR(i18n, args);
-    }
-    
-    /**
-     * Decremental Roman tag <DecR>.
-     * @param args optional parameters for tag logic
-     */
-    public DecR createDecRTag(Object... args) {
-        return new DecR(i18n, args);
-    }
-
-    /**
-     * Incremental numeric tag <IncN>.
-     * @param args optional parameters for tag logic
-     */
-    public IncL createIncLTag(Object... args) {
-        return new IncL(i18n, args);
-    }
-    
-    /**
-     * Random number generator tag <Rnd>.
-     * @param args optional parameters for random length, charset, etc.
-     */
-    public RandN createRandNTag(Object... args) {
-        return new RandN(i18n, args);
-    }
-
-    /**
-     * Random string generator tag <Rnd>.
-     * @param args optional parameters for random length, charset, etc.
-     */
-    public RandL createRandLTag(Object... args) {
-        return new RandL(i18n, args);
-    }
-    
-    /**
-     * Time-based tag <Time>.
-     * @param args optional format or parameters
-     */
-    public Time createTimeTag(Object... args) {
-        return new Time(i18n, args);
-    }
-    
-    /**
-     * Date-based tag <Date>.
-     * @param args optional format or parameters
-     */
-    public Date createDateTag(Object... args) {
-        return new Date(i18n, args);
-    }
-    
-    /**
-     * Date-based tag <Date>.
-     * @param args optional format or parameters
-     */
-    public Word createWordTag(Object... args) {
-        return new Word(i18n, args);
-    }
-    
-    /**
-     * Date-based tag <Date>.
-     * @param args optional format or parameters
-     */
-    public Md5 createMd5Tag(Object... args) {
-        return new Md5(i18n, args);
-    }
-    
-    
-    public Crc32 createCrc32Tag(Object... args) {
-        return new Crc32(i18n, args);
-    }
-    
-    public Sha256 createSha256Tag(Object... args) {
-        return new Sha256(i18n, args);
-    }
-    
-    public Subs createSubsTag(Object... args) {
-        return new Subs(i18n, args);
-    }
-    
-    public Album createAudioAlbumTag(Object... args) {
-		return new Album(i18n, args);
-	}
-    
-    public WriteAlbum createAudioWriteAlbumTag(Object... args) {
-		return new WriteAlbum(i18n, args);
-	}
-    
-	private Title createAudioTitleTag(Object... args) {
-		return new Title(i18n, args);
-	}
-
-	private Artist createAudioArtistTag(Object... args) {
-		return new Artist(i18n, args);
-	}
-    
-	
-	private WriteTitle createAudioWriteTitleTag(Object... args) {
-		return new WriteTitle(i18n, args);
-	}
-
-	private WriteArtist createAudioWriteArtistTag(Object... args) {
-		return new WriteArtist(i18n, args);
-	}
-	
-	private CreationDate createCreationDateTag(Object... args) {
-		return new CreationDate(i18n, args);
-	}
-	
-	private ModifyDate createModifyDateTag(Object... args) {
-		return new ModifyDate(i18n, args);
-	}
-	
-	private FileOwner createFileOwnerTag(Object... args) {
-		return new FileOwner(i18n, args);
-	}
-	
-
-    private WriteCreationDate createWriteCreationDateTag(Object... args) {
-		return new WriteCreationDate(i18n, args);
-	}
-	
-	private WriteModifyDate createWriteModifyDateTag(Object... args) {
-		return new WriteModifyDate(i18n, args);
-	}
-	
-	private WriteOwner createWriteOwnerTag(Object... args) {
-		return new WriteOwner(i18n, args);
-	}
-    
+    /** Returns a preview instance of each registered tag. */
     public List<AbstractTag> buildAllTags() {
-        // Central place to list all tags;
         List<AbstractTag> list = new ArrayList<>();
-        // Numeric
-        list.add(createIncNTag(1, 1));
-        list.add(createDecNTag(1, 1));
-        list.add(createIncHTag(1, 1));
-        list.add(createDecHTag(1, 1));
-         list.add(createIncRTag(1, 1));
-        list.add(createDecRTag(1, 1));
-        list.add(createRandNTag(4, 1));
-        // String
-        list.add(createIncLTag(1, 1));
-        list.add(createSubsTag(1, 1));
-        list.add(createWordTag(1, 1));
-        list.add(createRandLTag(4, 1));
-        // Date/Time
-        list.add(createDateTag("yyyy-mm-dd"));
-        list.add(createTimeTag("hh:nn:ss"));
-        // Audio
-        list.add(createAudioAlbumTag());
-        list.add(createAudioArtistTag());
-        list.add(createAudioTitleTag());
-        list.add(createAudioWriteAlbumTag("Name"));
-        list.add(createAudioWriteArtistTag("Name"));
-        list.add(createAudioWriteTitleTag("Name"));
-        
-        // Checksum
-        list.add(createSha256Tag(8));
-        list.add(createCrc32Tag());
-        list.add(createMd5Tag());
-        // FileSystem
-        list.add(createCreationDateTag());
-        list.add(createModifyDateTag());
-        list.add(createFileOwnerTag());
-        list.add(createWriteCreationDateTag());
-        list.add(createWriteModifyDateTag());
-        list.add(createWriteOwnerTag());
-     
+        for (TagRegistration registration : registry.values()) {
+            list.add(registration.factory.apply(safeArgs(registration.previewArgs)));
+        }
         return list;
     }
 
+    private void registerDefaults() {
+        // Numeric
+        register("IncN", args -> new IncrNum(i18n, args), new Object[]{1, 1});
+        register("DecN", args -> new DecrNum(i18n, args), new Object[]{1, 1});
+        register("IncH", args -> new IncrHex(i18n, args), new Object[]{1, 1});
+        register("DecH", args -> new DecrHex(i18n, args), new Object[]{1, 1});
+        register("IncR", args -> new IncR(i18n, args), new Object[]{1, 1});
+        register("DecR", args -> new DecR(i18n, args), new Object[]{1, 1});
+        register("IncL", args -> new IncL(i18n, args), new Object[]{1, 1});
+        register("RandN", args -> new RandN(i18n, args), new Object[]{4, 1});
 
+        // String
+        register("Subs", args -> new Subs(i18n, args), new Object[]{1, 1});
+        register("Word", args -> new Word(i18n, args), new Object[]{1, 1});
+        register("RandL", args -> new RandL(i18n, args), new Object[]{4, 1});
 
+        // Date/Time
+        register("Date", args -> new Date(i18n, args), new Object[]{"yyyy-mm-dd"});
+        register("Time", args -> new Time(i18n, args), new Object[]{"hh:nn:ss"});
 
+        // Audio
+        register("Album", args -> new Album(i18n, args), new Object[0]);
+        register("Artist", args -> new Artist(i18n, args), new Object[0]);
+        register("Title", args -> new Title(i18n, args), new Object[0]);
+        register("WriteAlbum", args -> new WriteAlbum(i18n, args), new Object[]{"Name"});
+        register("WriteArtist", args -> new WriteArtist(i18n, args), new Object[]{"Name"});
+        register("WriteTitle", args -> new WriteTitle(i18n, args), new Object[]{"Name"});
 
+        // Checksum
+        register("Sha256", args -> new Sha256(i18n, args), new Object[]{8});
+        register("Crc32", args -> new Crc32(i18n, args), new Object[0]);
+        register("Md5", args -> new Md5(i18n, args), new Object[0]);
 
+        // FileSystem
+        register("CreationDate", args -> new CreationDate(i18n, args), new Object[0]);
+        register("ModifyDate", args -> new ModifyDate(i18n, args), new Object[0]);
+        register("FileOwner", args -> new FileOwner(i18n, args), new Object[0]);
+        register("WriteCreationDate", args -> new WriteCreationDate(i18n, args), new Object[0]);
+        register("WriteModifyDate", args -> new WriteModifyDate(i18n, args), new Object[0]);
+        register("WriteOwner", args -> new WriteOwner(i18n, args), new Object[0]);
+    }
 
+    private void register(String name, Function<Object[], AbstractTag> factory, Object[] previewArgs) {
+        registry.put(name, new TagRegistration(factory, safeArgs(previewArgs)));
+    }
+
+    private Object[] safeArgs(Object[] args) {
+        Object[] nonNull = Objects.requireNonNullElse(args, new Object[0]);
+        return nonNull.clone();
+    }
+
+    private record TagRegistration(Function<Object[], AbstractTag> factory, Object[] previewArgs) { }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-//package org.ln.noortools.factory;
-//
-//import org.ln.noortools.tag.AbstractTag;
-//
-//public class TagFactory {
-//
-//    private TagFactory() {
-//        // utility class, no instances
-//    }
-//
-//    /**
-//     * Crea dinamicamente un tag a partire dalla classe.
-//     * Supporta sia costruttori con Object... args che costruttori vuoti.
-//     */
-//    public static AbstractTag create(Class<? extends AbstractTag> clazz, Object... args) {
-//        try {
-//            // ✅ preferisce il costruttore con varargs
-//            return clazz.getConstructor(Object[].class).newInstance((Object) args);
-//        } catch (NoSuchMethodException e) {
-//            try {
-//                // fallback: costruttore vuoto + setArgs()
-//                AbstractTag tag = clazz.getDeclaredConstructor().newInstance();
-//                tag.setArgs(args);
-//                return tag;
-//            } catch (Exception ex) {
-//                throw new RuntimeException("Failed to create tag via no-arg constructor: " + clazz.getName(), ex);
-//            }
-//        } catch (Exception e) {
-//            throw new RuntimeException("Failed to create tag: " + clazz.getName(), e);
-//        }
-//    }
-//}
