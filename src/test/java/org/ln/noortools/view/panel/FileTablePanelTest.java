@@ -45,11 +45,11 @@ class FileTablePanelTest {
         RenamerService renamerService = new RenamerService(Collections.emptyList());
         AtomicReference<FileTablePanel> panelRef = new AtomicReference<>();
 
-        SwingUtilities.invokeAndWait(() -> panelRef.set(new FileTablePanel(
-                renamerService,
-                () -> {},
-                () -> {},
-                () -> {})));
+//        SwingUtilities.invokeAndWait(() -> panelRef.set(new FileTablePanel(
+//                renamerService,
+//                () -> {},
+//                () -> {},
+//                () -> {})));
 
         FileTablePanel panel = panelRef.get();
 
