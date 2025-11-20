@@ -68,13 +68,13 @@ public class TagFactory {
 
     private void registerDefaults() {
         // Numeric
-        register("IncN", args -> new IncrNum(i18n, args), new Object[]{1, 1});
-        register("DecN", args -> new DecrNum(i18n, args), new Object[]{1, 1});
-        register("IncH", args -> new IncrHex(i18n, args), new Object[]{1, 1});
-        register("DecH", args -> new DecrHex(i18n, args), new Object[]{1, 1});
+        register("IncrNum", args -> new IncrNum(i18n, args), new Object[]{1, 1});
+        register("DecrNum", args -> new DecrNum(i18n, args), new Object[]{1, 1});
+        register("IncrHex", args -> new IncrHex(i18n, args), new Object[]{1, 1});
+        register("DecrHex", args -> new DecrHex(i18n, args), new Object[]{1, 1});
         register("IncR", args -> new IncR(i18n, args), new Object[]{1, 1});
         register("DecR", args -> new DecR(i18n, args), new Object[]{1, 1});
-        register("IncL", args -> new IncrLet(i18n, args), new Object[]{1, 1});
+        register("IncrLet", args -> new IncrLet(i18n, args), new Object[]{1, 1});
         register("RandN", args -> new RandNum(i18n, args), new Object[]{4, 1});
 
         // String
