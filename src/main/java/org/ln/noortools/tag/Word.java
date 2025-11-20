@@ -1,0 +1,103 @@
+package org.ln.noortools.tag;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.ln.noortools.i18n.I18n;
+
+/**
+ * Tag <Word>
+ * Extracts a word/segment from a string,
+ * split by delimiter characters.
+ *
+ * Example:
+ *   input: "file-name_test"
+ *   delimiters: ".-_()[]"
+ *   result: ["file", "name", "test"]
+ *
+ * Author: Luca Noale
+ */
+public class Word extends AbstractTag {
+
+    private static final String DELIMITERS = ".-_()[]";
+
+    public Word(I18n i18n, Object... arg) {
+        super(i18n, arg);
+        this.tagName = "Word";
+        this.type = TagType.STRING;
+    }
+
+    @Override
+    public void init() {
+        start = Math.max(1, getIntArg(0, 1)); // ensure start >= 1
+        newClear();
+
+        for (String string : getOldNames()) {
+            List<String> sub = extractSubstringsFromChars(string, DELIMITERS);
+            if (!sub.isEmpty() && start <= sub.size()) {
+                getNewNames().add(sub.get(start - 1));
+            } else {
+                getNewNames().add(""); // fallback if no segment available
+            }
+        }
+    }
+
+
+
+    /**
+     * Splits a string into substrings using a delimiter regex.
+     *
+     * @param inputString     the input string
+     * @param delimitersRegex regex for delimiters (e.g., "[._\\-]")
+     * @return a list of non-empty substrings
+     */
+    public static List<String> extractSubstringsByDelimiters(String inputString, String delimitersRegex) {
+        List<String> substrings = new ArrayList<>();
+        if (inputString == null || inputString.isEmpty()
+                || delimitersRegex == null || delimitersRegex.isEmpty()) {
+            return substrings;
+        }
+
+        String[] parts = inputString.split(delimitersRegex);
+        for (String part : parts) {
+            if (!part.isEmpty()) {
+                substrings.add(part);
+            }
+        }
+        return substrings;
+    }
+
+    /**
+     * Splits a string into substrings using the provided delimiter characters.
+     *
+     * @param inputString     the input string
+     * @param delimiterChars  string containing all characters to treat as delimiters
+     *                        (e.g., "-_()[]" will split by -, _, (, ), [ and ])
+     * @return a list of substrings
+     */
+    public static List<String> extractSubstringsFromChars(String inputString, String delimiterChars) {
+        if (delimiterChars == null || delimiterChars.isEmpty()) {
+            List<String> result = new ArrayList<>();
+            if (inputString != null && !inputString.isEmpty()) {
+                result.add(inputString);
+            }
+            return result;
+        }
+
+        // Build a regex class like:  "[.\\-_()\\[\\]]"
+        String regex = "[" + delimiterChars.replaceAll("([\\\\\\]\\[\\-])", "\\\\$1") + "]";
+
+        return extractSubstringsByDelimiters(inputString, regex);
+    }
+    
+    
+    @Override
+    public String getDescription() {
+        return i18n.get("tag.word.description");
+    }
+    
+    @Override
+    public String getActionDescription() {
+        return i18n.get("tag.word.description");
+    }
+}
