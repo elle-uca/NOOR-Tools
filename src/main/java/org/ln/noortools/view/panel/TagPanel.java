@@ -25,7 +25,6 @@ import javax.swing.event.DocumentListener;
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.service.StringParser;
-import org.ln.noortools.service.StringParser.ParseMode;
 import org.ln.noortools.service.ruleservice.RenamerService;
 import org.ln.noortools.tag.AbstractTag;
 import org.ln.noortools.view.TagListCellRenderer;
@@ -43,8 +42,9 @@ import net.miginfocom.swing.MigLayout;
 @Scope("prototype")
 public class TagPanel extends AbstractPanelContent {
 
-	private final TagListModel tagListModel; // 👈 injected by Spring
-	private final RenamerService renamerService;
+        private final TagListModel tagListModel; // 👈 injected by Spring
+        private final RenamerService renamerService;
+        private final StringParser stringParser;
 	private JList<AbstractTag> tagList;
 	private JLabel tagLabel;
 	private JTextField searchField;
@@ -53,10 +53,11 @@ public class TagPanel extends AbstractPanelContent {
 	
 	  
 	    
-	public TagPanel(I18n i18n, RenamerService renamerService, TagListModel tagListModel) {
+        public TagPanel(I18n i18n, RenamerService renamerService, TagListModel tagListModel, StringParser stringParser) {
         super(i18n);
         this.renamerService = renamerService;
         this.tagListModel = tagListModel; // ✅ use injected model
+        this.stringParser = stringParser;
         
 	}
 	    
@@ -158,18 +159,16 @@ public class TagPanel extends AbstractPanelContent {
 	void updateView() {
 		
 	    // ✅ Non fare nulla se il testo non è ancora valido
-	    if (!StringParser.isParsable(renameField.getText())) {
-	        return;
-	    }
-		
-		List<RenamableFile> updated =
-			    StringParser.parse(renameField.getText(), 
-			    		renamerService.getFiles(), 
-			    		getRenameMode(),
-			    		 ParseMode.PREVIEW
-			    		);
-		renamerService.setFiles(updated);
-	}
+            if (!StringParser.isParsable(renameField.getText())) {
+                return;
+            }
+
+                List<RenamableFile> updated =
+                            stringParser.parse(renameField.getText(),
+                                        renamerService.getFiles(),
+                                        getRenameMode());
+                renamerService.setFiles(updated);
+        }
 
 
 	
