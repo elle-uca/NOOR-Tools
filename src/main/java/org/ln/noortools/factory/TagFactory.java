@@ -15,7 +15,7 @@ import org.ln.noortools.tag.Date;
 import org.ln.noortools.tag.DecR;
 import org.ln.noortools.tag.DecrHex;
 import org.ln.noortools.tag.DecrNum;
-import org.ln.noortools.tag.IncL;
+import org.ln.noortools.tag.IncrLet;
 import org.ln.noortools.tag.IncR;
 import org.ln.noortools.tag.IncrHex;
 import org.ln.noortools.tag.IncrNum;
@@ -74,7 +74,7 @@ public class TagFactory {
         register("DecH", args -> new DecrHex(i18n, args), new Object[]{1, 1});
         register("IncR", args -> new IncR(i18n, args), new Object[]{1, 1});
         register("DecR", args -> new DecR(i18n, args), new Object[]{1, 1});
-        register("IncL", args -> new IncL(i18n, args), new Object[]{1, 1});
+        register("IncL", args -> new IncrLet(i18n, args), new Object[]{1, 1});
         register("RandN", args -> new RandNum(i18n, args), new Object[]{4, 1});
 
         // String
