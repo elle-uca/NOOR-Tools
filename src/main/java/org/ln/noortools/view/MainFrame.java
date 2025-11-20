@@ -46,31 +46,30 @@ import com.formdev.flatlaf.FlatLightLaf;
 @Component
 public class MainFrame extends JFrame {
 
-        private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
+	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
-        private final I18n i18n;
-        private final RenamerService renamerService;
-        private final PanelFactory panelFactory;
-        private final RenameController renameController;
+	private final I18n i18n;
+	private final RenamerService renamerService;
+	private final PanelFactory panelFactory;
+	private final RenameController renameController;
 
 	private StatusBarPanel statusBarPanel;
-	private JTable table;
 	private AccordionPanel accordion;
 
 
 
-        public MainFrame(I18n i18n,
-                        RenamerService renamerService,
-                        PanelFactory panelFactory,
-                        AccordionFactory accordionFactory,
-                        ConfigurableApplicationContext context,
-                        RenameController renameController) {
-                super(i18n.get("main.title"));
-                this.i18n = i18n;
-                this.renamerService = renamerService;
-                this.panelFactory = panelFactory;
-                this.accordion = accordionFactory.createAccordion();
-                this.renameController = renameController;
+	public MainFrame(I18n i18n,
+			RenamerService renamerService,
+			PanelFactory panelFactory,
+			AccordionFactory accordionFactory,
+			ConfigurableApplicationContext context,
+			RenameController renameController) {
+		super(i18n.get("main.title"));
+		this.i18n = i18n;
+		this.renamerService = renamerService;
+		this.panelFactory = panelFactory;
+		this.accordion = accordionFactory.createAccordion();
+		this.renameController = renameController;
 
 		// ✅ Avvio in Light mode
 		FlatLightLaf.setup();
@@ -95,13 +94,13 @@ public class MainFrame extends JFrame {
 				JSplitPane.HORIZONTAL_SPLIT,
 				createMethodPanel(),
 				createTablePanel());
-                splitPane.setDividerLocation(400);
-                getContentPane().add(splitPane);
-                statusBarPanel = new StatusBarPanel(
-                                i18n,
-                                e -> switchTheme(),
-                                e -> handleUndo(),
-                                new ImageIcon(getClass().getResource("/icons/undo.png")));
+		splitPane.setDividerLocation(400);
+		getContentPane().add(splitPane);
+		statusBarPanel = new StatusBarPanel(
+				i18n,
+				e -> switchTheme(),
+				e -> handleUndo(),
+				new ImageIcon(getClass().getResource("/icons/undo.png")));
 		renameController.addUndoStateListener(available -> statusBarPanel.setUndoEnabled(available));
 
 		getContentPane().add(statusBarPanel, BorderLayout.SOUTH);
@@ -111,25 +110,32 @@ public class MainFrame extends JFrame {
 	}
 
 
-        private void setMenuBar() {
-                JMenuBar menuBar = new JMenuBar();
+	private void setMenuBar() {
+		JMenuBar menuBar = new JMenuBar();
 
-                JMenu fileMenu = new JMenu(i18n.get("menu.file"));
-                JMenuItem exitItem = new JMenuItem(i18n.get("menu.file.exit"));
-                exitItem.addActionListener(e -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
-                fileMenu.add(exitItem);
+		JMenu fileMenu = new JMenu(i18n.get("menu.file"));
+		JMenuItem exitItem = new JMenuItem(i18n.get("menu.file.exit"));
+		exitItem.addActionListener(e -> dispatchEvent(
+				new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
+		fileMenu.add(exitItem);
 
-                JMenu viewMenu = new JMenu(i18n.get("menu.view"));
-                JMenuItem themeItem = new JMenuItem(i18n.get("menu.view.toggleTheme"));
-                themeItem.addActionListener(e -> statusBarPanel.toggleTheme());
-                viewMenu.add(themeItem);
+		JMenu viewMenu = new JMenu(i18n.get("menu.view"));
+		JMenuItem themeItem = new JMenuItem(i18n.get("menu.view.toggleTheme"));
+		themeItem.addActionListener(e -> statusBarPanel.toggleTheme());
+		viewMenu.add(themeItem);
+		
+		JMenu toolMenu = new JMenu(i18n.get("menu.tool"));
+		
+		JMenu helpMenu = new JMenu(i18n.get("menu.help"));
 
-                menuBar.add(fileMenu);
-                menuBar.add(viewMenu);
+		menuBar.add(fileMenu);
+		menuBar.add(viewMenu);
+		menuBar.add(toolMenu);
+		menuBar.add(helpMenu);
 
-                setJMenuBar(menuBar);
+		setJMenuBar(menuBar);
 
-        }
+	}
 
 	private JPanel createMethodPanel() {
 		JPanel panel = new JPanel(new BorderLayout());
@@ -146,50 +152,49 @@ public class MainFrame extends JFrame {
 		return panel;
 	}
 	private JPanel createTablePanel() {
-                FileTablePanel tablePanel = new FileTablePanel(
-                                renamerService,
-                                i18n,
-                                this::showFileChooser,
-                                this::showDirChooser,
-                                this::rename);
-		table = tablePanel.getTable();
+		FileTablePanel tablePanel = new FileTablePanel(
+				renamerService,
+				i18n,
+				this::showFileChooser,
+				this::showDirChooser,
+				this::rename);
 		return tablePanel;
 	}
 
-        private void showFileChooser() {
-                File[] chosen = SwingUtil.showOpenDialog(this, JFileChooser.FILES_ONLY, true);
-                if (chosen.length > 0) {
-                        List<RenamableFile> files = new ArrayList<>();
-                        for (File f : chosen) {
-                                RenamableFile file = new RenamableFile(f);
-                                files.add(file);
-                        }
-                        renamerService.setFiles(files);
-                }
+	private void showFileChooser() {
+		File[] chosen = SwingUtil.showOpenDialog(this, JFileChooser.FILES_ONLY, true);
+		if (chosen.length > 0) {
+			List<RenamableFile> files = new ArrayList<>();
+			for (File f : chosen) {
+				RenamableFile file = new RenamableFile(f);
+				files.add(file);
+			}
+			renamerService.setFiles(files);
+		}
 	}
 
 
-        private void showDirChooser() {
-                File[] chosen = SwingUtil.showOpenDialog(this, JFileChooser.DIRECTORIES_ONLY, true);
-                if (chosen.length > 0) {
-                        List<RenamableFile> files = new ArrayList<>();
-                        for (File f : chosen) {
-                                RenamableFile file = new RenamableFile(f);
-                                files.add(file);
-                        }
-                        renamerService.setFiles(files);
-                }
-        }
-        private void updateStatusBar() {
-                String theme = (statusBarPanel != null && statusBarPanel.isDarkModeSelected())
-                                ? i18n.get("status.theme.dark")
-                                : i18n.get("status.theme.light");
-                int ruleCount = (accordion != null) ? accordion.getPanelCount() : 0;
-                String rulesMessage = ruleCount == 1
-                                ? i18n.get("status.rules.single", ruleCount)
-                                : i18n.get("status.rules.multiple", ruleCount);
-                statusBarPanel.setStatusText(i18n.get("status.summary", theme, rulesMessage));
-        }
+	private void showDirChooser() {
+		File[] chosen = SwingUtil.showOpenDialog(this, JFileChooser.DIRECTORIES_ONLY, true);
+		if (chosen.length > 0) {
+			List<RenamableFile> files = new ArrayList<>();
+			for (File f : chosen) {
+				RenamableFile file = new RenamableFile(f);
+				files.add(file);
+			}
+			renamerService.setFiles(files);
+		}
+	}
+	private void updateStatusBar() {
+		String theme = (statusBarPanel != null && statusBarPanel.isDarkModeSelected())
+				? i18n.get("status.theme.dark")
+						: i18n.get("status.theme.light");
+		int ruleCount = (accordion != null) ? accordion.getPanelCount() : 0;
+		String rulesMessage = ruleCount == 1
+				? i18n.get("status.rules.single", ruleCount)
+						: i18n.get("status.rules.multiple", ruleCount);
+		statusBarPanel.setStatusText(i18n.get("status.summary", theme, rulesMessage));
+	}
 
 	private void switchTheme() {
 		try {
@@ -209,23 +214,23 @@ public class MainFrame extends JFrame {
 
 
 	private void rename()  {
-                try {
-                        renameController.renameFiles(renamerService.getFiles());
-                        JOptionPane.showMessageDialog(this, i18n.get("rename.success"));
-                } catch (IOException e) {
-                        JOptionPane.showMessageDialog(this, i18n.get("rename.error", e.getMessage()));
-                        logger.error("Rename failed", e);
-                }
-        }
+		try {
+			renameController.renameFiles(renamerService.getFiles());
+			JOptionPane.showMessageDialog(this, i18n.get("rename.success"));
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(this, i18n.get("rename.error", e.getMessage()));
+			logger.error("Rename failed", e);
+		}
+	}
 
-        private void handleUndo() {
-                try {
-                        renameController.undoLastRename();
-                        JOptionPane.showMessageDialog(this, i18n.get("undo.success"));
-                } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(this, i18n.get("undo.error", ex.getMessage()));
-                        logger.error("Undo failed", ex);
-                }
-        }
+	private void handleUndo() {
+		try {
+			renameController.undoLastRename();
+			JOptionPane.showMessageDialog(this, i18n.get("undo.success"));
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(this, i18n.get("undo.error", ex.getMessage()));
+			logger.error("Undo failed", ex);
+		}
+	}
 
 }

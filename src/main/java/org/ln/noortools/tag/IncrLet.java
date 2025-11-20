@@ -6,17 +6,17 @@ import java.util.List;
 import org.ln.noortools.i18n.I18n;
 
 /**
- * Tag <IncL>
+ * Tag <IncrLet>
  * Generates incremental alphabetical labels.
  * Example: A, B, C ... Z, AA, AB ...
  *
  * Author: Luca Noale
  */
-public class IncL extends AbstractTag {
+public class IncrLet extends AbstractTag {
 
-    public IncL(I18n i18n, Object... arg) {
+    public IncrLet(I18n i18n, Object... arg) {
         super(i18n, arg);
-        this.tagName = "IncL";
+        this.tagName = "IncrLet";
         this.type = TagType.STRING;
     }
 

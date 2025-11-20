@@ -19,6 +19,7 @@ import org.ln.noortools.i18n.I18n;
  * methods to update the displayed status and to react to theme/undo actions
  * without leaking the underlying buttons to callers.
  */
+@SuppressWarnings("serial")
 public class StatusBarPanel extends JPanel {
 
     private final I18n i18n;
@@ -26,7 +27,10 @@ public class StatusBarPanel extends JPanel {
     private final JToggleButton themeToggle;
     private final JButton undoButton;
 
-    public StatusBarPanel(I18n i18n, ActionListener themeSwitchListener, ActionListener undoListener, Icon undoIcon) {
+    public StatusBarPanel(I18n i18n, 
+    		ActionListener themeSwitchListener, 
+    		ActionListener undoListener, 
+    		Icon undoIcon) {
         super(new FlowLayout(FlowLayout.LEADING));
         this.i18n = i18n;
 

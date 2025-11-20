@@ -3,7 +3,6 @@ package org.ln.noortools.view.dialog;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.UIManager;
 
 /**
  * Standard confirmation dialog used before executing ActionTags.

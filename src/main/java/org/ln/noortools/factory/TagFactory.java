@@ -18,7 +18,7 @@ import org.ln.noortools.tag.DecrHex;
 import org.ln.noortools.tag.DecrNum;
 import org.ln.noortools.tag.DecR;
 import org.ln.noortools.tag.FileOwner;
-import org.ln.noortools.tag.IncL;
+import org.ln.noortools.tag.IncrLet;
 import org.ln.noortools.tag.IncrHex;
 import org.ln.noortools.tag.IncrNum;
 import org.ln.noortools.tag.IncR;
@@ -80,13 +80,13 @@ public class TagFactory {
 
     private void registerDefaults() {
         // Numeric
-        register("IncN", args -> new IncrNum(i18n, args), new Object[]{1, 1});
-        register("DecN", args -> new DecrNum(i18n, args), new Object[]{1, 1});
-        register("IncH", args -> new IncrHex(i18n, args), new Object[]{1, 1});
-        register("DecH", args -> new DecrHex(i18n, args), new Object[]{1, 1});
+        register("IncrNum", args -> new IncrNum(i18n, args), new Object[]{1, 1});
+        register("DecrNum", args -> new DecrNum(i18n, args), new Object[]{1, 1});
+        register("IncrHex", args -> new IncrHex(i18n, args), new Object[]{1, 1});
+        register("DecrHex", args -> new DecrHex(i18n, args), new Object[]{1, 1});
         register("IncR", args -> new IncR(i18n, args), new Object[]{1, 1});
         register("DecR", args -> new DecR(i18n, args), new Object[]{1, 1});
-        register("IncL", args -> new IncL(i18n, args), new Object[]{1, 1});
+        register("IncrLet", args -> new IncrLet(i18n, args), new Object[]{1, 1});
         register("RandN", args -> new RandN(i18n, args), new Object[]{4, 1});
 
         // String
