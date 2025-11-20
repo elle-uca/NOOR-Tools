@@ -11,8 +11,12 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.mp4.Mp4Tag;
 import org.ln.noortools.enums.AudioTagType;
 import org.ln.noortools.model.RenamableFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AudioUtil {
+
+    private static final Logger logger = LoggerFactory.getLogger(AudioUtil.class);
 	
 //	private static final Set<String> AUDIO_EXT = Set.of(
 //    "mp3","flac","ogg","opus","wav","aiff","aif","m4a","aac","wma","ape","dsf","dff"
@@ -23,7 +27,7 @@ public class AudioUtil {
         try {
             return AudioFileIO.read(file);
         } catch (Exception e) {
-            System.err.println("[AudioUtil] Cannot read file: " + file.getAbsolutePath() + " → " + e.getMessage());
+            logger.error("[AudioUtil] Cannot read file: {}", file.getAbsolutePath(), e);
             return null;
         }
     }
@@ -45,33 +49,33 @@ public class AudioUtil {
             if (audio instanceof MP3File mp3) {
                 newTag = mp3.createDefaultTag();
                 mp3.setTag(newTag);
-                System.out.println("[AudioUtil] Created ID3 tag for MP3");
+                logger.debug("[AudioUtil] Created ID3 tag for MP3");
             }
             else if (ext.endsWith(".flac")) {
             	newTag = audio.getTagOrCreateAndSetDefault();
                 audio.setTag(newTag);
-                System.out.println("[AudioUtil] Created FLAC tag");
+                logger.debug("[AudioUtil] Created FLAC tag");
             }
             else if (ext.endsWith(".mp4") || ext.endsWith(".m4a") || ext.endsWith(".m4b")) {
                 newTag = new Mp4Tag();
                 audio.setTag(newTag);
-                System.out.println("[AudioUtil] Created MP4/M4A tag");
+                logger.debug("[AudioUtil] Created MP4/M4A tag");
             }
             else if (ext.endsWith(".wav")) {
                 newTag = new WavTag();
                 audio.setTag(newTag);
-                System.out.println("[AudioUtil] Created WAV tag");
+                logger.debug("[AudioUtil] Created WAV tag");
             }
             else {
                 // Formato non gestito: niente crash, solo avviso
-                System.err.println("[AudioUtil] Unsupported format for tag creation: " + ext);
+                logger.error("[AudioUtil] Unsupported format for tag creation: {}", ext);
                 return null;
             }
 
             return newTag;
 
         } catch (Exception e) {
-            System.err.println("[AudioUtil] Failed to create tag for " + audio.getFile().getName() + ": " + e.getMessage());
+            logger.error("[AudioUtil] Failed to create tag for {}", audio.getFile().getName(), e);
             return null;
         }
     }
@@ -93,7 +97,7 @@ public class AudioUtil {
                 default -> null;
             };
         } catch (Exception e) {
-            System.err.println("[AudioUtil] Cannot read audio tag from: " + file + " → " + e.getMessage());
+            logger.error("[AudioUtil] Cannot read audio tag from: {}", file, e);
             return null;
         }
     }
@@ -117,9 +121,9 @@ public class AudioUtil {
                 
              // Scrive fisicamente sul file
                 AudioFileIO.write(audio);
-                System.out.println("Tag scritti e salvati con successo per il file: " + file.getSource().getName());
+                logger.info("Tags written and saved successfully for file: {}", file.getSource().getName());
             } catch (Exception e) {
-                System.err.println("[WriteTag] Cannot update tag: "+ file.getSource() + " → " + e.getMessage());
+                logger.error("[WriteTag] Cannot update tag: {}", file.getSource(), e);
             }
             
     }
@@ -209,7 +213,7 @@ public class AudioUtil {
 //                default -> null;
 //            };
 //        } catch (Exception e) {
-//            System.err.println("[AudioUtil] Cannot read audio tag from: " + file + " → " + e.getMessage());
+//            logger.error("[AudioUtil] Cannot read audio tag from: {}", file, e);
 //            return null;
 //        }
 //    }

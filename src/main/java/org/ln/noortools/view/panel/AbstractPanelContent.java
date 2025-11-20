@@ -78,19 +78,19 @@ public abstract class AbstractPanelContent extends JPanel
     }
 	 
 	 @PostConstruct
-	 private void setupUI(){ 
-		 JPanel contentArea = new JPanel(); 
-	        contentArea.setLayout(new GridBagLayout()); 
-	        add(contentArea, BorderLayout.CENTER);
+    private void setupUI(){
+            JPanel contentArea = new JPanel();
+            contentArea.setLayout(new GridBagLayout());
+            add(contentArea, BorderLayout.CENTER);
 
-	        // pannello footer con combo
-	        JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-	        footer.add(new JLabel("Rename Mode:"));
-	        footer.add(modeCombo);
-	        add(footer, BorderLayout.SOUTH);
-	        // delega a sottoclasse per costruire controlli specifici
-	        initComponents(contentArea);
-	 }
+            // pannello footer con combo
+            JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            footer.add(new JLabel(i18n.get("rename.mode")));
+            footer.add(modeCombo);
+            add(footer, BorderLayout.SOUTH);
+            // delega a sottoclasse per costruire controlli specifici
+            initComponents(contentArea);
+     }
 	 
 	    /** chiamata da SlidingPanel subito dopo la creazione */
 	    public void setAccordion(AccordionPanel accordion) {

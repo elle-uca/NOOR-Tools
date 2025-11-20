@@ -10,12 +10,15 @@ import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
+import org.ln.noortools.i18n.I18n;
+
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 public class ToolbarBuilder {
 
     public static JToolBar buildToolbar(
+            I18n i18n,
             Runnable onAddFile,
             Runnable onAddDir,
             Runnable onRename
@@ -40,8 +43,8 @@ public class ToolbarBuilder {
 
         // 🔹 Crea pulsanti colorati
         JButton btnFile = createToolbarButton(
-                "File",
-                "Aggiungi file",
+                i18n.get("toolbar.button.file"),
+                i18n.get("toolbar.button.file.tooltip"),
                 new FlatSVGIcon("icons/file.svg", 32, 32),
                 fileColor,
                 hoverFile,
@@ -49,8 +52,8 @@ public class ToolbarBuilder {
         );
 
         JButton btnDir = createToolbarButton(
-                "Directory",
-                "Aggiungi directory",
+                i18n.get("toolbar.button.directory"),
+                i18n.get("toolbar.button.directory.tooltip"),
                 new FlatSVGIcon("icons/folder.svg", 32, 32),
                 folderColor,
                 hoverFolder,
@@ -58,8 +61,8 @@ public class ToolbarBuilder {
         );
 
         JButton btnRename = createToolbarButton(
-                "Rinomina",
-                "Esegui rinomina",
+                i18n.get("toolbar.button.rename"),
+                i18n.get("toolbar.button.rename.tooltip"),
                 new FlatSVGIcon("icons/rename.svg", 32, 32),
                 renameColor,
                 hoverRename,

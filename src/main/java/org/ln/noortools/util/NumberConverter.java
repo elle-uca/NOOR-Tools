@@ -1,7 +1,12 @@
 package org.ln.noortools.util;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class NumberConverter {
+
+    private static final Logger logger = LoggerFactory.getLogger(NumberConverter.class);
 
     /**
      * Esegue la conversione di un numero tra due basi, mostrando i passaggi.
@@ -16,18 +21,18 @@ public class NumberConverter {
         }
 
         // --- PASSO 1: Conversione dalla Base di Partenza alla Base 10 ---
-        System.out.println("\n--- PASSO 1: Da Base " + baseIn + " a Base 10 ---");
+        logger.info("\n--- PASSO 1: Da Base {} a Base 10 ---", baseIn);
         long decimalValue = toDecimal(number, baseIn);
-        System.out.println("\nRisultato in Base 10: " + decimalValue);
+        logger.info("\nRisultato in Base 10: {}", decimalValue);
 
         if (baseOut == 10) {
             return String.valueOf(decimalValue);
         }
 
         // --- PASSO 2: Conversione dalla Base 10 alla Base di Arrivo ---
-        System.out.println("\n--- PASSO 2: Da Base 10 a Base " + baseOut + " ---");
+        logger.info("\n--- PASSO 2: Da Base 10 a Base {} ---", baseOut);
         String result = fromDecimal(decimalValue, baseOut);
-        System.out.println("\nRisultato Finale in Base " + baseOut + ": " + result);
+        logger.info("\nRisultato Finale in Base {}: {}", baseOut, result);
 
         return result;
     }
@@ -40,7 +45,7 @@ public class NumberConverter {
         String digits = "0123456789ABCDEF"; // Simboli usati per le basi > 10
         number = number.toUpperCase();
 
-        System.out.println("  Calcolo: Somma dei (Simbolo * Base ^ Posizione)");
+        logger.debug("  Calcolo: Somma dei (Simbolo * Base ^ Posizione)");
 
         for (int i = 0; i < number.length(); i++) {
             char digitChar = number.charAt(i);
@@ -51,7 +56,7 @@ public class NumberConverter {
             long contribution = digitValue * (long) Math.pow(base, power);
             decimalValue += contribution;
 
-            System.out.printf("  Posizione %d: %s (%d) * %d^%d = %d\n", 
+            logger.debug("  Posizione {}: {} ({}) * {}^{} = {}",
                               power, digitChar, digitValue, base, power, contribution);
         }
         return decimalValue;
@@ -67,7 +72,7 @@ public class NumberConverter {
         String digits = "0123456789ABCDEF";
         long currentNumber = decimalValue;
 
-        System.out.println("  Calcolo: Divisioni successive per la Base " + base);
+        logger.debug("  Calcolo: Divisioni successive per la Base {}", base);
         
         while (currentNumber > 0) {
             // Calcola il resto, che è la prossima cifra nella nuova base
@@ -82,7 +87,7 @@ public class NumberConverter {
             // Aggiunge la cifra all'inizio del risultato
             result = digitChar + result;
 
-            System.out.printf("  %d / %d = Quoziente %d, Resto %d (%s)\n", 
+            logger.debug("  {} / {} = Quoziente {}, Resto {} ({})",
                               currentNumber, base, quotient, remainder, digitChar);
             
             currentNumber = quotient;
@@ -94,15 +99,15 @@ public class NumberConverter {
         NumberConverter converter = new NumberConverter();
         Scanner scanner = new Scanner(System.in);
         
-        System.out.println("--- Convertitore di Base Numerica ---");
+        logger.info("--- Convertitore di Base Numerica ---");
 
-        System.out.print("Inserisci il numero da convertire: ");
+        logger.info("Inserisci il numero da convertire: ");
         String number = scanner.nextLine();
 
-        System.out.print("Inserisci la base di partenza (es. 16, 2): ");
+        logger.info("Inserisci la base di partenza (es. 16, 2): ");
         int baseIn = scanner.nextInt();
 
-        System.out.print("Inserisci la base di arrivo (es. 10, 8): ");
+        logger.info("Inserisci la base di arrivo (es. 10, 8): ");
         int baseOut = scanner.nextInt();
         
         scanner.close();

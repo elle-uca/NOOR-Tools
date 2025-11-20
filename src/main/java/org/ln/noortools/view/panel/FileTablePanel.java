@@ -12,6 +12,7 @@ import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.table.TableRowSorter;
 
+import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.service.ruleservice.RenamerService;
 import org.ln.noortools.view.NaturalOrderComparator;
@@ -25,17 +26,19 @@ import net.miginfocom.swing.MigLayout;
 public class FileTablePanel extends JPanel {
 
     private final RenamerService renamerService;
+    private final I18n i18n;
     private final JTable table;
     private final JLabel infoLabel;
     private final JLabel fileInfoLabel;
 
-    public FileTablePanel(RenamerService renamerService, Runnable onFileChooser, Runnable onDirChooser, Runnable onRename) {
+    public FileTablePanel(RenamerService renamerService, I18n i18n, Runnable onFileChooser, Runnable onDirChooser, Runnable onRename) {
         super(new BorderLayout());
         this.renamerService = renamerService;
+        this.i18n = i18n;
 
         JPanel container = new JPanel(new MigLayout("fill, insets 10", "[grow]", "[][grow][]"));
         JScrollPane tableScrollPane = new JScrollPane();
-        RenamableFileTableModel tableModel = new RenamableFileTableModel();
+        RenamableFileTableModel tableModel = new RenamableFileTableModel(i18n);
         this.renamerService.addListener(tableModel);
         table = new JTable(tableModel);
         table.putClientProperty("Table.alternateRowColor", null);
@@ -49,13 +52,13 @@ public class FileTablePanel extends JPanel {
         sorter.setComparator(2, new NaturalOrderComparator());
         table.setRowSorter(sorter);
 
-        infoLabel = new JLabel("No files loaded");
-        fileInfoLabel = new JLabel("No file selected");
+        infoLabel = new JLabel(i18n.get("table.noFiles"));
+        fileInfoLabel = new JLabel(i18n.get("table.noFileSelected"));
 
         table.getSelectionModel().addListSelectionListener(e -> updateFileInfo());
         this.renamerService.addListener(this::updateGlobalInfo);
 
-        JToolBar toolBar = ToolbarBuilder.buildToolbar(onFileChooser, onDirChooser, onRename);
+        JToolBar toolBar = ToolbarBuilder.buildToolbar(i18n, onFileChooser, onDirChooser, onRename);
 
         container.add(toolBar, "wrap");
 
@@ -82,18 +85,18 @@ public class FileTablePanel extends JPanel {
 
     private void updateGlobalInfo(List<RenamableFile> files) {
         if (files == null || files.isEmpty()) {
-            infoLabel.setText("No files loaded");
+            infoLabel.setText(i18n.get("table.noFiles"));
             return;
         }
 
         String dir = files.getFirst().getSource().getParent();
-        infoLabel.setText(String.format("%d files loaded from: %s", files.size(), dir));
+        infoLabel.setText(i18n.get("table.filesLoaded", files.size(), dir));
     }
 
     private void updateFileInfo() {
         int row = table.getSelectedRow();
         if (row < 0) {
-            fileInfoLabel.setText("No file selected");
+            fileInfoLabel.setText(i18n.get("table.noFileSelected"));
             return;
         }
 
@@ -101,17 +104,17 @@ public class FileTablePanel extends JPanel {
         RenamableFileTableModel model = (RenamableFileTableModel) table.getModel();
         RenamableFile file = model.getFileAt(modelRow);
         if (file == null) {
-            fileInfoLabel.setText("No file selected");
+            fileInfoLabel.setText(i18n.get("table.noFileSelected"));
             return;
         }
 
         java.io.File src = file.getSource();
         String name = src.getName();
-        String ext = file.getExtension().isEmpty() ? "(no extension)" : file.getExtension();
+        String ext = file.getExtension().isEmpty() ? i18n.get("table.noExtension") : file.getExtension();
         long size = src.length() / 1024;
-        String readableSize = size == 0 ? "<1 KB" : size + " KB";
+        String readableSize = size == 0 ? i18n.get("table.size.lessThanOneKb") : size + " KB";
 
-        fileInfoLabel.setText(String.format("Selected: %s  —  Type: %s  —  Size: %s", name, ext, readableSize));
+        fileInfoLabel.setText(i18n.get("table.fileInfo", name, ext, readableSize));
     }
 
     public JTable getTable() {

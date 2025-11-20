@@ -6,15 +6,26 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 import org.ln.noortools.enums.FileStatus;
+import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.service.RenamerServiceListener;
 
 @SuppressWarnings("serial")
 public class RenamableFileTableModel extends AbstractTableModel implements RenamerServiceListener{
 	
-	private List<RenamableFile> data = new ArrayList<>();
+        private List<RenamableFile> data = new ArrayList<>();
 
-	private final String[] columnNames = {"Selected", "Original name", "New name", "Path", "Status" };
+        private final String[] columnNames;
+
+        public RenamableFileTableModel(I18n i18n) {
+                this.columnNames = new String[] {
+                                i18n.get("table.column.selected"),
+                                i18n.get("table.column.original"),
+                                i18n.get("table.column.new"),
+                                i18n.get("table.column.path"),
+                                i18n.get("table.column.status")
+                };
+        }
 	
 	@Override
 	public int getRowCount() {

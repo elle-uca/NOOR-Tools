@@ -8,11 +8,15 @@ import java.util.List;
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.service.FileAwareTag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractFsTag extends AbstractTag implements FileAwareTag {
 
-     
-	protected List<RenamableFile> filesCtx = List.of();
+
+        private static final Logger logger = LoggerFactory.getLogger(AbstractFsTag.class);
+
+        protected List<RenamableFile> filesCtx = List.of();
 
     protected AbstractFsTag(I18n i18n, Object... args) {
         super(i18n, args);
@@ -44,7 +48,7 @@ public abstract class AbstractFsTag extends AbstractTag implements FileAwareTag 
         try {
             Files.setAttribute(rf.getSource().toPath(), attribute, time);
         } catch (Exception e) {
-            System.err.println("[FS-WriteTag] Cannot write attribute: " + attribute + " → " + e.getMessage());
+            logger.error("[FS-WriteTag] Cannot write attribute: {}", attribute, e);
         }
     }
 }
