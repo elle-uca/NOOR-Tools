@@ -113,9 +113,6 @@ public class RenamerService {
 
     
     public void setFiles(List<RenamableFile> newFiles) {
-    	
-    	
-    	// sostituisci solo gli oggetti, non resettiamo la selection
     	Map<Path, Boolean> prevSelection = files.stream()
     	        .collect(Collectors.toMap(f -> f.getSource().toPath(), RenamableFile::isSelected));
 

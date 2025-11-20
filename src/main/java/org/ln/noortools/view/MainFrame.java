@@ -56,10 +56,8 @@ import net.miginfocom.swing.MigLayout;
 @Component
 public class MainFrame extends JFrame {
 
-	private final ConfigurableApplicationContext context;
 	private final I18n i18n;
 	private final RenamerService renamerService;
-	private final AccordionFactory accordionFactory;
 	private final PanelFactory panelFactory;
 	private final FileRenameManager fileRenameManager; 
 	
@@ -71,8 +69,7 @@ public class MainFrame extends JFrame {
 	private JTable table;
 	private AccordionPanel accordion;
 
-//	@Autowired
-//	private FileRenameManager fileRenameManager;
+
 
 	public MainFrame(I18n i18n, 
 			RenamerService renamerService, 
@@ -83,10 +80,8 @@ public class MainFrame extends JFrame {
 		super("NOOR Tools (Not Only an Ordinary Renamer) by Luke");
 		this.i18n = i18n;
 		this.renamerService = renamerService;
-		this.accordionFactory = accordionFactory;
 		this.panelFactory = panelFactory;
 		this.accordion = accordionFactory.createAccordion();
-		this.context = context;
 		this.fileRenameManager = fileRenameManager; 
 
 		// ✅ Avvio in Light mode
@@ -235,12 +230,12 @@ public class MainFrame extends JFrame {
 		table.putClientProperty( "Table.alternateRowColor", null );
 		tableScrollPane.setViewportView(table);
 		
-		for (int i = 1; i < table.getColumnCount(); i++) { // skip col 0
-		    table.getColumnModel().getColumn(i).setCellRenderer(new DisabledRowRenderer());
-		}		
+//		for (int i = 1; i < table.getColumnCount(); i++) { // skip col 0
+//		    table.getColumnModel().getColumn(i).setCellRenderer(new DisabledRowRenderer());
+//		}		
 		
-//		table.getColumnModel().getColumn(4).setCellRenderer(new StatusCellRenderer());
-//		table.getColumnModel().getColumn(2).setCellRenderer(new NewNameCellRenderer());
+		table.getColumnModel().getColumn(4).setCellRenderer(new StatusCellRenderer());
+		table.getColumnModel().getColumn(2).setCellRenderer(new NewNameCellRenderer());
 		
 		
 
@@ -252,10 +247,10 @@ public class MainFrame extends JFrame {
 		sorter.setComparator(2, new NaturalOrderComparator());
 
 		// ✅ Sposta i non selezionati in fondo
-		sorter.setComparator(0, (Boolean a, Boolean b) -> {
-		    // true deve venire PRIMA → selezionati in alto
-		    return Boolean.compare(!a, !b);
-		});
+//		sorter.setComparator(0, (Boolean a, Boolean b) -> {
+//		    // true deve venire PRIMA → selezionati in alto
+//		    return Boolean.compare(!a, !b);
+//		});
 
 		table.setRowSorter(sorter);
 		

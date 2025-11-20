@@ -28,7 +28,6 @@ import org.springframework.stereotype.Component;
 @Scope("singleton")
 public class TagListModel extends AbstractListModel<AbstractTag> {
 	
-//	private AbstractTag.TagType activeType = null; // null = mostra tutto
 
     // Immutable master data loaded from TagFactory
     private final List<AbstractTag> master = new ArrayList<>();

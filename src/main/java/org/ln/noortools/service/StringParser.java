@@ -31,19 +31,37 @@ public class StringParser {
 
     private static final String TAG_PACKAGE = "org.ln.noortools.tag.";
     private static final Map<String, Constructor<? extends AbstractTag>> TAG_CACHE = new ConcurrentHashMap<>();
+    
+    public enum ParseMode { PREVIEW, EXECUTION }
 
     /**
      * Parses a template and applies tags based on the given RenameMode.
      * Returns a new list of files; does not modify the original one.
      */
+    /**
+     * @param template
+     * @param files
+     * @param mode
+     * @param parseMode
+     * @return
+     */
     public static List<RenamableFile> parse(
             String template,
             List<RenamableFile> files,
-            RenameMode mode
+            RenameMode mode,
+            ParseMode parseMode
     ) {
         if (template == null || files == null || files.isEmpty() || !isParsable(template))
             return files;
 
+        
+        // 🔁 Reset all actions for this new template/preview
+        PerformManager performManager = SpringContext.getBean(PerformManager.class);
+        performManager.reset();
+        
+        ActionManager actionManager = SpringContext.getBean(ActionManager.class);
+        actionManager.reset();
+        
         // 1️⃣ Split the string into components (tags or plain text)
         List<Object> components = tokenize(template);
 
@@ -72,10 +90,11 @@ public class StringParser {
                     am.registerActionTag(at);
                 }
                 
-                if (tag instanceof PerformTag pt) {
-                    PerformManager pm = SpringContext.getBean(PerformManager.class);
-                    pm.registerActionTag(pt);
-                    System.out.println("Perform       ");                 }
+//                if (tag instanceof PerformTag pt ) {
+//                    PerformManager pm = SpringContext.getBean(PerformManager.class);
+//                    pm.registerActionTag(pt);
+//                    System.out.println("Perform       ");                 
+//                }
                 
                 tag.init();
             }
@@ -91,7 +110,7 @@ public class StringParser {
 
             String sourceName = file.getSource().getName();
             String base = baseNameOf(sourceName);
-            String ext  = extensionOf(sourceName);
+           // String ext  = extensionOf(sourceName);
 
             StringBuilder sb = new StringBuilder();
             for (Object comp : components) {
@@ -105,7 +124,8 @@ public class StringParser {
             String result;
             switch (mode) {
                 case FULL -> result = sb.toString();
-                case NAME_ONLY -> result = sb + (ext.isEmpty() ? "" : "." + ext);
+                //case NAME_ONLY -> result = sb + (ext.isEmpty() ? "" : "." + ext);
+                case NAME_ONLY -> result = sb.toString();
                 case EXT_ONLY -> result = base + "." + sb;
                 default -> result = sourceName;
             }
@@ -139,128 +159,12 @@ public class StringParser {
     }
 
 
-    
+  
     /**
      * Dynamically creates a tag instance (e.g., <DecN:1> or <RandN:2>).
      * Uses reflection and retrieves I18n from Spring.
      * Constructor lookups are cached to boost performance.
      */
-//    @SuppressWarnings("unchecked")
-//    private static AbstractTag createTag(String token) {
-//        try {
-//            // 1️⃣ Extract tag class name
-//        	
-//        	Matcher nameM = Pattern.compile("(?<=<)[A-Za-z][A-Za-z0-9_]*(?=[:>])").matcher(token);
-//        	if (!nameM.find()) return null;
-//        	String className = nameM.group();
-////            Matcher nameM = Pattern.compile("(?<=<)[a-zA-Z]+(?=:)").matcher(token);
-////            if (!nameM.find()) return null;
-////            String className = nameM.group();
-//
-//            // 2️⃣ Extract numeric parameters (e.g., :1, :2)
-//            Matcher argsM = Pattern.compile("(?<=:)\\d+(?=[>:])").matcher(token);
-//            List<Object> args = new ArrayList<>();
-//            while (argsM.find()) args.add(Integer.parseInt(argsM.group()));
-//
-//            // 3️⃣ Get I18n bean from Spring context
-//            I18n i18n = SpringContext.getBean(I18n.class);
-//            Object[] arr = args.toArray();
-//
-//            // 4️⃣ Get constructor from cache or via reflection
-//            Constructor<? extends AbstractTag> ctor = TAG_CACHE.get(className);
-//
-//            if (ctor == null) {
-//                Class<?> clazz = Class.forName(TAG_PACKAGE + className);
-//                try {
-//                    ctor = (Constructor<? extends AbstractTag>)
-//                            clazz.getDeclaredConstructor(I18n.class, Object[].class);
-//                } catch (NoSuchMethodException e) {
-//                    ctor = (Constructor<? extends AbstractTag>)
-//                            clazz.getDeclaredConstructor(); // fallback
-//                }
-//                TAG_CACHE.put(className, ctor);
-//
-//                // optional debug log
-//                System.out.println("[StringParser] Cached new tag class: " + className);
-//            }
-//
-//            // 5️⃣ Instantiate the tag
-//            if (ctor.getParameterCount() == 2)
-//                return ctor.newInstance(i18n,  arr);
-//            else
-//                return ctor.newInstance();
-//
-//            
-//        } catch (Exception e) {
-//            System.err.println("[StringParser] Failed to create tag: " + token + " → " + e.getMessage());
-//            return null;
-//        }
-//    }
-
-    
-//    @SuppressWarnings("unchecked")
-//    private static AbstractTag createTag(String token) {
-//        try {
-//            // Rimuovi i delimitatori <...>
-//            if (!token.startsWith("<") || !token.endsWith(">")) return null;
-//            String inner = token.substring(1, token.length() - 1).trim();
-//
-//            // 1) Nome classe: fino al primo ':' (se c'è), altrimenti tutto
-//            int colon = inner.indexOf(':');
-//            String className = (colon >= 0) ? inner.substring(0, colon) : inner;
-//            if (className.isBlank()) return null;
-//
-//            // 2) Argomenti (se presenti), separati da ':'
-//            List<Object> args = new ArrayList<>();
-//            if (colon >= 0 && colon + 1 < inner.length()) {
-//                String rest = inner.substring(colon + 1);
-//                // supporta più argomenti: <Foo:a:b:3>
-//                for (String raw : rest.split(":")) {
-//                    String s = raw.trim();
-//                    if (s.isEmpty()) continue; // ignora vuoti
-//                    if (s.matches("-?\\d+")) {
-//                        // intero
-//                        args.add(Integer.valueOf(s));
-//                    } else {
-//                        // stringa
-//                        args.add(s);
-//                    }
-//                }
-//            }
-//
-//            // 3) I18n dal contesto Spring
-//            I18n i18n = SpringContext.getBean(I18n.class);
-//            Object[] arr = args.toArray();
-//
-//            // 4) Costruttore da cache o via reflection
-//            Constructor<? extends AbstractTag> ctor = TAG_CACHE.get(className);
-//            if (ctor == null) {
-//                Class<?> clazz = Class.forName(TAG_PACKAGE + className);
-//                try {
-//                    ctor = (Constructor<? extends AbstractTag>)
-//                            clazz.getDeclaredConstructor(I18n.class, Object[].class);
-//                } catch (NoSuchMethodException e) {
-//                    ctor = (Constructor<? extends AbstractTag>)
-//                            clazz.getDeclaredConstructor(); // fallback
-//                }
-//                ctor.setAccessible(true);
-//                TAG_CACHE.put(className, ctor);
-//                System.out.println("[StringParser] Cached new tag class: " + className);
-//            }
-//
-//            // 5) Istanziazione
-//            if (ctor.getParameterCount() == 2) {
-//                return ctor.newInstance(i18n, arr);
-//            } else {
-//                return ctor.newInstance();
-//            }
-//
-//        } catch (Exception e) {
-//            System.err.println("[StringParser] Failed to create tag: " + token + " → " + e.getMessage());
-//            return null;
-//        }
-//    }
-
     @SuppressWarnings("unchecked")
     private static AbstractTag createTag(String token) {
         try {

@@ -89,8 +89,8 @@
         <!-- Mockito inline mock maker is kept to suppress inline mock warnings; version follows the Boot-managed Mockito BOM -->
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-            <version>${mockito.version}</version>
+            <artifactId>mockito-core</artifactId>
+            <version>5.14.2</version>
             <scope>test</scope>
         </dependency>
         <!-- Byte Buddy agent required when inline mocks are active -->

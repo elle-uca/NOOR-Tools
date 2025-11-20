@@ -50,16 +50,6 @@ public class WriteModifyDate extends AbstractFsTag implements ActionTag{
     }
     
     
-//    @Override
-//    public void performAction() {
-//        String ts = getStringArg(0, "");
-//        try {
-//            FileTime t = FileTime.from(Instant.parse(ts));
-//            for (RenamableFile rf : filesCtx) {
-//                writeTime(rf, "basic:lastModifiedTime", t);
-//            }
-//        } catch (Exception ignored) {}
-//    }
 
     @Override
     public String getDescription() {

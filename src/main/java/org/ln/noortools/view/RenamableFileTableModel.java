@@ -56,25 +56,7 @@ public class RenamableFileTableModel extends AbstractTableModel implements Renam
         };
     }
 
-//    @Override
-//    public Object getValueAt(int rowIndex, int columnIndex) {
-//        RenamableFile f = data.get(rowIndex);
-//        boolean active = f.isSelected();
-//
-//        return switch (columnIndex) {
-//            case 0 -> f.isSelected();
-//            case 1 -> f.getSource().getName();
-//            case 2 -> active
-//                    ? (f.getDestinationName() == null || f.getDestinationName().isBlank()
-//                        ? f.getSource().getName()
-//                        : f.getDestinationName())
-//                    : "";          // riga disattiva → vuoto
-//            case 3 -> active ? f.getSource().getParent() : ""; // vuoto se disattiva
-//            case 4 -> active ? f.getFileStatus() : null;        // NULL (non String!)
-//            default -> "";
-//        };
-//    }
-    
+   
 
     
     
@@ -83,16 +65,6 @@ public class RenamableFileTableModel extends AbstractTableModel implements Renam
         return columnIndex == 0; // ✅ solo la colonna checkbox è editabile
     }
     
-//    @Override
-//    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-//        if (columnIndex == 0 && rowIndex < data.size()) {
-//            RenamableFile file = data.get(rowIndex);
-//            if (aValue instanceof Boolean) {
-//                file.setSelected((Boolean) aValue);
-//                fireTableCellUpdated(rowIndex, columnIndex);
-//            }
-//        }
-//    }
     
     
     @Override

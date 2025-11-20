@@ -16,18 +16,20 @@ import org.ln.noortools.view.dialog.ActionConfirmationDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
 /**
  * Handles the final filesystem rename operations.
  *
- * This class:
- *  - Applies renames to actual files on disk
- *  - Stores operations to allow UNDO
- *  - Notifies UI listeners when undo availability changes
+ * Responsibilities:
+ *  - apply renames to disk
+ *  - execute registered ActionTag (metadata writes…)
+ *  - manage UNDO history
+ *  - show global confirm/log dialogs
  *
  * It does NOT decide *what* the new name should be — 
- * that logic belongs to RenamerService.
+ * that logic belongs to RenamerService/StringParser.
  * 
- *  Author: Luca Noale
+ * Author: Luca Noale
  */
 @Component
 public class FileRenameManager {
@@ -100,17 +102,43 @@ public class FileRenameManager {
         // 🔥 1) PRIMA DI QUALSIASI RENAME → esegui azioni con conferma
        // actionManager.executeAllIfConfirmed();
         
-        performManager.showConfirm();
-        StringBuilder sb = new StringBuilder();
-        sb.append("The following actions will be executed:\n\n");
-//        for (RenamableFile rf : files) {
-//        	 sb.append("+ file ")
-//        	 .append(rf.getSource().getName())
-//        	 .append(" renamed to  ")
-//        	 .append(rf.getDestinationName())
-//        	 .append("\n");
-//        }
-//        
+    	
+    	
+        //performManager.showConfirm();
+        StringBuilder confirmMsg = new StringBuilder();
+        confirmMsg.append("The following actions will be executed:\n\n");
+        
+        
+        for (RenamableFile rf : files) {
+        	
+            Path oldPath = rf.getSource().toPath();
+            Path newPath = oldPath.resolveSibling(rf.getDestinationName());
+            if (oldPath.equals(newPath)) continue;
+            
+           // renameCount++;
+            confirmMsg.append("+ rename file ")
+                      .append(oldPath.getFileName())
+                      .append(" → ")
+                      .append(newPath.getFileName())
+                      .append("\n");
+            
+        }
+        
+        List<ActionTag> actions = actionManager.getActionTags();
+        if (!actions.isEmpty()) {
+            confirmMsg.append("\nAdditional actions:\n");
+            for (ActionTag at : actions) {
+                 confirmMsg.append("• ")
+                          .append(at.getActionDescription())
+                          .append("\n");
+            }
+        }
+        
+           boolean ok = ActionConfirmationDialog.show(confirmMsg.toString());
+        if (!ok) {
+            return; // user cancelled
+        }  
+        
 //        ActionConfirmationDialog.show(sb.toString());
         List<RenameOperation> operations = new ArrayList<>();
 

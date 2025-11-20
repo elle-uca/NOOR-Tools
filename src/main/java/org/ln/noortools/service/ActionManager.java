@@ -83,4 +83,13 @@ public class ActionManager {
                 ActionLogDialog.show(resultLog.toString())
         );
     }
+
+	/**
+	 * @return the actionTags
+	 */
+	public List<ActionTag> getActionTags() {
+		return actionTags;
+	}
+    
+    
 }
