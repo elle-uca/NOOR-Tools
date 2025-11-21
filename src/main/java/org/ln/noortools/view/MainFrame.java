@@ -33,6 +33,7 @@ import org.ln.noortools.view.panel.AccordionPanel;
 import org.ln.noortools.view.panel.FileTablePanel;
 import org.ln.noortools.view.panel.PanelFactory;
 import org.ln.noortools.view.panel.RuleButtonBar;
+import org.ln.noortools.view.dialog.AboutDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -124,19 +125,22 @@ public class MainFrame extends JFrame {
 				new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
 		fileMenu.add(exitItem);
 
-		JMenu viewMenu = new JMenu(i18n.get("menu.view"));
-		JMenuItem themeItem = new JMenuItem(i18n.get("menu.view.toggleTheme"));
-		themeItem.addActionListener(e -> statusBarPanel.toggleTheme());
-		viewMenu.add(themeItem);
-		
-		JMenu toolMenu = new JMenu(i18n.get("menu.tool"));
-		
-		JMenu helpMenu = new JMenu(i18n.get("menu.help"));
+                JMenu viewMenu = new JMenu(i18n.get("menu.view"));
+                JMenuItem themeItem = new JMenuItem(i18n.get("menu.view.toggleTheme"));
+                themeItem.addActionListener(e -> statusBarPanel.toggleTheme());
+                viewMenu.add(themeItem);
 
-		menuBar.add(fileMenu);
-		menuBar.add(viewMenu);
-		menuBar.add(toolMenu);
-		menuBar.add(helpMenu);
+                JMenu toolMenu = new JMenu(i18n.get("menu.tool"));
+
+                JMenu helpMenu = new JMenu(i18n.get("menu.help"));
+                JMenuItem aboutItem = new JMenuItem(i18n.get("menu.help.about"));
+                aboutItem.addActionListener(e -> AboutDialog.show(this, i18n));
+                helpMenu.add(aboutItem);
+
+                menuBar.add(fileMenu);
+                menuBar.add(viewMenu);
+                menuBar.add(toolMenu);
+                menuBar.add(helpMenu);
 
 		setJMenuBar(menuBar);
 
