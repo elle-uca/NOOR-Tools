@@ -14,6 +14,7 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 /**
  * Horizontal bar with shortcuts to add rule panels inside the accordion.
  */
+@SuppressWarnings("serial")
 public class RuleButtonBar extends JPanel {
 
     private final PanelFactory panelFactory;
@@ -49,10 +50,10 @@ public class RuleButtonBar extends JPanel {
         JButton button = (JButton) e.getSource();
 
         switch (button.getActionCommand()) {
-        case "ADD" -> accordion.addPanel(button.getText(), panelFactory.createAddPanel(accordion));
-        case "REMOVE" -> accordion.addPanel(button.getText(), panelFactory.createRemovePanel(accordion));
-        case "REPLACE" -> accordion.addPanel(button.getText(), panelFactory.createReplacePanel(accordion));
-        case "CASE" -> accordion.addPanel(button.getText(), panelFactory.createCasePanel(accordion));
+        case "ADD" -> accordion.addPanel(button.getText(), panelFactory.createAddPanel());
+        case "REMOVE" -> accordion.addPanel(button.getText(), panelFactory.createRemovePanel());
+        case "REPLACE" -> accordion.addPanel(button.getText(), panelFactory.createReplacePanel());
+        case "CASE" -> accordion.addPanel(button.getText(), panelFactory.createCasePanel());
         case "NEW" -> accordion.addPanel(button.getText(), panelFactory.createTagPanel(accordion));
         default -> throw new IllegalArgumentException("Unknown command: " + button.getActionCommand());
         }

@@ -62,28 +62,28 @@ public class PanelFactory {
      * Creates a new {@link AddPanel}.
      * <p>Panels are obtained from Spring so that all their dependencies are injected.</p>
      */
-    public AddPanel createAddPanel(AccordionPanel accordion) {
+    public AddPanel createAddPanel() {
         return SpringContext.getBean(AddPanel.class);
     }
 
     /**
      * Creates a new {@link RemovePanel}.
      */
-    public RemovePanel createRemovePanel(AccordionPanel accordion) {
+    public RemovePanel createRemovePanel() {
         return SpringContext.getBean(RemovePanel.class);
     }
 
     /**
      * Creates a new {@link ReplacePanel}.
      */
-    public ReplacePanel createReplacePanel(AccordionPanel accordion) {
+    public ReplacePanel createReplacePanel() {
         return SpringContext.getBean(ReplacePanel.class);
     }
 
     /**
      * Creates a new {@link CasePanel}.
      */
-    public CasePanel createCasePanel(AccordionPanel accordion) {
+    public CasePanel createCasePanel() {
         return SpringContext.getBean(CasePanel.class);
     }
 

@@ -73,7 +73,8 @@ public class RenamableFileTableModel extends AbstractTableModel implements Renam
     
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columnIndex == 0; // ✅ solo la colonna checkbox è editabile
+       // return columnIndex == 0; // ✅ solo la colonna checkbox è editabile
+    	return false;
     }
     
     

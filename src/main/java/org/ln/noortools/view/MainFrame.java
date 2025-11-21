@@ -19,7 +19,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -28,12 +27,12 @@ import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.service.RenameController;
 import org.ln.noortools.service.ruleservice.RenamerService;
 import org.ln.noortools.util.SwingUtil;
+import org.ln.noortools.view.component.StatusBarPanel;
 import org.ln.noortools.view.panel.AccordionFactory;
 import org.ln.noortools.view.panel.AccordionPanel;
 import org.ln.noortools.view.panel.FileTablePanel;
 import org.ln.noortools.view.panel.PanelFactory;
 import org.ln.noortools.view.panel.RuleButtonBar;
-import org.ln.noortools.view.component.StatusBarPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -114,6 +113,12 @@ public class MainFrame extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 
 		JMenu fileMenu = new JMenu(i18n.get("menu.file"));
+		JMenuItem addFileItem = new JMenuItem(i18n.get("toolbar.button.file"));
+		addFileItem.addActionListener(e -> showFileChooser());
+		fileMenu.add(addFileItem);
+		JMenuItem addDirItem = new JMenuItem(i18n.get("toolbar.button.directory"));
+		addDirItem.addActionListener(e -> showDirChooser());
+		fileMenu.add(addDirItem);
 		JMenuItem exitItem = new JMenuItem(i18n.get("menu.file.exit"));
 		exitItem.addActionListener(e -> dispatchEvent(
 				new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
