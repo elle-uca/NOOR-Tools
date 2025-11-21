@@ -4,7 +4,7 @@ import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.util.RomanNumberUtil;
 
 /**
- * Tag <DecR>
+ * Tag <DecrRom>
  *
  * Generates a sequence of Roman numerals decreasing from a given starting value,
  * with a specified step.
@@ -18,11 +18,11 @@ import org.ln.noortools.util.RomanNumberUtil;
  *
  * Author: Luca Noale
  */
-public class DecR extends AbstractTag {
+public class DecrRom extends AbstractTag {
 
-    public DecR(I18n i18n, Object... arg) {
+    public DecrRom(I18n i18n, Object... arg) {
         super(i18n, arg);
-        this.tagName = "DecR";
+        this.tagName = "DecrRom";
         this.type = TagType.NUMERIC;
     }
 

@@ -4,7 +4,7 @@ import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.util.RomanNumberUtil;
 
 /**
- * Tag <IncR>
+ * Tag <IncrRom>
  *
  * Generates a sequence of Roman numerals starting from a given value, 
  * incrementing by a specified step.
@@ -18,11 +18,11 @@ import org.ln.noortools.util.RomanNumberUtil;
  *
  * Author: Luca Noale
  */
-public class IncR extends AbstractTag {
+public class IncrRom extends AbstractTag {
 
-    public IncR(I18n i18n, Object... arg) {
+    public IncrRom(I18n i18n, Object... arg) {
         super(i18n, arg);
-        this.tagName = "IncR";
+        this.tagName = "IncrRom";
         this.type = TagType.NUMERIC;
     }
 

@@ -16,16 +16,16 @@ import org.ln.noortools.tag.CreationDate;
 import org.ln.noortools.tag.Date;
 import org.ln.noortools.tag.DecrHex;
 import org.ln.noortools.tag.DecrNum;
-import org.ln.noortools.tag.DecR;
+import org.ln.noortools.tag.DecrRom;
 import org.ln.noortools.tag.FileOwner;
 import org.ln.noortools.tag.IncrLet;
 import org.ln.noortools.tag.IncrHex;
 import org.ln.noortools.tag.IncrNum;
-import org.ln.noortools.tag.IncR;
+import org.ln.noortools.tag.IncrRom;
 import org.ln.noortools.tag.Md5;
 import org.ln.noortools.tag.ModifyDate;
-import org.ln.noortools.tag.RandL;
-import org.ln.noortools.tag.RandN;
+import org.ln.noortools.tag.RandLet;
+import org.ln.noortools.tag.RandNum;
 import org.ln.noortools.tag.Sha256;
 import org.ln.noortools.tag.Subs;
 import org.ln.noortools.tag.Time;
@@ -84,15 +84,15 @@ public class TagFactory {
         register("DecrNum", args -> new DecrNum(i18n, args), new Object[]{1, 1});
         register("IncrHex", args -> new IncrHex(i18n, args), new Object[]{1, 1});
         register("DecrHex", args -> new DecrHex(i18n, args), new Object[]{1, 1});
-        register("IncR", args -> new IncR(i18n, args), new Object[]{1, 1});
-        register("DecR", args -> new DecR(i18n, args), new Object[]{1, 1});
+        register("IncrRom", args -> new IncrRom(i18n, args), new Object[]{1, 1});
+        register("DecrRom", args -> new DecrRom(i18n, args), new Object[]{1, 1});
         register("IncrLet", args -> new IncrLet(i18n, args), new Object[]{1, 1});
-        register("RandN", args -> new RandN(i18n, args), new Object[]{4, 1});
+        register("RandNum", args -> new RandNum(i18n, args), new Object[]{4, 1});
 
         // String
         register("Subs", args -> new Subs(i18n, args), new Object[]{1, 1});
         register("Word", args -> new Word(i18n, args), new Object[]{1, 1});
-        register("RandL", args -> new RandL(i18n, args), new Object[]{4, 1});
+        register("RandLet", args -> new RandLet(i18n, args), new Object[]{4, 1});
 
         // Date/Time
         register("Date", args -> new Date(i18n, args), new Object[]{"yyyy-mm-dd"});

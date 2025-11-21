@@ -5,7 +5,7 @@ import java.security.SecureRandom;
 import org.ln.noortools.i18n.I18n;
 
 /**
- * Tag <RandL>
+ * Tag <RandLet>
  *
  * Generates random strings consisting of uppercase letters (A–Z).
  *
@@ -17,14 +17,14 @@ import org.ln.noortools.i18n.I18n;
  *
  * Author: Luca Noale
  */
-public class RandL extends AbstractTag {
+public class RandLet extends AbstractTag {
 
     private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final SecureRandom RANDOM = new SecureRandom();
 
-    public RandL(I18n i18n, Object... arg) {
+    public RandLet(I18n i18n, Object... arg) {
         super(i18n, arg);
-        this.tagName = "RandL";
+        this.tagName = "RandLet";
         this.type = TagType.STRING;
     }
 
