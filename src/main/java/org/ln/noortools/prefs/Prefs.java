@@ -1,5 +1,6 @@
 package org.ln.noortools.prefs;
 
+import java.util.Locale;
 import java.util.prefs.Preferences;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +27,10 @@ public class Prefs {
     private final Preferences userPrefs = Preferences.userNodeForPackage(Prefs.class);
 
     // Global config values from application.properties
+    private static final String PREF_KEY_LANGUAGE = "language";
+    private static final String PREF_KEY_THEME = "theme";
+    private static final String PREF_KEY_FILL_VALUE = "fill.value";
+
     @Value("${app.language:it}")
     private String language;
 
@@ -44,15 +49,36 @@ public class Prefs {
     // Non-static getters (Spring style)
     // ---------------------------
     public String getLanguage() {
-        return language;
+        return userPrefs.get(PREF_KEY_LANGUAGE, language);
+    }
+
+    public void setLanguage(String language) {
+        if (language == null || language.isBlank()) {
+            return;
+        }
+        this.language = language;
+        userPrefs.put(PREF_KEY_LANGUAGE, language);
     }
 
     public String getTheme() {
-        return theme;
+        return userPrefs.get(PREF_KEY_THEME, theme);
+    }
+
+    public void setTheme(String theme) {
+        if (theme == null || theme.isBlank()) {
+            return;
+        }
+        this.theme = theme.toLowerCase(Locale.ROOT);
+        userPrefs.put(PREF_KEY_THEME, this.theme);
     }
 
     public int getFillValue() {
-        return fillValue;
+        return userPrefs.getInt(PREF_KEY_FILL_VALUE, fillValue);
+    }
+
+    public void setFillValue(int fillValue) {
+        this.fillValue = fillValue;
+        userPrefs.putInt(PREF_KEY_FILL_VALUE, fillValue);
     }
 
     // ---------------------------

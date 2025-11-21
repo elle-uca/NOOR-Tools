@@ -24,6 +24,7 @@ import javax.swing.UIManager;
 
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
+import org.ln.noortools.prefs.Prefs;
 import org.ln.noortools.service.RenameController;
 import org.ln.noortools.service.ruleservice.RenamerService;
 import org.ln.noortools.util.SwingUtil;
@@ -34,6 +35,7 @@ import org.ln.noortools.view.panel.FileTablePanel;
 import org.ln.noortools.view.panel.PanelFactory;
 import org.ln.noortools.view.panel.RuleButtonBar;
 import org.ln.noortools.view.dialog.AboutDialog;
+import org.ln.noortools.view.dialog.PreferencesDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -48,10 +50,11 @@ public class MainFrame extends JFrame {
 
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
-	private final I18n i18n;
-	private final RenamerService renamerService;
-	private final PanelFactory panelFactory;
-	private final RenameController renameController;
+        private final I18n i18n;
+        private final RenamerService renamerService;
+        private final PanelFactory panelFactory;
+        private final RenameController renameController;
+        private final Prefs prefs;
 
 	private StatusBarPanel statusBarPanel;
 	private AccordionPanel accordion;
@@ -59,20 +62,21 @@ public class MainFrame extends JFrame {
 
 
 	public MainFrame(I18n i18n,
-			RenamerService renamerService,
-			PanelFactory panelFactory,
-			AccordionFactory accordionFactory,
-			ConfigurableApplicationContext context,
-			RenameController renameController) {
-		super(i18n.get("main.title"));
-		this.i18n = i18n;
-		this.renamerService = renamerService;
-		this.panelFactory = panelFactory;
-		this.accordion = accordionFactory.createAccordion();
-		this.renameController = renameController;
+                        RenamerService renamerService,
+                        PanelFactory panelFactory,
+                        AccordionFactory accordionFactory,
+                        ConfigurableApplicationContext context,
+                        RenameController renameController,
+                        Prefs prefs) {
+                super(i18n.get("main.title"));
+                this.i18n = i18n;
+                this.renamerService = renamerService;
+                this.panelFactory = panelFactory;
+                this.accordion = accordionFactory.createAccordion();
+                this.renameController = renameController;
+                this.prefs = prefs;
 
-		// ✅ Avvio in Light mode
-		FlatLightLaf.setup();
+                setupInitialTheme();
 
 		initComponents();
 
@@ -96,12 +100,13 @@ public class MainFrame extends JFrame {
 				createTablePanel());
 		splitPane.setDividerLocation(400);
 		getContentPane().add(splitPane);
-		statusBarPanel = new StatusBarPanel(
-				i18n,
-				e -> switchTheme(),
-				e -> handleUndo(),
-				new ImageIcon(getClass().getResource("/icons/undo.png")));
-		renameController.addUndoStateListener(available -> statusBarPanel.setUndoEnabled(available));
+                statusBarPanel = new StatusBarPanel(
+                                i18n,
+                                e -> switchTheme(),
+                                e -> handleUndo(),
+                                new ImageIcon(getClass().getResource("/icons/undo.png")));
+                statusBarPanel.updateThemeSymbol(isDarkModePreferred());
+                renameController.addUndoStateListener(available -> statusBarPanel.setUndoEnabled(available));
 
 		getContentPane().add(statusBarPanel, BorderLayout.SOUTH);
 
@@ -133,6 +138,9 @@ public class MainFrame extends JFrame {
                 JMenu toolMenu = new JMenu(i18n.get("menu.tool"));
 
                 JMenu helpMenu = new JMenu(i18n.get("menu.help"));
+                JMenuItem preferencesItem = new JMenuItem(i18n.get("menu.help.preferences"));
+                preferencesItem.addActionListener(e -> showPreferences());
+                helpMenu.add(preferencesItem);
                 JMenuItem aboutItem = new JMenuItem(i18n.get("menu.help.about"));
                 aboutItem.addActionListener(e -> AboutDialog.show(this, i18n));
                 helpMenu.add(aboutItem);
@@ -194,10 +202,10 @@ public class MainFrame extends JFrame {
 			renamerService.setFiles(files);
 		}
 	}
-	private void updateStatusBar() {
-		String theme = (statusBarPanel != null && statusBarPanel.isDarkModeSelected())
-				? i18n.get("status.theme.dark")
-						: i18n.get("status.theme.light");
+        private void updateStatusBar() {
+                String theme = (statusBarPanel != null && statusBarPanel.isDarkModeSelected())
+                                ? i18n.get("status.theme.dark")
+                                                : i18n.get("status.theme.light");
 		int ruleCount = (accordion != null) ? accordion.getPanelCount() : 0;
 		String rulesMessage = ruleCount == 1
 				? i18n.get("status.rules.single", ruleCount)
@@ -205,21 +213,53 @@ public class MainFrame extends JFrame {
 		statusBarPanel.setStatusText(i18n.get("status.summary", theme, rulesMessage));
 	}
 
-	private void switchTheme() {
-		try {
-			if (statusBarPanel.isDarkModeSelected()) {
-				UIManager.setLookAndFeel(new FlatDarkLaf());
-				statusBarPanel.updateThemeSymbol(true);
-			} else {
-				UIManager.setLookAndFeel(new FlatLightLaf());
-				statusBarPanel.updateThemeSymbol(false);
-			}
-			SwingUtilities.updateComponentTreeUI(this);
-			updateStatusBar();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        private void switchTheme() {
+                try {
+                        applyTheme(statusBarPanel.isDarkModeSelected());
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+        }
+
+        private void showPreferences() {
+                PreferencesDialog dialog = new PreferencesDialog(this, i18n, prefs);
+                dialog.setVisible(true);
+                if (dialog.isSaved()) {
+                        applyTheme("dark".equalsIgnoreCase(dialog.getSelectedTheme()));
+                        updateStatusBar();
+                }
+        }
+
+        private void applyTheme(boolean darkMode) {
+                try {
+                        if (darkMode) {
+                                UIManager.setLookAndFeel(new FlatDarkLaf());
+                                prefs.setTheme("dark");
+                        } else {
+                                UIManager.setLookAndFeel(new FlatLightLaf());
+                                prefs.setTheme("light");
+                        }
+                        if (statusBarPanel != null) {
+                                statusBarPanel.updateThemeSymbol(darkMode);
+                        }
+                        SwingUtilities.updateComponentTreeUI(this);
+                        updateStatusBar();
+                } catch (Exception e) {
+                        logger.error("Unable to apply theme", e);
+                }
+        }
+
+        private boolean isDarkModePreferred() {
+                return "dark".equalsIgnoreCase(prefs.getTheme());
+        }
+
+        private void setupInitialTheme() {
+                if (isDarkModePreferred()) {
+                        FlatDarkLaf.setup();
+                } else {
+                        FlatLightLaf.setup();
+                }
+        }
 
 
 	private void rename()  {
