@@ -7,7 +7,7 @@ import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.ln.noortools.preferences.Prefs;
+import org.ln.noortools.preferences.PreferencesService;
 
 /**
  * Swing utility methods.
@@ -29,7 +29,7 @@ public final class SwingUtil {
      * @return configured file chooser
      */
     public static JFileChooser getFileChooser(int mode, boolean multi) {
-        String lastPath = Prefs.loadLastDir();
+        String lastPath = PreferencesService.loadLastDir();
         File startDir = (lastPath != null && !lastPath.isBlank())
                 ? new File(lastPath)
                 : new File(System.getProperty("user.home"));
@@ -63,7 +63,7 @@ public final class SwingUtil {
             // Save last directory for next use
             File selected = fc.getSelectedFile();
             if (selected != null) {
-                Prefs.saveLastDir(selected.getParent());
+                PreferencesService.saveLastDir(selected.getParent());
             }
 
             if (multi) {

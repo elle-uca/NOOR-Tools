@@ -25,9 +25,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
-import org.ln.noortools.preferences.PreferencesDialog;
 import org.ln.noortools.preferences.PreferencesService;
-import org.ln.noortools.preferences.Prefs;
 import org.ln.noortools.service.RenameController;
 import org.ln.noortools.service.ruleservice.RenamerService;
 import org.ln.noortools.util.SwingUtil;
@@ -53,11 +51,11 @@ public class MainFrame extends JFrame {
 
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
-	private final I18n i18n;
-	private final RenamerService renamerService;
-	private final PanelFactory panelFactory;
-	private final RenameController renameController;
-	private final Prefs prefs;
+        private final I18n i18n;
+        private final RenamerService renamerService;
+        private final PanelFactory panelFactory;
+        private final RenameController renameController;
+        private final PreferencesService prefs;
 
 	private StatusBarPanel statusBarPanel;
 	private AccordionPanel accordion;
@@ -65,21 +63,21 @@ public class MainFrame extends JFrame {
 
 
 	public MainFrame(I18n i18n,
-			RenamerService renamerService,
-			PanelFactory panelFactory,
-			AccordionFactory accordionFactory,
-			ConfigurableApplicationContext context,
-			RenameController renameController,
-			Prefs prefs) {
-		super(i18n.get("main.title"));
-		this.i18n = i18n;
-		this.renamerService = renamerService;
-		this.panelFactory = panelFactory;
-		this.accordion = accordionFactory.createAccordion();
-		this.renameController = renameController;
-		this.prefs = prefs;
+                        RenamerService renamerService,
+                        PanelFactory panelFactory,
+                        AccordionFactory accordionFactory,
+                        ConfigurableApplicationContext context,
+                        RenameController renameController,
+                        PreferencesService prefs) {
+                super(i18n.get("main.title"));
+                this.i18n = i18n;
+                this.renamerService = renamerService;
+                this.panelFactory = panelFactory;
+                this.accordion = accordionFactory.createAccordion();
+                this.renameController = renameController;
+                this.prefs = prefs;
 
-
+                setupInitialTheme();
 
 		initComponents();
 

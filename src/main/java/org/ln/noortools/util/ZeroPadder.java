@@ -1,6 +1,6 @@
 package org.ln.noortools.util;
 
-import org.ln.noortools.preferences.Prefs;
+import org.ln.noortools.preferences.PreferencesService;
 
 public class ZeroPadder {
 
@@ -110,8 +110,8 @@ public class ZeroPadder {
 			return displayName; 
 		}
 
-		public  static FillOption getByPref() {
-			return fromString(Prefs.getProp("FILL_TYPE", "NO_FILL"));
+                public  static FillOption getByPref() {
+                        return fromString(PreferencesService.getProp("FILL_TYPE", "NO_FILL"));
 
 		}
 		/**
