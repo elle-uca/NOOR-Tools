@@ -12,6 +12,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 @SpringBootApplication
 public class NoorToolsApplication {
 
+
+	
     public static void main(String[] args) {
         // 1) Mostra lo splash
         SplashScreen splash = new SplashScreen();

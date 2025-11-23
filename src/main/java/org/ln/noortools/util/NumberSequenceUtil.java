@@ -3,7 +3,7 @@ package org.ln.noortools.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ln.noortools.prefs.Prefs;
+import org.ln.noortools.preferences.Prefs;
 import org.ln.noortools.util.ZeroPadder.FillOption;
 
 public class NumberSequenceUtil {

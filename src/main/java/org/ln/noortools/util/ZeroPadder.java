@@ -1,6 +1,6 @@
 package org.ln.noortools.util;
 
-import org.ln.noortools.prefs.Prefs;
+import org.ln.noortools.preferences.Prefs;
 
 public class ZeroPadder {
 

@@ -1,4 +1,4 @@
-package org.ln.noortools.prefs;
+package org.ln.noortools.preferences;
 
 import java.util.Locale;
 import java.util.prefs.Preferences;

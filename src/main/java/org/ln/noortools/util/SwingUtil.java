@@ -7,7 +7,7 @@ import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.ln.noortools.prefs.Prefs;
+import org.ln.noortools.preferences.Prefs;
 
 /**
  * Swing utility methods.

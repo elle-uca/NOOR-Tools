@@ -28,7 +28,7 @@ public final class AboutDialog {
         JPanel content = new JPanel(new BorderLayout(12, 12));
         content.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JLabel logoLabel = new JLabel(new ImageIcon(AboutDialog.class.getResource("/img/noor.png")));
+        JLabel logoLabel = new JLabel(new ImageIcon(AboutDialog.class.getResource("/img/noor-splash.png")));
         content.add(logoLabel, BorderLayout.WEST);
 
         JPanel infoPanel = new JPanel();

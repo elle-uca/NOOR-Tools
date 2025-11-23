@@ -21,24 +21,27 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
-import org.ln.noortools.prefs.Prefs;
+import org.ln.noortools.preferences.PreferencesDialog;
+import org.ln.noortools.preferences.PreferencesService;
+import org.ln.noortools.preferences.Prefs;
 import org.ln.noortools.service.RenameController;
 import org.ln.noortools.service.ruleservice.RenamerService;
 import org.ln.noortools.util.SwingUtil;
 import org.ln.noortools.view.component.StatusBarPanel;
+import org.ln.noortools.view.dialog.AboutDialog;
 import org.ln.noortools.view.panel.AccordionFactory;
 import org.ln.noortools.view.panel.AccordionPanel;
 import org.ln.noortools.view.panel.FileTablePanel;
 import org.ln.noortools.view.panel.PanelFactory;
 import org.ln.noortools.view.panel.RuleButtonBar;
-import org.ln.noortools.view.dialog.AboutDialog;
-import org.ln.noortools.view.dialog.PreferencesDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import com.formdev.flatlaf.FlatDarkLaf;
@@ -50,11 +53,11 @@ public class MainFrame extends JFrame {
 
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
-        private final I18n i18n;
-        private final RenamerService renamerService;
-        private final PanelFactory panelFactory;
-        private final RenameController renameController;
-        private final Prefs prefs;
+	private final I18n i18n;
+	private final RenamerService renamerService;
+	private final PanelFactory panelFactory;
+	private final RenameController renameController;
+	private final Prefs prefs;
 
 	private StatusBarPanel statusBarPanel;
 	private AccordionPanel accordion;
@@ -62,21 +65,21 @@ public class MainFrame extends JFrame {
 
 
 	public MainFrame(I18n i18n,
-                        RenamerService renamerService,
-                        PanelFactory panelFactory,
-                        AccordionFactory accordionFactory,
-                        ConfigurableApplicationContext context,
-                        RenameController renameController,
-                        Prefs prefs) {
-                super(i18n.get("main.title"));
-                this.i18n = i18n;
-                this.renamerService = renamerService;
-                this.panelFactory = panelFactory;
-                this.accordion = accordionFactory.createAccordion();
-                this.renameController = renameController;
-                this.prefs = prefs;
+			RenamerService renamerService,
+			PanelFactory panelFactory,
+			AccordionFactory accordionFactory,
+			ConfigurableApplicationContext context,
+			RenameController renameController,
+			Prefs prefs) {
+		super(i18n.get("main.title"));
+		this.i18n = i18n;
+		this.renamerService = renamerService;
+		this.panelFactory = panelFactory;
+		this.accordion = accordionFactory.createAccordion();
+		this.renameController = renameController;
+		this.prefs = prefs;
 
-                setupInitialTheme();
+
 
 		initComponents();
 
@@ -100,13 +103,13 @@ public class MainFrame extends JFrame {
 				createTablePanel());
 		splitPane.setDividerLocation(400);
 		getContentPane().add(splitPane);
-                statusBarPanel = new StatusBarPanel(
-                                i18n,
-                                e -> switchTheme(),
-                                e -> handleUndo(),
-                                new ImageIcon(getClass().getResource("/icons/undo.png")));
-                statusBarPanel.updateThemeSymbol(isDarkModePreferred());
-                renameController.addUndoStateListener(available -> statusBarPanel.setUndoEnabled(available));
+		statusBarPanel = new StatusBarPanel(
+				i18n,
+				//e -> switchTheme(),
+				e -> handleUndo(),
+				new ImageIcon(getClass().getResource("/icons/undo.png")));
+		//statusBarPanel.updateThemeSymbol(isDarkModePreferred());
+		renameController.addUndoStateListener(available -> statusBarPanel.setUndoEnabled(available));
 
 		getContentPane().add(statusBarPanel, BorderLayout.SOUTH);
 
@@ -130,28 +133,39 @@ public class MainFrame extends JFrame {
 				new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
 		fileMenu.add(exitItem);
 
-                JMenu viewMenu = new JMenu(i18n.get("menu.view"));
-                JMenuItem themeItem = new JMenuItem(i18n.get("menu.view.toggleTheme"));
-                themeItem.addActionListener(e -> statusBarPanel.toggleTheme());
-                viewMenu.add(themeItem);
+		JMenu viewMenu = new JMenu(i18n.get("menu.view"));
+//		JMenuItem themeItem = new JMenuItem(i18n.get("menu.view.toggleTheme"));
+//		themeItem.addActionListener(e -> statusBarPanel.toggleTheme());
+	//	viewMenu.add(themeItem);
 
-                JMenu toolMenu = new JMenu(i18n.get("menu.tool"));
+		JMenu toolMenu = new JMenu(i18n.get("menu.tool"));
 
-                JMenu helpMenu = new JMenu(i18n.get("menu.help"));
-                JMenuItem preferencesItem = new JMenuItem(i18n.get("menu.help.preferences"));
-                preferencesItem.addActionListener(e -> showPreferences());
-                helpMenu.add(preferencesItem);
-                JMenuItem aboutItem = new JMenuItem(i18n.get("menu.help.about"));
-                aboutItem.addActionListener(e -> AboutDialog.show(this, i18n));
-                helpMenu.add(aboutItem);
+		JMenu helpMenu = new JMenu(i18n.get("menu.help"));
+		JMenuItem preferencesItem = new JMenuItem(i18n.get("menu.help.preferences"));
+		PreferencesService preferencesService = preferencesService() ;
+		preferencesItem.addActionListener(e -> {
+			PreferencesDialog dialog = new PreferencesDialog(this, preferencesService);
+			dialog.setVisible(true);
+		});
 
-                menuBar.add(fileMenu);
-                menuBar.add(viewMenu);
-                menuBar.add(toolMenu);
-                menuBar.add(helpMenu);
+		// preferencesItem.addActionListener(e -> showPreferences());
+		helpMenu.add(preferencesItem);
+		JMenuItem aboutItem = new JMenuItem(i18n.get("menu.help.about"));
+		aboutItem.addActionListener(e -> AboutDialog.show(this, i18n));
+		helpMenu.add(aboutItem);
+
+		menuBar.add(fileMenu);
+		menuBar.add(viewMenu);
+		menuBar.add(toolMenu);
+		menuBar.add(helpMenu);
 
 		setJMenuBar(menuBar);
 
+	}
+
+	@Bean
+	public PreferencesService preferencesService() {
+		return new PreferencesService();
 	}
 
 	private JPanel createMethodPanel() {
@@ -202,64 +216,21 @@ public class MainFrame extends JFrame {
 			renamerService.setFiles(files);
 		}
 	}
-        private void updateStatusBar() {
-                String theme = (statusBarPanel != null && statusBarPanel.isDarkModeSelected())
-                                ? i18n.get("status.theme.dark")
-                                                : i18n.get("status.theme.light");
+	private void updateStatusBar() {
+//		String theme = (statusBarPanel != null && statusBarPanel.isDarkModeSelected())
+//				? i18n.get("status.theme.dark")
+//						: i18n.get("status.theme.light");
 		int ruleCount = (accordion != null) ? accordion.getPanelCount() : 0;
 		String rulesMessage = ruleCount == 1
 				? i18n.get("status.rules.single", ruleCount)
 						: i18n.get("status.rules.multiple", ruleCount);
-		statusBarPanel.setStatusText(i18n.get("status.summary", theme, rulesMessage));
+		//statusBarPanel.setStatusText(i18n.get("status.summary", theme, rulesMessage));
 	}
 
-        private void switchTheme() {
-                try {
-                        applyTheme(statusBarPanel.isDarkModeSelected());
-                } catch (Exception e) {
-                        e.printStackTrace();
-                }
-        }
 
-        private void showPreferences() {
-                PreferencesDialog dialog = new PreferencesDialog(this, i18n, prefs);
-                dialog.setVisible(true);
-                if (dialog.isSaved()) {
-                        applyTheme("dark".equalsIgnoreCase(dialog.getSelectedTheme()));
-                        updateStatusBar();
-                }
-        }
 
-        private void applyTheme(boolean darkMode) {
-                try {
-                        if (darkMode) {
-                                UIManager.setLookAndFeel(new FlatDarkLaf());
-                                prefs.setTheme("dark");
-                        } else {
-                                UIManager.setLookAndFeel(new FlatLightLaf());
-                                prefs.setTheme("light");
-                        }
-                        if (statusBarPanel != null) {
-                                statusBarPanel.updateThemeSymbol(darkMode);
-                        }
-                        SwingUtilities.updateComponentTreeUI(this);
-                        updateStatusBar();
-                } catch (Exception e) {
-                        logger.error("Unable to apply theme", e);
-                }
-        }
 
-        private boolean isDarkModePreferred() {
-                return "dark".equalsIgnoreCase(prefs.getTheme());
-        }
 
-        private void setupInitialTheme() {
-                if (isDarkModePreferred()) {
-                        FlatDarkLaf.setup();
-                } else {
-                        FlatLightLaf.setup();
-                }
-        }
 
 
 	private void rename()  {
@@ -276,9 +247,9 @@ public class MainFrame extends JFrame {
 		try {
 			renameController.undoLastRename();
 			JOptionPane.showMessageDialog(this, i18n.get("undo.success"));
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(this, i18n.get("undo.error", ex.getMessage()));
-			logger.error("Undo failed", ex);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, i18n.get("undo.error", e.getMessage()));
+			logger.error("Undo failed", e);
 		}
 	}
 
