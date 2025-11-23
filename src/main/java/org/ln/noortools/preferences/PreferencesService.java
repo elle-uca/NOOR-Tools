@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
  * accessed from any part of the application, regardless of whether Spring
  * dependency injection is available.
  */
+
 @Service
 public class PreferencesService {
 

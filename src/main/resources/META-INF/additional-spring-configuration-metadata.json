@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "app.language",
+    "type": "java.lang.String",
+    "description": "A description for 'app.language'"
+  },
+  {
+    "name": "app.theme",
+    "type": "java.lang.String",
+    "description": "A description for 'app.theme'"
+  },
+  {
+    "name": "app.fill.value",
+    "type": "java.lang.String",
+    "description": "A description for 'app.fill.value'"
+  }
+]}

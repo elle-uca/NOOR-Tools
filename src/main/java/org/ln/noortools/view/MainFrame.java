@@ -19,12 +19,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
+import org.ln.noortools.preferences.PreferencesDialog;
 import org.ln.noortools.preferences.PreferencesService;
 import org.ln.noortools.service.RenameController;
 import org.ln.noortools.service.ruleservice.RenamerService;
@@ -39,11 +37,7 @@ import org.ln.noortools.view.panel.RuleButtonBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-
-import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatLightLaf;
 
 @SuppressWarnings("serial")
 @Component
@@ -55,7 +49,6 @@ public class MainFrame extends JFrame {
         private final RenamerService renamerService;
         private final PanelFactory panelFactory;
         private final RenameController renameController;
-        private final PreferencesService prefs;
 
 	private StatusBarPanel statusBarPanel;
 	private AccordionPanel accordion;
@@ -67,17 +60,13 @@ public class MainFrame extends JFrame {
                         PanelFactory panelFactory,
                         AccordionFactory accordionFactory,
                         ConfigurableApplicationContext context,
-                        RenameController renameController,
-                        PreferencesService prefs) {
+                        RenameController renameController) {
                 super(i18n.get("main.title"));
                 this.i18n = i18n;
                 this.renamerService = renamerService;
                 this.panelFactory = panelFactory;
                 this.accordion = accordionFactory.createAccordion();
                 this.renameController = renameController;
-                this.prefs = prefs;
-
-                setupInitialTheme();
 
 		initComponents();
 
@@ -140,9 +129,9 @@ public class MainFrame extends JFrame {
 
 		JMenu helpMenu = new JMenu(i18n.get("menu.help"));
 		JMenuItem preferencesItem = new JMenuItem(i18n.get("menu.help.preferences"));
-		PreferencesService preferencesService = preferencesService() ;
+		//PreferencesService.getInstance() preferencesService = preferencesService() ;
 		preferencesItem.addActionListener(e -> {
-			PreferencesDialog dialog = new PreferencesDialog(this, preferencesService);
+			PreferencesDialog dialog = new PreferencesDialog(this, PreferencesService.getInstance());
 			dialog.setVisible(true);
 		});
 
@@ -161,10 +150,10 @@ public class MainFrame extends JFrame {
 
 	}
 
-	@Bean
-	public PreferencesService preferencesService() {
-		return new PreferencesService();
-	}
+//	@Bean
+//	public PreferencesService preferencesService() {
+//		return new PreferencesService();
+//	}
 
 	private JPanel createMethodPanel() {
 		JPanel panel = new JPanel(new BorderLayout());
@@ -224,10 +213,6 @@ public class MainFrame extends JFrame {
 						: i18n.get("status.rules.multiple", ruleCount);
 		//statusBarPanel.setStatusText(i18n.get("status.summary", theme, rulesMessage));
 	}
-
-
-
-
 
 
 

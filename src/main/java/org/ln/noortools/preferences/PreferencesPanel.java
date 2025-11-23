@@ -62,7 +62,7 @@ public class PreferencesPanel extends JPanel {
         add(new JLabel("Tema:"));
         themeBox = new JComboBox<>(themeMap.keySet().toArray(new String[0]));
 
-        String currentKey = prefs.getThemeKey();
+        String currentKey = prefs.getTheme();
         String currentLabel = themeMap.entrySet().stream()
                 .filter(e -> e.getValue().equalsIgnoreCase(currentKey))
                 .map(Map.Entry::getKey)
@@ -94,11 +94,11 @@ public class PreferencesPanel extends JPanel {
 
         String selectedLabel = (String) themeBox.getSelectedItem();
         String themeKey = themeMap.getOrDefault(selectedLabel, "light");
-        prefs.setThemeKey(themeKey);
+        prefs.setTheme(themeKey);
 
-        prefs.save();
+        //prefs.save();
         ThemeManager.applyTheme(themeKey);
-
+        
         if (closeAfter) {
             SwingUtilities.getWindowAncestor(this).dispose();
         }
