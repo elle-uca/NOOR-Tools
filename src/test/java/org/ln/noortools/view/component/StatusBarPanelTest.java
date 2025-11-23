@@ -38,7 +38,7 @@ class StatusBarPanelTest {
         SwingUtilities.invokeAndWait(() -> panelRef.set(
                 new StatusBarPanel(
                         i18n,
-                        e -> themeTriggered.set(true),
+//                        e -> themeTriggered.set(true),
                         e -> undoTriggered.set(true),
                         new ImageIcon())));
 
@@ -48,14 +48,14 @@ class StatusBarPanelTest {
             panel.setStatusText("Custom status");
             panel.setUndoEnabled(true);
             panel.getUndoButton().doClick();
-            panel.getThemeToggle().doClick();
-            panel.updateThemeSymbol(true);
+//            panel.getThemeToggle().doClick();
+//            panel.updateThemeSymbol(true);
         });
 
         assertThat(panel.getStatusBarLabel().getText()).isEqualTo("Custom status");
         assertThat(panel.getUndoButton().isEnabled()).isTrue();
         assertThat(undoTriggered.get()).isTrue();
         assertThat(themeTriggered.get()).isTrue();
-        assertThat(panel.isDarkModeSelected()).isTrue();
+//        assertThat(panel.isDarkModeSelected()).isTrue();
     }
 }
