@@ -3,7 +3,7 @@ package org.ln.noortools.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ln.noortools.prefs.Prefs;
+import org.ln.noortools.preferences.PreferencesService;
 import org.ln.noortools.util.ZeroPadder.FillOption;
 
 public class NumberSequenceUtil {
@@ -16,7 +16,7 @@ public class NumberSequenceUtil {
             result.add(
                 ZeroPadder.padNumber(
                     curr,
-                    Integer.parseInt(Prefs.getProp("FILL_VALUE", "0")),
+                    Integer.parseInt(PreferencesService.getProp("FILL_VALUE", "0")),
                     FillOption.getByPref()
                 )
             );

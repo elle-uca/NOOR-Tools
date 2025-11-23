@@ -16,7 +16,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 
 import org.ln.noortools.i18n.I18n;
-import org.ln.noortools.prefs.Prefs;
+import org.ln.noortools.preferences.PreferencesService;
 
 @SuppressWarnings("serial")
 public class PreferencesDialog extends JDialog {
@@ -25,7 +25,7 @@ public class PreferencesDialog extends JDialog {
     private final JSpinner fillValueSpinner;
     private boolean saved;
 
-    public PreferencesDialog(JFrame owner, I18n i18n, Prefs prefs) {
+    public PreferencesDialog(JFrame owner, I18n i18n, PreferencesService prefs) {
         super(owner, true);
         setTitle(i18n.get("preferences.title"));
 
@@ -71,7 +71,7 @@ public class PreferencesDialog extends JDialog {
         return panel;
     }
 
-    private JPanel buildButtonPanel(I18n i18n, Prefs prefs) {
+    private JPanel buildButtonPanel(I18n i18n, PreferencesService prefs) {
         JPanel panel = new JPanel();
 
         JButton cancel = new JButton(i18n.get("preferences.cancel"));

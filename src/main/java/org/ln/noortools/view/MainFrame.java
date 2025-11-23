@@ -24,7 +24,7 @@ import javax.swing.UIManager;
 
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
-import org.ln.noortools.prefs.Prefs;
+import org.ln.noortools.preferences.PreferencesService;
 import org.ln.noortools.service.RenameController;
 import org.ln.noortools.service.ruleservice.RenamerService;
 import org.ln.noortools.util.SwingUtil;
@@ -54,7 +54,7 @@ public class MainFrame extends JFrame {
         private final RenamerService renamerService;
         private final PanelFactory panelFactory;
         private final RenameController renameController;
-        private final Prefs prefs;
+        private final PreferencesService prefs;
 
 	private StatusBarPanel statusBarPanel;
 	private AccordionPanel accordion;
@@ -67,7 +67,7 @@ public class MainFrame extends JFrame {
                         AccordionFactory accordionFactory,
                         ConfigurableApplicationContext context,
                         RenameController renameController,
-                        Prefs prefs) {
+                        PreferencesService prefs) {
                 super(i18n.get("main.title"));
                 this.i18n = i18n;
                 this.renamerService = renamerService;
