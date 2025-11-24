@@ -7,6 +7,7 @@ import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.ln.noortools.SpringContext;
 import org.ln.noortools.preferences.PreferencesService;
 
 /**
@@ -29,7 +30,8 @@ public final class SwingUtil {
      * @return configured file chooser
      */
     public static JFileChooser getFileChooser(int mode, boolean multi) {
-        String lastPath = PreferencesService.loadLastDir();
+    	PreferencesService prefs = SpringContext.getBean(PreferencesService.class);
+        String lastPath = prefs.loadLastFile();
         File startDir = (lastPath != null && !lastPath.isBlank())
                 ? new File(lastPath)
                 : new File(System.getProperty("user.home"));
@@ -63,7 +65,8 @@ public final class SwingUtil {
             // Save last directory for next use
             File selected = fc.getSelectedFile();
             if (selected != null) {
-                PreferencesService.saveLastDir(selected.getParent());
+            	PreferencesService prefs = SpringContext.getBean(PreferencesService.class);
+            	prefs.saveLastFile(selected.getParent());
             }
 
             if (multi) {

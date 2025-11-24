@@ -49,6 +49,7 @@ public class MainFrame extends JFrame {
         private final RenamerService renamerService;
         private final PanelFactory panelFactory;
         private final RenameController renameController;
+        private final PreferencesService prefs;
 
 	private StatusBarPanel statusBarPanel;
 	private AccordionPanel accordion;
@@ -60,13 +61,15 @@ public class MainFrame extends JFrame {
                         PanelFactory panelFactory,
                         AccordionFactory accordionFactory,
                         ConfigurableApplicationContext context,
-                        RenameController renameController) {
+                        RenameController renameController,
+                        PreferencesService service) {
                 super(i18n.get("main.title"));
                 this.i18n = i18n;
                 this.renamerService = renamerService;
                 this.panelFactory = panelFactory;
                 this.accordion = accordionFactory.createAccordion();
                 this.renameController = renameController;
+                this.prefs = service;
 
 		initComponents();
 
@@ -131,7 +134,7 @@ public class MainFrame extends JFrame {
 		JMenuItem preferencesItem = new JMenuItem(i18n.get("menu.help.preferences"));
 		//PreferencesService.getInstance() preferencesService = preferencesService() ;
 		preferencesItem.addActionListener(e -> {
-			PreferencesDialog dialog = new PreferencesDialog(this, PreferencesService.getInstance());
+			PreferencesDialog dialog = new PreferencesDialog(this, prefs);
 			dialog.setVisible(true);
 		});
 

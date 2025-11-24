@@ -2,8 +2,10 @@ package org.ln.noortools;
 
 import javax.swing.SwingUtilities;
 
+import org.ln.noortools.preferences.PreferencesService;
 import org.ln.noortools.view.MainFrame;
 import org.ln.noortools.view.SplashScreen;
+import org.ln.noortools.view.ThemeManager;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -34,6 +36,11 @@ public class NoorToolsApplication {
                 .headless(false)
                 .web(WebApplicationType.NONE)
                 .run(args);
+        // 1) recupera le preferenze
+        PreferencesService prefs = context.getBean(PreferencesService.class);
+
+        // 2) applica il tema PRIMA di creare le finestre
+        ThemeManager.applyTheme(prefs.getTheme());
 
         SwingUtilities.invokeLater(() -> {
             MainFrame frame = context.getBean(MainFrame.class);

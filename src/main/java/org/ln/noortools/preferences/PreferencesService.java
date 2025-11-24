@@ -22,24 +22,22 @@ public class PreferencesService {
     private static final String PREF_KEY_LANGUAGE = "language";
     private static final String PREF_KEY_THEME = "theme";
     private static final String PREF_KEY_FILL_VALUE = "fill.value";
+    private static final String PREF_KEY_FILL_TYPE = "fill.type";
     private static final String PREF_KEY_WINDOW_WIDTH = "window.width";
     private static final String PREF_KEY_WINDOW_HEIGHT = "window.height";
     private static final String PREF_KEY_LAST_FILE = "lastFile";
     private static final String PREF_KEY_LAST_DIR = "lastDir";
 
-    private static volatile PreferencesService instance;
 
     private final Preferences userPrefs;
     private final String defaultLanguage;
     private final String defaultTheme;
     private final int defaultFillValue;
 
-    public PreferencesService() {
-        this(loadDefaults());
-        instance = this;
-    }
 
-    private PreferencesService(Properties defaults) {
+
+    private PreferencesService() {
+    	Properties defaults = loadDefaults();
         this.userPrefs = Preferences.userNodeForPackage(PreferencesService.class);
         this.defaultLanguage = defaults.getProperty("app.language", "it");
         this.defaultTheme = defaults.getProperty("app.theme", "light");
@@ -59,16 +57,16 @@ public class PreferencesService {
         return props;
     }
 
-    public static PreferencesService getInstance() {
-        if (instance == null) {
-            synchronized (PreferencesService.class) {
-                if (instance == null) {
-                    instance = new PreferencesService(loadDefaults());
-                }
-            }
-        }
-        return instance;
-    }
+//    public static PreferencesService getInstance() {
+//        if (instance == null) {
+//            synchronized (PreferencesService.class) {
+//                if (instance == null) {
+//                    instance = new PreferencesService(loadDefaults());
+//                }
+//            }
+//        }
+//        return instance;
+//    }
 
     // ---------------------------
     // Preference getters/setters
@@ -102,8 +100,18 @@ public class PreferencesService {
     public void setFillValue(int fillValue) {
         userPrefs.putInt(PREF_KEY_FILL_VALUE, fillValue);
     }
+    
+    
+    
 
-    public void saveWindowSize(int width, int height) {
+    /**
+	 * @return the prefKeyFillType
+	 */
+	public static String getPrefKeyFillType() {
+		return PREF_KEY_FILL_TYPE;
+	}
+
+	public void saveWindowSize(int width, int height) {
         userPrefs.putInt(PREF_KEY_WINDOW_WIDTH, width);
         userPrefs.putInt(PREF_KEY_WINDOW_HEIGHT, height);
     }
@@ -137,44 +145,44 @@ public class PreferencesService {
     // ---------------------------
     // Legacy static-style helpers
     // ---------------------------
-    public static String getProp(String key, String def) {
-        return getInstance().resolveProperty(key, def);
-    }
-
-    public static void saveWindow(int w, int h) {
-        getInstance().saveWindowSize(w, h);
-    }
-
-    public static int[] loadWindow() {
-        return getInstance().loadWindowSize();
-    }
-
-    public static void saveLastDir(String path) {
-        getInstance().saveLastDirectory(path);
-    }
-
-    public static String loadLastDir() {
-        return getInstance().loadLastDirectory();
-    }
-
-    private String resolveProperty(String key, String def) {
-        if (key == null || key.isBlank()) {
-            return def;
-        }
-
-        String normalized = key.trim()
-                .toLowerCase()
-                .replace('_', '.');
-
-        if (normalized.startsWith("app.")) {
-            normalized = normalized.substring(4);
-        }
-
-        return switch (normalized) {
-            case PREF_KEY_LANGUAGE -> getLanguage();
-            case PREF_KEY_THEME -> getTheme();
-            case PREF_KEY_FILL_VALUE -> String.valueOf(getFillValue());
-            default -> def;
-        };
-    }
+//    public static String getProp(String key, String def) {
+//        return getInstance().resolveProperty(key, def);
+//    }
+//
+//    public static void saveWindow(int w, int h) {
+//        getInstance().saveWindowSize(w, h);
+//    }
+//
+//    public static int[] loadWindow() {
+//        return getInstance().loadWindowSize();
+//    }
+//
+//    public static void saveLastDir(String path) {
+//        getInstance().saveLastDirectory(path);
+//    }
+//
+//    public static String loadLastDir() {
+//        return getInstance().loadLastDirectory();
+//    }
+//
+//    private String resolveProperty(String key, String def) {
+//        if (key == null || key.isBlank()) {
+//            return def;
+//        }
+//
+//        String normalized = key.trim()
+//                .toLowerCase()
+//                .replace('_', '.');
+//
+//        if (normalized.startsWith("app.")) {
+//            normalized = normalized.substring(4);
+//        }
+//
+//        return switch (normalized) {
+//            case PREF_KEY_LANGUAGE -> getLanguage();
+//            case PREF_KEY_THEME -> getTheme();
+//            case PREF_KEY_FILL_VALUE -> String.valueOf(getFillValue());
+//            default -> def;
+//        };
+//    }
 }
