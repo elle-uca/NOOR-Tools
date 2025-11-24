@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.ln.noortools.SpringContext;
 import org.ln.noortools.preferences.PreferencesService;
-import org.ln.noortools.util.ZeroPadder.FillOption;
 
 public class NumberSequenceUtil {
 
@@ -19,7 +18,7 @@ public class NumberSequenceUtil {
                 ZeroPadder.padNumber(
                     curr,
                     prefs.getFillValue(),
-                    FillOption.getByPref()
+                    prefs.getFillType()
                 )
             );
             curr = ascending ? curr + step : curr - step;

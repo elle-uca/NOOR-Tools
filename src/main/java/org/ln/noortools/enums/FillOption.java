@@ -21,10 +21,10 @@ public enum FillOption {
 		return displayName; 
 	}
 
-	public  static FillOption getByPref() {
-		return fromString(RnPrefs.getInstance().getGlobalProperty("FILL_TYPE"));
-
-	}
+//	public  static FillOption getByPref() {
+//		return fromString(RnPrefs.getInstance().getGlobalProperty("FILL_TYPE"));
+//
+//	}
 	/**
 	 * Questo metodo è case-insensitive (non fa distinzione tra maiuscole e minuscole)
 	 * e restituisce un valore di default se la stringa non corrisponde a nessuna costante.

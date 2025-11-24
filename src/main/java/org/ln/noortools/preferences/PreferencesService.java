@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.prefs.Preferences;
 
+import org.ln.noortools.enums.FillOption;
 import org.springframework.stereotype.Service;
 
 /**
@@ -101,7 +102,10 @@ public class PreferencesService {
         userPrefs.putInt(PREF_KEY_FILL_VALUE, fillValue);
     }
     
-    
+    public FillOption getFillType() {
+    	//return userPrefs.get(PREF_KEY_FILL_TYPE, "NO_FILL");
+    	return FillOption.fromString(userPrefs.get(PREF_KEY_FILL_TYPE, "NO_FILL"));
+    }
     
 
     /**
