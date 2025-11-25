@@ -58,16 +58,6 @@ public class PreferencesService {
         return props;
     }
 
-//    public static PreferencesService getInstance() {
-//        if (instance == null) {
-//            synchronized (PreferencesService.class) {
-//                if (instance == null) {
-//                    instance = new PreferencesService(loadDefaults());
-//                }
-//            }
-//        }
-//        return instance;
-//    }
 
     // ---------------------------
     // Preference getters/setters
@@ -103,7 +93,6 @@ public class PreferencesService {
     }
     
     public FillOption getFillType() {
-    	//return userPrefs.get(PREF_KEY_FILL_TYPE, "NO_FILL");
     	return FillOption.fromString(userPrefs.get(PREF_KEY_FILL_TYPE, "NO_FILL"));
     }
     

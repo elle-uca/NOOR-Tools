@@ -1,7 +1,6 @@
 package org.ln.noortools.view.panel;
 
 import java.awt.Cursor;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 
@@ -10,6 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+
+import net.miginfocom.swing.MigLayout;
 
 /**
  * Horizontal bar with shortcuts to add rule panels inside the accordion.
@@ -22,14 +23,15 @@ public class RuleButtonBar extends JPanel {
     private final Runnable statusUpdater;
 
     public RuleButtonBar(PanelFactory panelFactory, AccordionPanel accordion, Runnable statusUpdater) {
-        super(new FlowLayout(FlowLayout.LEFT, 8, 6));
+      // super(new FlowLayout(FlowLayout.LEFT, 8, 6));
+    	super(new MigLayout("", "[][][]", "[][][]"));
         this.panelFactory = panelFactory;
         this.accordion = accordion;
         this.statusUpdater = statusUpdater;
 
         add(newRuleButton("New Name", "NEW", "wrench.svg"));
         add(newRuleButton("Aggiungi", "ADD", "plus.svg"));
-        add(newRuleButton("Rimuovi", "REMOVE", "x.svg"));
+        add(newRuleButton("Rimuovi", "REMOVE", "x.svg"), "wrap");
         add(newRuleButton("Replace", "REPLACE", "rotate.svg"));
         add(newRuleButton("Case", "CASE", "case-upper.svg"));
     }
