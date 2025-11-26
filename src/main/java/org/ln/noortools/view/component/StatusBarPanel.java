@@ -24,11 +24,9 @@ public class StatusBarPanel extends JPanel {
 
    // private final I18n i18n;
     private final JLabel statusBarLabel;
-   // private final JToggleButton themeToggle;
     private final JButton undoButton;
 
     public StatusBarPanel(I18n i18n, 
-    		//ActionListener themeSwitchListener, 
     		ActionListener undoListener, 
     		Icon undoIcon) {
         super(new FlowLayout(FlowLayout.LEADING));
@@ -37,11 +35,6 @@ public class StatusBarPanel extends JPanel {
         statusBarLabel = new JLabel(i18n.get("status.initial"));
         statusBarLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         statusBarLabel.setFont(statusBarLabel.getFont().deriveFont(Font.PLAIN, 12f));
-
-//        themeToggle = new JToggleButton(i18n.get("status.theme.toggle.light"));
-//        if (themeSwitchListener != null) {
-//            themeToggle.addActionListener(themeSwitchListener);
-//        }
 
         undoButton = new JButton(i18n.get("status.undo.label"));
         undoButton.putClientProperty("JButton.buttonType", "toolBarButton");
@@ -56,7 +49,6 @@ public class StatusBarPanel extends JPanel {
         setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(210, 210, 210)));
 
         add(undoButton);
-     //   add(themeToggle);
         add(statusBarLabel);
     }
 
@@ -68,26 +60,12 @@ public class StatusBarPanel extends JPanel {
         undoButton.setEnabled(enabled);
     }
 
-//    public boolean isDarkModeSelected() {
-//        return themeToggle.isSelected();
-//    }
-//
-//    public void updateThemeSymbol(boolean darkMode) {
-//        themeToggle.setText(darkMode ? i18n.get("status.theme.toggle.dark") : i18n.get("status.theme.toggle.light"));
-//        themeToggle.setSelected(darkMode);
-//    }
-//
-//    public void toggleTheme() {
-//        themeToggle.doClick();
-//    }
+
 
     public JLabel getStatusBarLabel() {
         return statusBarLabel;
     }
 
-//    public JToggleButton getThemeToggle() {
-//        return themeToggle;
-//    }
 
     public JButton getUndoButton() {
         return undoButton;

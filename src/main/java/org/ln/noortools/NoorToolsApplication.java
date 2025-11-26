@@ -2,6 +2,7 @@ package org.ln.noortools;
 
 import javax.swing.SwingUtilities;
 
+import org.ln.noortools.enums.Theme;
 import org.ln.noortools.preferences.PreferencesService;
 import org.ln.noortools.view.MainFrame;
 import org.ln.noortools.view.SplashScreen;
@@ -40,8 +41,7 @@ public class NoorToolsApplication {
         PreferencesService prefs = context.getBean(PreferencesService.class);
 
         // 2) applica il tema PRIMA di creare le finestre
-        ThemeManager.applyTheme(prefs.getTheme());
-
+        ThemeManager.applyTheme(Theme.fromKey(prefs.getTheme()));
         SwingUtilities.invokeLater(() -> {
             MainFrame frame = context.getBean(MainFrame.class);
             splash.close();

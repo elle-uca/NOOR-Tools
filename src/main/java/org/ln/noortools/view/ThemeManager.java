@@ -2,10 +2,11 @@ package org.ln.noortools.view;
 
 
 import java.awt.Window;
-import java.util.Locale;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+
+import org.ln.noortools.enums.Theme;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
@@ -15,34 +16,33 @@ public class ThemeManager {
     /**
      * Applica il tema in base alla chiave salvata nelle preferenze.
      */
-	public static void applyTheme(String themeKey) {
-	    if (themeKey == null) themeKey = "light";
-	    themeKey = themeKey.toLowerCase(Locale.ROOT);
-
+	public static void applyTheme(Theme theme) {
+	    if (theme == null) theme = Theme.LIGHT;
+	
 	    try {
 
-	        switch (themeKey) {
-	            case "dark" -> {
+	        switch (theme) {
+	            case DARK -> {
 	                FlatDarkLaf.setup();
 	            }
 
-	            case "light" -> {
+	            case LIGHT -> {
 	                FlatLightLaf.setup();
 	            }
 
-	            case "nimbus" -> {
+	            case NIMBUS -> {
 	                UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 	            }
 
-	            case "metal" -> {
+	            case METAL -> {
 	                UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 	            }
 
-	            case "motif" -> {
+	            case MOTIF -> {
 	                UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
 	            }
 
-	            case "system" -> {
+	            case SYSTEM -> {
 	                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 	            }
 

@@ -6,10 +6,12 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -18,8 +20,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSplitPane;
 
+import org.ln.noortools.enums.Theme;
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.preferences.PreferencesDialog;
@@ -45,11 +49,11 @@ public class MainFrame extends JFrame {
 
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
-        private final I18n i18n;
-        private final RenamerService renamerService;
-        private final PanelFactory panelFactory;
-        private final RenameController renameController;
-        private final PreferencesService prefs;
+	private final I18n i18n;
+	private final RenamerService renamerService;
+	private final PanelFactory panelFactory;
+	private final RenameController renameController;
+	private final PreferencesService prefs;
 
 	private StatusBarPanel statusBarPanel;
 	private AccordionPanel accordion;
@@ -57,19 +61,19 @@ public class MainFrame extends JFrame {
 
 
 	public MainFrame(I18n i18n,
-                        RenamerService renamerService,
-                        PanelFactory panelFactory,
-                        AccordionFactory accordionFactory,
-                        ConfigurableApplicationContext context,
-                        RenameController renameController,
-                        PreferencesService service) {
-                super(i18n.get("main.title"));
-                this.i18n = i18n;
-                this.renamerService = renamerService;
-                this.panelFactory = panelFactory;
-                this.accordion = accordionFactory.createAccordion();
-                this.renameController = renameController;
-                this.prefs = service;
+			RenamerService renamerService,
+			PanelFactory panelFactory,
+			AccordionFactory accordionFactory,
+			ConfigurableApplicationContext context,
+			RenameController renameController,
+			PreferencesService service) {
+		super(i18n.get("main.title"));
+		this.i18n = i18n;
+		this.renamerService = renamerService;
+		this.panelFactory = panelFactory;
+		this.accordion = accordionFactory.createAccordion();
+		this.renameController = renameController;
+		this.prefs = service;
 
 		initComponents();
 
@@ -124,15 +128,24 @@ public class MainFrame extends JFrame {
 		fileMenu.add(exitItem);
 
 		JMenu viewMenu = new JMenu(i18n.get("menu.view"));
-//		JMenuItem themeItem = new JMenuItem(i18n.get("menu.view.toggleTheme"));
-//		themeItem.addActionListener(e -> statusBarPanel.toggleTheme());
-	//	viewMenu.add(themeItem);
-
+		
+		JMenu themeMenu = new JMenu("Tema");
+		EnumMap<Theme, JRadioButtonMenuItem> themeMenuItems = new EnumMap<>(Theme.class);
+		ButtonGroup themeGroup = new ButtonGroup();
+		for (Theme theme : Theme.values()) {
+			JRadioButtonMenuItem themeItem = new JRadioButtonMenuItem(theme.toString());
+			//themeItem.setSelected(theme == ThemeSupport.getTheme());
+			themeItem.addActionListener(e -> updateTheme(theme));
+			themeGroup.add(themeItem);
+			themeMenu.add(themeItem);
+			themeMenuItems.put(theme, themeItem);
+		}
+		viewMenu.add(themeMenu);
+		
 		JMenu toolMenu = new JMenu(i18n.get("menu.tool"));
 
 		JMenu helpMenu = new JMenu(i18n.get("menu.help"));
 		JMenuItem preferencesItem = new JMenuItem(i18n.get("menu.help.preferences"));
-		//PreferencesService.getInstance() preferencesService = preferencesService() ;
 		preferencesItem.addActionListener(e -> {
 			PreferencesDialog dialog = new PreferencesDialog(this, prefs);
 			dialog.setVisible(true);
@@ -150,17 +163,17 @@ public class MainFrame extends JFrame {
 		menuBar.add(helpMenu);
 
 		setJMenuBar(menuBar);
-
 	}
 
-//	@Bean
-//	public PreferencesService preferencesService() {
-//		return new PreferencesService();
-//	}
+
+
+	private void updateTheme(Theme theme) {
+		ThemeManager.applyTheme(theme);
+	}
+
 
 	private JPanel createMethodPanel() {
 		JPanel panel = new JPanel(new BorderLayout());
-
 		accordion = new AccordionPanel();
 		accordion.setLayout(new BoxLayout(accordion, BoxLayout.Y_AXIS));
 		accordion.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
@@ -207,14 +220,12 @@ public class MainFrame extends JFrame {
 		}
 	}
 	private void updateStatusBar() {
-//		String theme = (statusBarPanel != null && statusBarPanel.isDarkModeSelected())
-//				? i18n.get("status.theme.dark")
-//						: i18n.get("status.theme.light");
+		String theme = prefs.getTheme();
 		int ruleCount = (accordion != null) ? accordion.getPanelCount() : 0;
 		String rulesMessage = ruleCount == 1
 				? i18n.get("status.rules.single", ruleCount)
 						: i18n.get("status.rules.multiple", ruleCount);
-		//statusBarPanel.setStatusText(i18n.get("status.summary", theme, rulesMessage));
+		statusBarPanel.setStatusText(i18n.get("status.summary", theme, rulesMessage));
 	}
 
 

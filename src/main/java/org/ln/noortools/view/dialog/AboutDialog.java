@@ -5,8 +5,6 @@ import java.awt.Component;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -15,15 +13,15 @@ import javax.swing.JTextArea;
 
 import org.ln.noortools.i18n.I18n;
 
+import net.miginfocom.swing.MigLayout;
+
 /**
  * Simple "About" dialog showing application metadata.
  */
 public final class AboutDialog {
 
-    private AboutDialog() {
-        // utility class
-    }
-
+    private AboutDialog() {}
+    
     public static void show(Component parent, I18n i18n) {
         JPanel content = new JPanel(new BorderLayout(12, 12));
         content.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -32,15 +30,10 @@ public final class AboutDialog {
         content.add(logoLabel, BorderLayout.WEST);
 
         JPanel infoPanel = new JPanel();
-        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+        infoPanel.setLayout(new MigLayout("", "[fill]"));
 
         JLabel titleLabel = new JLabel(i18n.get("about.title"));
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 16f));
-        infoPanel.add(titleLabel);
-
-        infoPanel.add(Box.createVerticalStrut(4));
-        infoPanel.add(new JLabel(i18n.get("about.version")));
-        infoPanel.add(new JLabel(i18n.get("about.author")));
 
         JTextArea description = new JTextArea(i18n.get("about.description"));
         description.setEditable(false);
@@ -48,7 +41,12 @@ public final class AboutDialog {
         description.setLineWrap(true);
         description.setOpaque(false);
         description.setBorder(BorderFactory.createEmptyBorder(8, 0, 0, 0));
-        infoPanel.add(description);
+        
+        
+        infoPanel.add(titleLabel, "wrap");
+        infoPanel.add(new JLabel(i18n.get("about.version")), "wrap");
+        infoPanel.add(new JLabel(i18n.get("about.author")), "wrap");
+        infoPanel.add(description, "wrap");
 
         content.add(infoPanel, BorderLayout.CENTER);
 
