@@ -102,7 +102,6 @@ public class MainFrame extends JFrame {
 				//e -> switchTheme(),
 				e -> handleUndo(),
 				new ImageIcon(getClass().getResource("/icons/undo.png")));
-		//statusBarPanel.updateThemeSymbol(isDarkModePreferred());
 		renameController.addUndoStateListener(available -> statusBarPanel.setUndoEnabled(available));
 
 		getContentPane().add(statusBarPanel, BorderLayout.SOUTH);
@@ -232,6 +231,8 @@ public class MainFrame extends JFrame {
 
 	private void rename()  {
 		try {
+			
+			System.out.println("Rename  "+renamerService.getFiles().size());
 			renameController.renameFiles(renamerService.getFiles());
 			JOptionPane.showMessageDialog(this, i18n.get("rename.success"));
 		} catch (IOException e) {

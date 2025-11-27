@@ -50,45 +50,17 @@ public class RenamerService {
      * @param mode     rename mode (FULL, NAME_ONLY, EXT_ONLY)
      * @param params   rule-specific parameters
      */
-//    public void applyRule(String ruleName, RenameMode mode, Object... params) {
-//        RuleService service = ruleRegistry.get(ruleName.toLowerCase());
-//        if (service == null) {
-//            throw new IllegalArgumentException("Unknown rule: " + ruleName);
-//        }
-//
-//   
-//         List<RenamableFile> activeFiles = new ArrayList<>();
-//        List<RenamableFile> inactiveFiles = new ArrayList<>();
-//
-//        // Separate active/inactive
-//        for (RenamableFile f : files) {
-//            if (f.isSelected()) activeFiles.add(f);
-//            else inactiveFiles.add(f);
-//        }
-//
-//        // Apply rule only to selected files
-//        List<RenamableFile> updatedActive = service.applyRule(activeFiles, mode, params);
-//
-//        // Merge back (inactive unchanged)
-//        List<RenamableFile> result = new ArrayList<>();
-//        result.addAll(updatedActive);
-//        result.addAll(inactiveFiles);
-//
-//        setFiles(result);
-//    }
-   
     public void applyRule(String ruleName, RenameMode mode, Object... params) {
         RuleService service = ruleRegistry.get(ruleName.toLowerCase());
         if (service == null) {
             throw new IllegalArgumentException("Unknown rule: " + ruleName);
         }
+        System.out.println("applyRule  "+service);
 
-        // 🔥 1) Applica la regola solo ai file selezionati
         List<RenamableFile> selectedFiles = new ArrayList<>();
         for (RenamableFile f : files) {
-            if (f.isSelected()) {
-                selectedFiles.add(f);
-            }
+        	selectedFiles.add(f);
+        	
         }
 
         if (selectedFiles.isEmpty()) {
@@ -125,7 +97,8 @@ public class RenamerService {
 
     	// ripristina selection precedente
     	for (RenamableFile f : files) {
-    	    f.setSelected(prevSelection.getOrDefault(f.getSource().toPath(), true));
+    	    //f.setSelected(prevSelection.getOrDefault(f.getSource().toPath(), true));
+    		System.out.println("RenamableFile  "+f);
     	}
     	
 //         // mappa selezioni correnti per path

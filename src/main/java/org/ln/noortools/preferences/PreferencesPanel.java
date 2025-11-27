@@ -1,8 +1,5 @@
 package org.ln.noortools.preferences;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -23,23 +20,12 @@ public class PreferencesPanel extends JPanel {
 	private JComboBox<String> languageBox;
 	private JComboBox<Theme> themeBox;
 
-	// Mappa: label visibile -> themeKey
-	//private final Map<String, String> themeMap = new LinkedHashMap<>();
 
 	public PreferencesPanel(PreferencesService prefs) {
 		this.prefs = prefs;
-		//   initThemeMap();
 		initUI();
 	}
 
-	//    private void initThemeMap() {
-	//        themeMap.put("Chiaro (Flat)", "light");
-	//        themeMap.put("Scuro (Flat)", "dark");
-	//        themeMap.put("Nimbus (Swing)", "nimbus");
-	//        themeMap.put("Metal (Swing)", "metal");
-	//        themeMap.put("Motif (Swing)", "motif");
-	//        themeMap.put("Tema di Sistema", "system");
-	//    }
 
 	private void initUI() {
 		setLayout(new MigLayout(
@@ -61,17 +47,8 @@ public class PreferencesPanel extends JPanel {
 		// TEMA
 		// ---------------------------------------------------------
 		add(new JLabel("Tema:"));
-		//themeBox = new JComboBox<>(themeMap.keySet().toArray(new String[0]));
 		themeBox = new JComboBox<Theme>(Theme.values());
-		//        String currentKey = prefs.getTheme();
-		//        String currentLabel = themeMap.entrySet().stream()
-		//                .filter(e -> e.getValue().equalsIgnoreCase(currentKey))
-		//                .map(Map.Entry::getKey)
-		//                .findFirst()
-		//                .orElse("Chiaro (Flat)");
-		//        themeBox.setSelectedItem(currentLabel);
-		//prefs.get
-		//themeBox.setSelectedItem();
+		themeBox.setSelectedItem(Theme.fromKey(prefs.getTheme()));
 		add(themeBox, "wrap para");
 
 		// ---------------------------------------------------------
