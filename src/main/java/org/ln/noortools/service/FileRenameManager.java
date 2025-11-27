@@ -41,8 +41,8 @@ public class FileRenameManager {
 	private ActionManager actionManager;
 
 
-	@Autowired
-	private PerformManager performManager;
+//	@Autowired
+//	private PerformManager performManager;
 
 
 	/**
@@ -142,33 +142,34 @@ public class FileRenameManager {
 		try {
 			for (RenamableFile rf : files) {
 
-
+				//boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
 				Path oldPath = rf.getSource().toPath();
 				Path newPath = oldPath.resolveSibling(rf.getDestinationName());
-				
-				System.out.println("equals path  "+oldPath.normalize().toString().equals(newPath.normalize().toString()));
 				
 				String oldName = oldPath.getFileName().toString();
 				String newName = newPath.getFileName().toString();
 
-				boolean b = oldName.toLowerCase().equals(newName.toLowerCase())  && !oldName.equals(newName);
-				
-				System.out.println("equals name  "+b);
-				// Su Windows serve rename intermedio
-				Path tempPath = oldPath.resolveSibling(rf.getDestinationName() + ".tmp_rename");
-				
-			    // 1) rename → temporaneo
-			    Files.move(oldPath, tempPath, StandardCopyOption.REPLACE_EXISTING);
-			    
-			    // 2) rename → finale (case-sensitive)
-			    Files.move(tempPath, newPath, StandardCopyOption.REPLACE_EXISTING);
+				//  è Windows
+				if (System.getProperty("os.name").toLowerCase().contains("win") && 
+						(oldName.toLowerCase().equals(newName.toLowerCase())  && 
+						!oldName.equals(newName))) {
+					
+					Path tempPath = oldPath.resolveSibling(rf.getDestinationName() + ".tmp_rename");
+					
+				    // 1) rename → temporaneo
+				    Files.move(oldPath, tempPath, StandardCopyOption.REPLACE_EXISTING);
+				    
+				    // 2) rename → finale (case-sensitive)
+				    Files.move(tempPath, newPath, StandardCopyOption.REPLACE_EXISTING);
 
-				//Files.move(oldPath, newPath, StandardCopyOption.REPLACE_EXISTING);
+				}
+				else {
+					Files.move(oldPath, newPath, StandardCopyOption.REPLACE_EXISTING);
+				}
 				rf.setFileStatus(FileStatus.OK);
 				operations.add(new RenameOperation(oldPath, newPath));
 			}
 
-			performManager.reset();
 			// Save batch for undo
 			history.push(operations);
 			notifyUndoStateChanged();
