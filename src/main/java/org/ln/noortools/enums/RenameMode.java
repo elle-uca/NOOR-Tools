@@ -9,10 +9,7 @@ package org.ln.noortools.enums;
  */
 public enum RenameMode {
     
-    /** * Renames the entire file name: both the base name and the extension.
-     * (e.g., "old_file.txt" -> "new_document.pdf")
-     */
-    FULL,        
+      
     
     /** * Renames only the base name of the file, keeping the existing extension unchanged.
      * (e.g., "old_file.txt" -> "new_document.txt")
