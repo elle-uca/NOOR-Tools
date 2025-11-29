@@ -45,12 +45,6 @@ public abstract class AbstractRuleService implements RuleService {
                 case EXT_ONLY -> {
                     newExt = transformExtension(ext, params);
                 }
-                case FULL -> {
-                    String full = file.getSource().getName();
-                    String newFull = transformFullName(full, params);
-                    updated.add(copyWithName(file, newFull));
-                    continue;
-                }
             }
 
             String finalName = newBase + (newExt.isEmpty() ? "" : "." + newExt);

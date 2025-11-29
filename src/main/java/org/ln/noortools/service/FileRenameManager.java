@@ -136,13 +136,11 @@ public class FileRenameManager {
 			return; // user cancelled
 		}  
 
-		//        ActionConfirmationDialog.show(sb.toString());
 		List<RenameOperation> operations = new ArrayList<>();
 
 		try {
 			for (RenamableFile rf : files) {
 
-				//boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
 				Path oldPath = rf.getSource().toPath();
 				Path newPath = oldPath.resolveSibling(rf.getDestinationName());
 				
@@ -166,6 +164,7 @@ public class FileRenameManager {
 				else {
 					Files.move(oldPath, newPath, StandardCopyOption.REPLACE_EXISTING);
 				}
+				
 				rf.setFileStatus(FileStatus.OK);
 				operations.add(new RenameOperation(oldPath, newPath));
 			}

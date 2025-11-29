@@ -49,7 +49,6 @@ public class TemplateApplier {
             }
 
             String destinationName = switch (mode) {
-                case FULL -> destinationBuilder.toString();
                 case NAME_ONLY -> destinationBuilder + (ext.isEmpty() ? "" : "." + ext);
                 case EXT_ONLY -> base + "." + destinationBuilder;
             };
@@ -119,7 +118,6 @@ public class TemplateApplier {
 
     private String selectPart(String filename, RenameMode mode) {
         return switch (mode) {
-            case FULL -> filename;
             case NAME_ONLY -> baseNameOf(filename);
             case EXT_ONLY -> extensionOf(filename);
         };
