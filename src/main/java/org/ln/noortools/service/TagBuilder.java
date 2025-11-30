@@ -7,6 +7,11 @@ import org.ln.noortools.factory.TagFactory;
 import org.ln.noortools.tag.AbstractTag;
 import org.springframework.stereotype.Component;
 
+/**
+ * Translates template tokens into concrete components that can be used by
+ * the renaming pipeline. Plain text is kept as strings while tag tokens are
+ * resolved through {@link org.ln.noortools.factory.TagFactory}.
+ */
 @Component
 public class TagBuilder {
 
@@ -16,6 +21,12 @@ public class TagBuilder {
         this.tagFactory = tagFactory;
     }
 
+    /**
+     * Converts the parsed template tokens into runtime components.
+     *
+     * @param tokens ordered list of template parts
+     * @return a mixed list of strings and {@link AbstractTag} instances
+     */
     public List<Object> buildComponents(List<TemplateComponent> tokens) {
         List<Object> components = new ArrayList<>();
         for (TemplateComponent token : tokens) {

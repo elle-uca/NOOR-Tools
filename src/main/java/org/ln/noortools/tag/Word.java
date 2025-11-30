@@ -84,10 +84,19 @@ public class Word extends AbstractTag {
             return result;
         }
 
-        // Build a regex class like:  "[.\\-_()\\[\\]]"
-        String regex = "[" + delimiterChars.replaceAll("([\\\\\\]\\[\\-])", "\\\\$1") + "]";
-
+        String regex = buildCharacterClass(delimiterChars);
         return extractSubstringsByDelimiters(inputString, regex);
+    }
+
+    private static String buildCharacterClass(String delimiterChars) {
+        StringBuilder builder = new StringBuilder("[");
+        for (char delimiter : delimiterChars.toCharArray()) {
+            if ("\\^[]-".indexOf(delimiter) >= 0) {
+                builder.append('\\');
+            }
+            builder.append(delimiter);
+        }
+        return builder.append(']').toString();
     }
     
     
