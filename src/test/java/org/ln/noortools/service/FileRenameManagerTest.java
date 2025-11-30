@@ -36,9 +36,20 @@ class FileRenameManagerTest {
         assertThat(renamedPath).exists();
 
         // inject mock after commit so rollback triggers reload
-        java.lang.reflect.Field serviceField = FileRenameManager.class.getDeclaredField("renamerService");
+        java.lang.reflect.Field serviceField = null;
+		try {
+			serviceField = FileRenameManager.class.getDeclaredField("renamerService");
+		} catch (NoSuchFieldException | SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         serviceField.setAccessible(true);
-        serviceField.set(manager, renamerService);
+        try {
+			serviceField.set(manager, renamerService);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         manager.undoLast();
 

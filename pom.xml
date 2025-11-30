@@ -85,35 +85,22 @@
 	<!-- ========================= -->
 	
 	
-	    <!-- Test base di Spring Boot (JUnit5, AssertJ, Hamcrest, Mockito, ecc.) -->
-	    <dependency>
-	        <groupId>org.springframework.boot</groupId>
-	        <artifactId>spring-boot-starter-test</artifactId>
-	        <scope>test</scope>
-	        <exclusions>
-	            <!-- Escludiamo il mockito-core incluso dal BOM -->
-	            <exclusion>
-	                <groupId>org.mockito</groupId>
-	                <artifactId>mockito-core</artifactId>
-	            </exclusion>
-	        </exclusions>
-	    </dependency>
+		<!-- Test base: JUnit5 + AssertJ + Mockito-core (inline-ready) -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-test</artifactId>
+		    <scope>test</scope>
+		</dependency>
 	
 	
 	    <!-- ByteBuddy agent: necessario per mockito-inline su JPMS -->
-        <dependency>
-            <groupId>net.bytebuddy</groupId>
-            <artifactId>byte-buddy-agent</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-    </dependencies>
+	    <dependency>
+	        <groupId>net.bytebuddy</groupId>
+	        <artifactId>byte-buddy-agent</artifactId>
+	        <scope>test</scope>
+	    </dependency>
+	
+	</dependencies>
 	
 	
 	<build>

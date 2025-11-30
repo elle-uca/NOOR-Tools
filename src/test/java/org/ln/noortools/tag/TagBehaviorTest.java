@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,13 @@ class TagBehaviorTest {
     private static TagFactory factory;
     private static List<String> baseNames;
     private static List<RenamableFile> tempFiles;
+    
+    @BeforeAll
+    static void disableJaudiotaggerLogs() {
+        java.util.logging.Logger logger = java.util.logging.Logger.getLogger("org.jaudiotagger");
+        logger.setLevel(java.util.logging.Level.OFF);
+        logger.setUseParentHandlers(false);
+    }
 
     @BeforeAll
     static void setupFactory() throws Exception {
@@ -148,21 +156,28 @@ class TagBehaviorTest {
     }
 
     private static List<RenamableFile> createTempFiles() throws IOException {
-        Path first = Files.createTempFile("track-one", ".mp3");
-        Path second = Files.createTempFile("track-two", ".wav");
+        Path dir = Files.createTempDirectory("audio-test");
+        
+        Path first = dir.resolve("track-one.mp3");
+        Path second = dir.resolve("track-two.wav");
+
         Files.writeString(first, "alpha");
         Files.writeString(second, "bravo");
-        return List.of(new RenamableFile(first.toFile()), new RenamableFile(second.toFile()));
+
+        return List.of(
+            new RenamableFile(first.toFile()),
+            new RenamableFile(second.toFile())
+        );
     }
 
     private static MessageSource minimalMessageSource() {
         StaticMessageSource source = new StaticMessageSource();
-        source.addMessage("tag.word.description", null, "word");
-        source.addMessage("tag.title.description", null, "title");
-        source.addMessage("tag.sha256.description", null, "sha256");
-        source.addMessage("tag.incn.description", null, "incn");
-        source.addMessage("tag.decn.description", null, "decn");
-        source.addMessage("tag.inch.description", null, "inch");
+        source.addMessage("tag.word.description", Locale.ROOT, "word");
+        source.addMessage("tag.title.description", Locale.ROOT, "title");
+        source.addMessage("tag.sha256.description", Locale.ROOT, "sha256");
+        source.addMessage("tag.incn.description", Locale.ROOT, "incn");
+        source.addMessage("tag.decn.description", Locale.ROOT, "decn");
+        source.addMessage("tag.inch.description", Locale.ROOT, "inch");
         return source;
     }
 }

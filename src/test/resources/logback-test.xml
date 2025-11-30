@@ -1,0 +1,5 @@
+<configuration>
+    <logger name="org.ln.noortools.util.AudioUtil" level="OFF"/>
+    <logger name="org.jaudiotagger" level="OFF"/>
+    <root level="OFF"/>
+</configuration>

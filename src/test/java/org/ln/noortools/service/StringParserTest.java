@@ -34,15 +34,15 @@ class StringParserTest {
 
         when(tokenizer.tokenize("abc")).thenReturn(tokens);
         when(builder.buildComponents(tokens)).thenReturn(components);
-        when(applier.apply(components, files, RenameMode.SINGLE_FILE)).thenReturn(files);
+        when(applier.apply(components, files, RenameMode.NAME_ONLY)).thenReturn(files);
 
         StringParser parser = new StringParser(tokenizer, builder, applier);
-        List<RenamableFile> result = parser.parse("abc", files, RenameMode.SINGLE_FILE);
+        List<RenamableFile> result = parser.parse("abc", files, RenameMode.NAME_ONLY);
 
         assertThat(result).isEqualTo(files);
         verify(tokenizer).tokenize("abc");
         verify(builder).buildComponents(tokens);
-        verify(applier).apply(components, files, RenameMode.SINGLE_FILE);
+        verify(applier).apply(components, files, RenameMode.NAME_ONLY);
     }
 }
 
