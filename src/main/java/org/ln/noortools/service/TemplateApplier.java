@@ -6,15 +6,17 @@ import java.util.List;
 import org.ln.noortools.enums.RenameMode;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.tag.AbstractTag;
+import org.ln.noortools.util.FileNameUtil;
 import org.springframework.stereotype.Component;
 
+/**
+ * Applies a parsed rename template to a list of files, producing new
+ * {@link RenamableFile} instances with computed destination names.
+ */
 @Component
 public class TemplateApplier {
 
-
-
     public TemplateApplier() {
-
     }
 
     public List<RenamableFile> apply(
@@ -34,8 +36,8 @@ public class TemplateApplier {
             RenamableFile copy = new RenamableFile(file.getSource());
 
             String sourceName = file.getSource().getName();
-            String base = baseNameOf(sourceName);
-            String ext  = extensionOf(sourceName);
+            String base = FileNameUtil.getBaseName(sourceName);
+            String ext  = FileNameUtil.getExtension(sourceName);
 
             StringBuilder destinationBuilder = new StringBuilder();
             for (Object component : components) {
@@ -48,7 +50,7 @@ public class TemplateApplier {
 
             String destinationName = switch (mode) {
                 case NAME_ONLY -> destinationBuilder + (ext.isEmpty() ? "" : "." + ext);
-                case EXT_ONLY -> base + "." + destinationBuilder;
+                case EXT_ONLY -> FileNameUtil.combine(base, destinationBuilder.toString());
             };
 
             copy.setDestinationName(destinationName);
@@ -77,16 +79,6 @@ public class TemplateApplier {
         }
     }
 
-    private String baseNameOf(String name) {
-        int dot = name.lastIndexOf('.');
-        return (dot > 0) ? name.substring(0, dot) : name;
-    }
-
-    private String extensionOf(String name) {
-        int dot = name.lastIndexOf('.');
-        return (dot > 0 && dot < name.length() - 1) ? name.substring(dot + 1) : "";
-    }
-
     private List<String> getOldStrings(List<RenamableFile> files, RenameMode mode) {
         List<String> result = new ArrayList<>();
         for (RenamableFile f : files) {
@@ -108,8 +100,8 @@ public class TemplateApplier {
 
     private String selectPart(String filename, RenameMode mode) {
         return switch (mode) {
-            case NAME_ONLY -> baseNameOf(filename);
-            case EXT_ONLY -> extensionOf(filename);
+            case NAME_ONLY -> FileNameUtil.getBaseName(filename);
+            case EXT_ONLY -> FileNameUtil.getExtension(filename);
         };
     }
 }

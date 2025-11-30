@@ -40,7 +40,7 @@ public class I18n {
     public String get(String code, Object... args) {
         // Retrieve the current locale associated with the execution context (e.g., the user's session or thread).
         Locale locale = LocaleContextHolder.getLocale();
-        
+
         // Delegate the actual message lookup to the underlying MessageSource.
         // The last argument, 'locale', specifies which language bundle to use.
         return messageSource.getMessage(code, args, locale);
