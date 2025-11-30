@@ -11,12 +11,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class TemplateApplier {
 
-    private final ActionManager actionManager;
-    private final PerformManager performManager;
 
-    public TemplateApplier(ActionManager actionManager, PerformManager performManager) {
-        this.actionManager = actionManager;
-        this.performManager = performManager;
+
+    public TemplateApplier() {
+
     }
 
     public List<RenamableFile> apply(
@@ -72,14 +70,6 @@ public class TemplateApplier {
 
                 if (tag instanceof FileAwareTag fileAwareTag) {
                     fileAwareTag.setFilesContext(files);
-                }
-
-                if (tag instanceof ActionTag actionTag) {
-                    actionManager.registerActionTag(actionTag);
-                }
-
-                if (tag instanceof PerformTag performTag) {
-                    performManager.registerActionTag(performTag);
                 }
 
                 tag.init();

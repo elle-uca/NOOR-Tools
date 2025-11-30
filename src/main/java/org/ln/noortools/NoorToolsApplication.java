@@ -4,13 +4,15 @@ import javax.swing.SwingUtilities;
 
 import org.ln.noortools.enums.Theme;
 import org.ln.noortools.preferences.PreferencesService;
+import org.ln.noortools.service.ThemeManager;
 import org.ln.noortools.view.MainFrame;
 import org.ln.noortools.view.SplashScreen;
-import org.ln.noortools.view.ThemeManager;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+
+import com.formdev.flatlaf.FlatDarkLaf;
 
 @SpringBootApplication
 public class NoorToolsApplication {
@@ -18,6 +20,7 @@ public class NoorToolsApplication {
 
 	
     public static void main(String[] args) {
+    	FlatDarkLaf.setup();
         // 1) Mostra lo splash
         SplashScreen splash = new SplashScreen();
         splash.showSplash();

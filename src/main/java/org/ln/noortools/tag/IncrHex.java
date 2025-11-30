@@ -44,9 +44,6 @@ public class IncrHex extends AbstractTag {
         return i18n.get("tag.inch.description");
     }
     
-    @Override
-    public String getActionDescription() {
-        return i18n.get("tag.inch.description");
-    }
+
 }
 

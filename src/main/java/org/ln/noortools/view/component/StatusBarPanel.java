@@ -10,7 +10,6 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
 
 import org.ln.noortools.i18n.I18n;
 
@@ -22,7 +21,6 @@ import org.ln.noortools.i18n.I18n;
 @SuppressWarnings("serial")
 public class StatusBarPanel extends JPanel {
 
-   // private final I18n i18n;
     private final JLabel statusBarLabel;
     private final JButton undoButton;
 
@@ -30,8 +28,6 @@ public class StatusBarPanel extends JPanel {
     		ActionListener undoListener, 
     		Icon undoIcon) {
         super(new FlowLayout(FlowLayout.LEADING));
-      //  this.i18n = i18n;
-
         statusBarLabel = new JLabel(i18n.get("status.initial"));
         statusBarLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         statusBarLabel.setFont(statusBarLabel.getFont().deriveFont(Font.PLAIN, 12f));

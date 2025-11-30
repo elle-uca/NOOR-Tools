@@ -71,8 +71,5 @@ public class Subs extends AbstractTag {
         return "Subs";//i18n.get("tag.subs.description");
     }
     
-    @Override
-    public String getActionDescription() {
-        return "Subs";//i18n.get("tag.subs.description");
-    }
+
 }

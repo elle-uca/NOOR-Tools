@@ -29,9 +29,6 @@ public class CreationDate extends AbstractFsTag {
 		return "Returns file creation timestamp";
 	}
 	
-	@Override
-	public String getActionDescription() {
-		return "Returns file creation timestamp";
-	}
+
 	
 }

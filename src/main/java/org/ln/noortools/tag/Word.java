@@ -96,8 +96,5 @@ public class Word extends AbstractTag {
         return i18n.get("tag.word.description");
     }
     
-    @Override
-    public String getActionDescription() {
-        return i18n.get("tag.word.description");
-    }
+
 }

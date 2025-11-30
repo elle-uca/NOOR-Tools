@@ -18,8 +18,8 @@ import org.ln.noortools.tag.DecrHex;
 import org.ln.noortools.tag.DecrNum;
 import org.ln.noortools.tag.DecrRom;
 import org.ln.noortools.tag.FileOwner;
-import org.ln.noortools.tag.IncrLet;
 import org.ln.noortools.tag.IncrHex;
+import org.ln.noortools.tag.IncrLet;
 import org.ln.noortools.tag.IncrNum;
 import org.ln.noortools.tag.IncrRom;
 import org.ln.noortools.tag.Md5;
@@ -31,12 +31,6 @@ import org.ln.noortools.tag.Subs;
 import org.ln.noortools.tag.Time;
 import org.ln.noortools.tag.Title;
 import org.ln.noortools.tag.Word;
-import org.ln.noortools.tag.WriteAlbum;
-import org.ln.noortools.tag.WriteArtist;
-import org.ln.noortools.tag.WriteCreationDate;
-import org.ln.noortools.tag.WriteModifyDate;
-import org.ln.noortools.tag.WriteOwner;
-import org.ln.noortools.tag.WriteTitle;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -87,12 +81,12 @@ public class TagFactory {
         register("IncrRom", args -> new IncrRom(i18n, args), new Object[]{1, 1});
         register("DecrRom", args -> new DecrRom(i18n, args), new Object[]{1, 1});
         register("IncrLet", args -> new IncrLet(i18n, args), new Object[]{1, 1});
-        register("RandNum", args -> new RandNum(i18n, args), new Object[]{4, 1});
+        register("RandNum", args -> new RandNum(i18n, args), new Object[]{4});
 
         // String
         register("Subs", args -> new Subs(i18n, args), new Object[]{1, 1});
         register("Word", args -> new Word(i18n, args), new Object[]{1, 1});
-        register("RandLet", args -> new RandLet(i18n, args), new Object[]{4, 1});
+        register("RandLet", args -> new RandLet(i18n, args), new Object[]{4});
 
         // Date/Time
         register("Date", args -> new Date(i18n, args), new Object[]{"yyyy-mm-dd"});
@@ -102,9 +96,7 @@ public class TagFactory {
         register("Album", args -> new Album(i18n, args), new Object[0]);
         register("Artist", args -> new Artist(i18n, args), new Object[0]);
         register("Title", args -> new Title(i18n, args), new Object[0]);
-        register("WriteAlbum", args -> new WriteAlbum(i18n, args), new Object[]{"Name"});
-        register("WriteArtist", args -> new WriteArtist(i18n, args), new Object[]{"Name"});
-        register("WriteTitle", args -> new WriteTitle(i18n, args), new Object[]{"Name"});
+
 
         // Checksum
         register("Sha256", args -> new Sha256(i18n, args), new Object[]{8});
@@ -115,9 +107,6 @@ public class TagFactory {
         register("CreationDate", args -> new CreationDate(i18n, args), new Object[0]);
         register("ModifyDate", args -> new ModifyDate(i18n, args), new Object[0]);
         register("FileOwner", args -> new FileOwner(i18n, args), new Object[0]);
-        register("WriteCreationDate", args -> new WriteCreationDate(i18n, args), new Object[0]);
-        register("WriteModifyDate", args -> new WriteModifyDate(i18n, args), new Object[0]);
-        register("WriteOwner", args -> new WriteOwner(i18n, args), new Object[0]);
     }
 
     private void register(String name, Function<Object[], AbstractTag> factory, Object[] previewArgs) {

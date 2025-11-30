@@ -37,12 +37,6 @@ public class FileRenameManager {
 	@Autowired
 	private RenamerService renamerService;
 
-	@Autowired
-	private ActionManager actionManager;
-
-
-//	@Autowired
-//	private PerformManager performManager;
 
 
 	/**
@@ -119,16 +113,6 @@ public class FileRenameManager {
 			.append(" → ")
 			.append(newPath.getFileName())
 			.append("\n");
-		}
-
-		List<ActionTag> actions = actionManager.getActionTags();
-		if (!actions.isEmpty()) {
-			confirmMsg.append("\nAdditional actions:\n");
-			for (ActionTag at : actions) {
-				confirmMsg.append("• ")
-				.append(at.getActionDescription())
-				.append("\n");
-			}
 		}
 
 		boolean ok = ActionConfirmationDialog.show(confirmMsg.toString());

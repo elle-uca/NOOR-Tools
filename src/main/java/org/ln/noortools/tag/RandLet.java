@@ -66,8 +66,4 @@ public class RandLet extends AbstractTag {
     }
     
 
-    @Override
-    public String getActionDescription() {
-        return i18n.get("tag.randl.description") ;
-    }
 }

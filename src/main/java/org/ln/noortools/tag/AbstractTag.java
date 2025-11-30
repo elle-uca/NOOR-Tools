@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ln.noortools.i18n.I18n;
-import org.ln.noortools.service.PerformTag;
 
 /**
  * Base class for all renaming tags used by NOOR Tools.
@@ -17,7 +16,7 @@ import org.ln.noortools.service.PerformTag;
  *
  * @author Luca Noale
  */
-public abstract class AbstractTag implements PerformTag {
+public abstract class AbstractTag  {
 
     public enum TagType {
         NUMERIC,

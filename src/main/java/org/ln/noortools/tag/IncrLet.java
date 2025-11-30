@@ -89,9 +89,5 @@ public class IncrLet extends AbstractTag {
     }
 
     
-    @Override
-    public String getActionDescription() {
-    	i18n.get("tag.incl.description");
-        return "An incremental string label";
-    }
+
 }

@@ -46,9 +46,6 @@ public class IncrRom extends AbstractTag {
     }
     
 
-    @Override
-    public String getActionDescription() {
-        return i18n.get("tag.incr.description");
-    }
+
 
 }

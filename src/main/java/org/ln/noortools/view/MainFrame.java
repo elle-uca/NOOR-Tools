@@ -29,6 +29,7 @@ import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.preferences.PreferencesDialog;
 import org.ln.noortools.preferences.PreferencesService;
 import org.ln.noortools.service.RenameController;
+import org.ln.noortools.service.ThemeManager;
 import org.ln.noortools.service.ruleservice.RenamerService;
 import org.ln.noortools.util.SwingUtil;
 import org.ln.noortools.view.component.StatusBarPanel;
@@ -99,7 +100,6 @@ public class MainFrame extends JFrame {
 		getContentPane().add(splitPane);
 		statusBarPanel = new StatusBarPanel(
 				i18n,
-				//e -> switchTheme(),
 				e -> handleUndo(),
 				new ImageIcon(getClass().getResource("/icons/undo.png")));
 		renameController.addUndoStateListener(available -> statusBarPanel.setUndoEnabled(available));

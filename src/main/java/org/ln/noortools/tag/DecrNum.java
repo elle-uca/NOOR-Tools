@@ -44,9 +44,6 @@ public class DecrNum extends AbstractTag {
 		return i18n.get("tag.decn.description");
 	}
 	
-	@Override
-	public String getActionDescription() {
-		return i18n.get("tag.decn.description");
-	}
+
 	
 }

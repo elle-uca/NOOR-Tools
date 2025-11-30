@@ -67,8 +67,5 @@ public class RandNum extends AbstractTag {
         return i18n.get("tag.randn.description") ;
     }
     
-    @Override
-    public String getActionDescription() {
-        return i18n.get("tag.randn.description") ;
-    }
+
 }

@@ -55,13 +55,11 @@ public class RenamerService {
         if (service == null) {
             throw new IllegalArgumentException("Unknown rule: " + ruleName);
         }
-        System.out.println("applyRule  "+service);
 
         List<RenamableFile> selectedFiles = new ArrayList<>();
         for (RenamableFile f : files) {
         	selectedFiles.add(f);
-        	
-        }
+         }
 
         if (selectedFiles.isEmpty()) {
             setFiles(new ArrayList<>(files));
@@ -89,35 +87,8 @@ public class RenamerService {
 
     
     public void setFiles(List<RenamableFile> newFiles) {
-    	Map<Path, Boolean> prevSelection = files.stream()
-    	        .collect(Collectors.toMap(f -> f.getSource().toPath(), RenamableFile::isSelected));
-
     	files.clear();
     	files.addAll(newFiles);
-
-    	// ripristina selection precedente
-    	for (RenamableFile f : files) {
-    	    //f.setSelected(prevSelection.getOrDefault(f.getSource().toPath(), true));
-    		System.out.println("RenamableFile  "+f);
-    	}
-    	
-//         // mappa selezioni correnti per path
-//        Map<Path, Boolean> selectedByPath = new HashMap<>();
-//        for (RenamableFile f : this.files) {
-//            selectedByPath.put(f.getSource().toPath(), f.isSelected());
-//        }
-//
-//        files.clear();
-//        if (newFiles != null) {
-//            files.addAll(newFiles);
-//        }
-//
-//        // re-applica la selezione pre-esistente
-//        for (RenamableFile f : files) {
-//            Boolean sel = selectedByPath.get(f.getSource().toPath());
-//            if (sel != null) f.setSelected(sel);
-//        }
-
         checkConflicts();
         notifyListeners();
     }

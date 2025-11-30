@@ -50,9 +50,6 @@ public class DecrRom extends AbstractTag {
         return i18n.get("tag.decr.description") ;
     }
     
-    @Override
-    public String getActionDescription() {
-        return i18n.get("tag.decr.description") ;
-    }
+
 
 }

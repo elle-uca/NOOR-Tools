@@ -37,9 +37,6 @@ public class Artist extends AbstractAudioTag {
         return i18n.get("tag.artist.description");
     }
     
-    @Override
-    public String getActionDescription() {
-        return i18n.get("tag.artist.description");
-    }
+
 }
 

@@ -39,9 +39,5 @@ public class IncrNum extends AbstractTag {
 		return i18n.get("tag.incn.description");
 	}
 
-	@Override
-	public String getActionDescription() {
-		return "Numero incrementale per  "+this.getOldNames().size();
-		//return i18n.get("tag.incn.description");
-	}
+
 }

@@ -37,9 +37,6 @@ public class Title extends AbstractAudioTag {
         return i18n.get("tag.title.description");
     }
     
-    @Override
-    public String getActionDescription() {
-        return i18n.get("tag.title.description");
-    }
+
 }
 

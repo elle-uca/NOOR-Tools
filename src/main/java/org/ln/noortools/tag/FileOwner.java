@@ -25,10 +25,7 @@ public class FileOwner extends AbstractFsTag {
         }
     }
     
-	@Override
-	public String getActionDescription() {
-		return "Returns file owner (OS-level)";
-	}
+
 
 	@Override
 	public String getDescription() {

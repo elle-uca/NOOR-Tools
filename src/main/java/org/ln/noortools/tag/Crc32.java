@@ -23,10 +23,6 @@ public class Crc32 extends AbstractChecksumTag {
     public String getDescription() {
         return i18n.get("tag.crc32.description");
     }
-    
-    @Override
-    public String getActionDescription() {
-        return i18n.get("tag.crc32.description");
-    }
+
 }
 

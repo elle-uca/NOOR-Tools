@@ -53,8 +53,5 @@ public class DecrHex extends AbstractTag {
         return i18n.get("tag.dech.description");
     }
     
-    @Override
-    public String getActionDescription() {
-        return i18n.get("tag.dech.description");
-    }
+
 }
