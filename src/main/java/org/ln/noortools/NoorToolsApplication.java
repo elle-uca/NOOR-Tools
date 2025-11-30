@@ -12,12 +12,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+
 @SpringBootApplication
 public class NoorToolsApplication {
 
 
 	
     public static void main(String[] args) {
+    	FlatDarkLaf.setup();
         // 1) Mostra lo splash
         SplashScreen splash = new SplashScreen();
         splash.showSplash();

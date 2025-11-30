@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.7</version>
+        <version>3.5.8</version>
         <relativePath/>
     </parent>
 
@@ -80,46 +80,60 @@
             </exclusions>
         </dependency>
 
-        <!-- Test -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- Mockito inline mock maker is kept to suppress inline mock warnings; version follows the Boot-managed Mockito BOM -->
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>5.14.2</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- Byte Buddy agent required when inline mocks are active -->
-        <dependency>
-            <groupId>net.bytebuddy</groupId>
-            <artifactId>byte-buddy-agent</artifactId>
-            <version>${bytebuddy.agent.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+	 <!-- ========================= -->
+	<!--        TESTING SETUP      -->
+	<!-- ========================= -->
+	
+	
+	    <!-- Test base di Spring Boot (JUnit5, AssertJ, Hamcrest, Mockito, ecc.) -->
+	    <dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-starter-test</artifactId>
+	        <scope>test</scope>
+	        <exclusions>
+	            <!-- Escludiamo il mockito-core incluso dal BOM -->
+	            <exclusion>
+	                <groupId>org.mockito</groupId>
+	                <artifactId>mockito-core</artifactId>
+	            </exclusion>
+	        </exclusions>
+	    </dependency>
+	
+	
+	    <!-- ByteBuddy agent: necessario per mockito-inline su JPMS -->
+	    <dependency>
+	        <groupId>net.bytebuddy</groupId>
+	        <artifactId>byte-buddy-agent</artifactId>
+	        <scope>test</scope>
+	    </dependency>
+	
+	</dependencies>
+	
+	
+	<build>
+	    <plugins>
+	
+	        <!-- Surefire: versione gestita da Spring Boot (NO override, NO warning) -->
+	        <plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-surefire-plugin</artifactId>
+	            <configuration>
+	                <useModulePath>false</useModulePath>
+	
+	                <!-- Abilita Mockito Inline tramite ByteBuddy agent -->
+	                <argLine>
+	                    -javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${bytebuddy.agent.version}/byte-buddy-agent-${bytebuddy.agent.version}.jar
+	                </argLine>
+	            </configuration>
+	        </plugin>
+	
+	        <!-- Plugin Spring Boot (usare versione gestita dal parent) -->
+	        <plugin>
+	            <groupId>org.springframework.boot</groupId>
+	            <artifactId>spring-boot-maven-plugin</artifactId>
+	        </plugin>
+	
+	    </plugins>
+	</build>
 
-    <build>
-        <plugins>
-            <!-- Surefire configured to load the Byte Buddy Java agent needed by mockito-inline -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <useModulePath>false</useModulePath>
-                    <argLine>
-                        -javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${bytebuddy.agent.version}/byte-buddy-agent-${bytebuddy.agent.version}.jar
-                    </argLine>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>
