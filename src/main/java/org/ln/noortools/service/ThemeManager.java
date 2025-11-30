@@ -11,6 +11,12 @@ import org.ln.noortools.enums.Theme;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
+/**
+ * Utility class responsible for switching Swing look & feel themes
+ * at runtime. The methods are static so the UI layer can easily
+ * apply a theme before creating windows or refresh all open ones
+ * when the preference changes.
+ */
 public class ThemeManager {
 
     /**
