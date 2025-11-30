@@ -6,6 +6,11 @@ import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.service.FileAwareTag;
 
+/**
+ * Base class for tags that need to read metadata from audio files.
+ * It stores the current file context and offers a filename fallback
+ * so subclasses only have to focus on extracting specific fields.
+ */
 public abstract class AbstractAudioTag extends AbstractTag implements FileAwareTag {
 
    

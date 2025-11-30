@@ -8,6 +8,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.function.Function;
 
 import org.ln.noortools.enums.FileStatus;
 import org.ln.noortools.model.RenamableFile;
@@ -54,10 +55,18 @@ public class FileRenameManager {
 	}
 
 	/** A stack of rename batches. Last batch can be undone (LIFO). */
-	private final Deque<List<RenameOperation>> history = new ArrayDeque<>();
+    private final Deque<List<RenameOperation>> history = new ArrayDeque<>();
 
-	/** UI listeners for undo availability state (toolbar button enable/disable). */
-	private final List<UndoStateListener> undoListeners = new ArrayList<>();
+    /** UI listeners for undo availability state (toolbar button enable/disable). */
+    private final List<UndoStateListener> undoListeners = new ArrayList<>();
+
+    /**
+     * Hook used to ask the user confirmation before renaming files.
+     * Default implementation shows the Swing dialog, but tests can
+     * inject a deterministic supplier to avoid UI popups.
+     */
+    private Function<String, Boolean> confirmationSupplier =
+            ActionConfirmationDialog::show;
 
 
 	// --------------------------------------------------------------------
@@ -68,9 +77,17 @@ public class FileRenameManager {
 		undoListeners.add(l);
 	}
 
-	public void removeUndoStateListener(UndoStateListener l) {
-		undoListeners.remove(l);
-	}
+    public void removeUndoStateListener(UndoStateListener l) {
+        undoListeners.remove(l);
+    }
+
+    /**
+     * Allows injecting a custom confirmation handler (primarily for tests)
+     * so the rename flow can run headless.
+     */
+    void setConfirmationSupplier(Function<String, Boolean> supplier) {
+        this.confirmationSupplier = supplier == null ? msg -> true : supplier;
+    }
 
 	/** Notifies UI whether undo is currently available. */
 	private void notifyUndoStateChanged() {
@@ -115,10 +132,10 @@ public class FileRenameManager {
 			.append("\n");
 		}
 
-		boolean ok = ActionConfirmationDialog.show(confirmMsg.toString());
-		if (!ok) {
-			return; // user cancelled
-		}  
+        boolean ok = confirmationSupplier.apply(confirmMsg.toString());
+        if (!ok) {
+            return; // user cancelled
+        }
 
 		List<RenameOperation> operations = new ArrayList<>();
 
