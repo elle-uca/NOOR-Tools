@@ -1,13 +1,12 @@
 package org.ln.noortools.tag;
 
+import org.ln.noortools.enums.ChecksumAlg;
 import org.ln.noortools.i18n.I18n;
 
 /**
- * Tag <Crc32>
- * 
-
- *   
- *    Author: Luca Noale
+ * CRC32 checksum tag.
+ *
+ * Produces a lowercase hexadecimal CRC32 hash.
  */
 public class Crc32 extends AbstractChecksumTag {
 
@@ -16,17 +15,17 @@ public class Crc32 extends AbstractChecksumTag {
         this.tagName = "Crc32";
         this.type = TagType.CHECKSUM;
     }
-    
-
 
     @Override
     public String getDescription() {
         return i18n.get("tag.crc32.description");
     }
+
     
     @Override
     public String getActionDescription() {
         return i18n.get("tag.crc32.description");
     }
-}
 
+
+}
