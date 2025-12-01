@@ -35,7 +35,7 @@ class CaseTransformerTest {
             "jAvA123, TOGGLE_CASE, JaVa123"
     })
     void testTransformCase(String input, ModeCase mode, String expected) {
-        String result = StringCaseUtil.transformCase(input, mode);
+        String result = StringUtil.transformCase(input, mode);
         assertEquals(expected, result);
     }
 
@@ -45,7 +45,7 @@ class CaseTransformerTest {
             "UPPER", "LOWER", "TITLE_CASE", "CAPITALIZE_FIRST", "TOGGLE_CASE"
     })
     void testNullInput(ModeCase mode) {
-        assertNull(StringCaseUtil.transformCase(null, mode));
+        assertNull(StringUtil.transformCase(null, mode));
     }
 
     @ParameterizedTest
@@ -54,6 +54,6 @@ class CaseTransformerTest {
             "UPPER", "LOWER", "TITLE_CASE", "CAPITALIZE_FIRST", "TOGGLE_CASE"
     })
     void testEmptyInput(ModeCase mode) {
-        assertEquals("", StringCaseUtil.transformCase("", mode));
+        assertEquals("", StringUtil.transformCase("", mode));
     }
 }

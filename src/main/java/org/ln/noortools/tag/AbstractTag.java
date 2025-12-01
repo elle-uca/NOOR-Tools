@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ln.noortools.i18n.I18n;
+
 import org.ln.noortools.service.PerformTag;
+
+import org.ln.noortools.util.StringUtil;
 
 /**
  * Base class for all renaming tags used by NOOR Tools.
@@ -156,8 +159,10 @@ public abstract class AbstractTag implements PerformTag {
         newNames.clear();
     }
 
-    public boolean newAdd(String e) {
-        return newNames.add(e);
+    public boolean newAdd(String value) {
+        if (value == null) value = "";
+        value = StringUtil.sanitize(value);
+        return newNames.add(value);
     }
 
     /** Returns the new name at a given index (safe). */

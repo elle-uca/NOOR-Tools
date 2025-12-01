@@ -1,7 +1,7 @@
 package org.ln.noortools.service.ruleservice;
 
 import org.ln.noortools.enums.ModeCase;
-import org.ln.noortools.util.StringCaseUtil;
+import org.ln.noortools.util.StringUtil;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,7 +30,7 @@ public class CaseRuleService extends AbstractRuleService {
 	@Override
 	protected String transformName(String base, Object... params) {
 		ModeCase mode = (ModeCase) params[0];
-		return StringCaseUtil.transformCase(base, mode);
+		return StringUtil.transformCase(base, mode);
 	}
 	
 

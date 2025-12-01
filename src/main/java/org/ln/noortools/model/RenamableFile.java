@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import org.ln.noortools.enums.FileStatus;
 import org.ln.noortools.util.FileNameUtil;
+import org.ln.noortools.util.StringUtil;
 
 /**
  * Represents a file that can be renamed.
@@ -55,7 +56,7 @@ public class RenamableFile {
     }
 
     public void setDestinationName(String destinationName) {
-        this.destinationName = destinationName;
+    	this.destinationName = StringUtil.sanitize(destinationName);
     }
 
     /** @return file status */
