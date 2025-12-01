@@ -1,4 +1,4 @@
-package org.ln.noortools.view;
+package org.ln.noortools.view.component;
 
 
 import javax.swing.JSpinner;
