@@ -6,7 +6,7 @@ import org.ln.noortools.enums.Theme;
 import org.ln.noortools.preferences.PreferencesService;
 import org.ln.noortools.service.ThemeManager;
 import org.ln.noortools.view.MainFrame;
-import org.ln.noortools.view.SplashScreen;
+import org.ln.noortools.view.component.SplashScreen;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;

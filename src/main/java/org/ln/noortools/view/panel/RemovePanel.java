@@ -5,7 +5,7 @@ import javax.swing.JPanel;
 
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.service.ruleservice.RenamerService;
-import org.ln.noortools.view.IntegerSpinner;
+import org.ln.noortools.view.component.IntegerSpinner;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
