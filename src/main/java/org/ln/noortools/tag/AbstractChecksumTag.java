@@ -1,45 +1,37 @@
 package org.ln.noortools.tag;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.zip.CRC32;
 
 import org.ln.noortools.enums.ChecksumAlg;
 import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.model.RenamableFile;
 import org.ln.noortools.service.FileAwareTag;
+import org.ln.noortools.util.HashUtils;
 
 /**
- * Base class for all checksum-based tags (CRC32, MD5, SHA256).
+ * Base class for all checksum-based tags.
  *
- * This class:
- *  - Computes a checksum for each file in the context.
- *  - Uses a static ConcurrentHashMap as a cache, so each
- *    file+algorithm pair is computed only once.
- *  - Supports optional prefix length (e.g. <Md5:8>).
- *
- * Subclasses only set the algorithm and description.
+ * Features:
+ *  - Centralized caching to avoid recomputing hashes.
+ *  - Uses HashUtils for unified hashing logic.
+ *  - Supports substring truncation (e.g., <Md5:8>).
  */
 public abstract class AbstractChecksumTag extends AbstractTag implements FileAwareTag {
 
-   
-    /** Selected algorithm for this tag instance. */
-    private final ChecksumAlg algorithm;
 
-    /** Files provided by the renamer context. */
+    private final ChecksumAlg algorithm;
     private List<RenamableFile> filesCtx = List.of();
 
     /**
-     * Global cache for checksums:
-     * key = absolutePath|length|lastModified|algorithm
-     * value = hex checksum
+     * Cache key → computed checksum
+     *
+     * The key includes:
+     *   - absolute path
+     *   - file length
+     *   - last modified timestamp
+     *   - algorithm
      */
     private static final Map<String, String> checksumCache = new ConcurrentHashMap<>();
 
@@ -54,46 +46,33 @@ public abstract class AbstractChecksumTag extends AbstractTag implements FileAwa
         this.filesCtx = (files == null) ? List.of() : files;
     }
 
-    /**
-     * Main checksum computation logic.
-     * Uses cache when possible, falling back to real hashing otherwise.
-     */
     @Override
     public void init() {
-        this.newNames = new ArrayList<>(filesCtx.size());
+        newClear();
 
-        int cut = getIntArg(0, 0); // e.g. <Md5:8> → truncate to first 8 chars
+        int cut = getIntArg(0, 0); // e.g. <Md5:8> → first 8 chars
 
         for (RenamableFile rf : filesCtx) {
-
             String key = cacheKey(rf);
+
+            // Check cache first
             String result = checksumCache.get(key);
 
             if (result == null) {
-                // Compute checksum and store in cache
-                try (InputStream in = Files.newInputStream(rf.getSource().toPath())) {
-
-                    result = switch (algorithm) {
-                        case CRC32 -> computeCRC32(in);
-                        case MD5 -> computeDigest("MD5", in);
-                        case SHA256 -> computeDigest("SHA-256", in);
-                    };
-
+                try {
+                    result = HashUtils.compute(rf.getSource().toPath(), algorithm);
                     checksumCache.put(key, result);
-
                 } catch (Exception e) {
-                    // On failure, add empty string
-                    newNames.add("");
+                    newAdd("");
                     continue;
                 }
             }
 
-            // Apply cutoff if needed
-            if (cut > 0 && cut < result.length()) {
+            // Apply substring trim
+            if (cut > 0 && cut < result.length())
                 result = result.substring(0, cut);
-            }
 
-            newNames.add(result);
+            newAdd(result);
         }
     }
 
@@ -105,30 +84,7 @@ public abstract class AbstractChecksumTag extends AbstractTag implements FileAwa
     }
 
     /**
-     * Computes a CRC32 checksum in hexadecimal.
-     */
-    private String computeCRC32(InputStream in) throws Exception {
-        CRC32 crc = new CRC32();
-        byte[] buffer = new byte[8192];
-        int n;
-        while ((n = in.read(buffer)) > 0) {
-            crc.update(buffer, 0, n);
-        }
-        return Long.toHexString(crc.getValue());
-    }
-
-    /**
-     * Computes a digest using the given algorithm (MD5, SHA-256).
-     */
-    private String computeDigest(String alg, InputStream in) throws Exception {
-        MessageDigest md = MessageDigest.getInstance(alg);
-        in.transferTo(new java.security.DigestOutputStream(OutputStream.nullOutputStream(), md));
-        return HexFormat.of().formatHex(md.digest());
-    }
-
-    /**
-     * Cache key for the given file.
-     * Ensures recomputation only when file content changes.
+     * Builds a cache key based on file identity and selected algorithm.
      */
     private String cacheKey(RenamableFile rf) {
         var f = rf.getSource();
