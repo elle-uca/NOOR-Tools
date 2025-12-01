@@ -11,8 +11,12 @@ import org.ln.noortools.enums.ModeCase;
  * 
  * Author: Luca Noale
  */
-public class StringCaseUtil {
+public class StringUtil {
 
+	
+	private static final String INVALID = "[<>:\"/\\\\|?*]";
+	
+	
     /**
      * Transforms the case of the provided input string based on the specified {@link ModeCase}.
      * <p>
@@ -63,5 +67,23 @@ public class StringCaseUtil {
 
             default -> throw new IllegalArgumentException("Unsupported mode: " + modeCase);
         };
+    }
+    
+    
+    public static String sanitize(String input) {
+        if (input == null || input.isBlank()) return "_";
+
+        // rimuove caratteri vietati
+        String name = input.replaceAll(INVALID, "_");
+
+        // trim e rimozione spazi doppi
+       // name = name.trim().replaceAll("\\s{2,}", " ");
+        name = name.trim();
+
+        // evita nomi non validi
+        if (name.isBlank() || name.equals(".") || name.equals(".."))
+            name = "_";
+
+        return name;
     }
 }
