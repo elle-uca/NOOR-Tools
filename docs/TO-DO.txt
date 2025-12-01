@@ -1,1 +1,3 @@
--Normalizzare <>:"/\*? in rinomina (owner su windoes etc.)
+-Normalizzare <>:"/\*? in rinomina (owner su windows etc.) (fatto, prevedere un warning)
+-org.jaudiotagger.audio.exceptions.CannotReadException: No Reader associated with this extension:pdf
+-non funzionano i checksum (Deve calcorarlo una sola volta) - se si aggiunge testo sparisce
