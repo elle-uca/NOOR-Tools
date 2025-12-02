@@ -12,7 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 
 @SpringBootApplication
 public class NoorToolsApplication {
@@ -20,7 +20,7 @@ public class NoorToolsApplication {
 
 	
     public static void main(String[] args) {
-    	FlatDarkLaf.setup();
+    	FlatLightLaf.setup();
         // 1) Mostra lo splash
         SplashScreen splash = new SplashScreen();
         splash.showSplash();
@@ -29,7 +29,7 @@ public class NoorToolsApplication {
             for (int i = 0; i <= 100; i++) {
                 splash.setProgress(i, "Caricamento... " + i + "%");
                 try {
-                    Thread.sleep(25);
+                    Thread.sleep(30);
                 } catch (InterruptedException ignored) {}
             }
         }).start();

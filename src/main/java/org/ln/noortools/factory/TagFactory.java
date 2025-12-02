@@ -90,7 +90,7 @@ public class TagFactory {
 
         // Date/Time
         register("Date", args -> new Date(i18n, args), new Object[]{"yyyy-mm-dd"});
-        register("Time", args -> new Time(i18n, args), new Object[]{"hh:nn:ss"});
+        register("Time", args -> new Time(i18n, args), new Object[]{"hh-nn-ss"});
 
         // Audio
         register("Album", args -> new Album(i18n, args), new Object[0]);
