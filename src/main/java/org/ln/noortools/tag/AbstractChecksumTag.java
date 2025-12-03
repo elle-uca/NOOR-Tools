@@ -77,6 +77,7 @@ public abstract class AbstractChecksumTag extends AbstractTag implements FileAwa
                         case CRC32 -> computeCRC32(in);
                         case MD5 -> computeDigest("MD5", in);
                         case SHA256 -> computeDigest("SHA-256", in);
+					default -> throw new IllegalArgumentException("Unexpected value: " + algorithm);
                     };
 
                     checksumCache.put(key, result);
