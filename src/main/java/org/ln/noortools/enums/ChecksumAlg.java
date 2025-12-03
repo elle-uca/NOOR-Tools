@@ -6,5 +6,7 @@ public enum ChecksumAlg {
     SHA1,
     SHA256,
     SHA512,
-    BLAKE2B_256  
+    SHA3_256,
+    SHA3_512,
+    BLAKE2B_256
 	}

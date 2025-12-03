@@ -14,57 +14,54 @@ import org.ln.noortools.enums.ChecksumAlg;
 /**
  * Utility class that provides file-based checksum operations.
  *
- * This calculator supports:
+ * Supported algorithms:
  *   - CRC32
  *   - MD5
+ *   - SHA-1
  *   - SHA-256
- *
- * All returned digests are lowercase hexadecimal strings.
+ *   - SHA-512
+ *   - SHA3-256
+ *   - SHA3-512
+ *   - BLAKE2B-256 (Java 21 native)
  */
 public final class HashUtils {
 
     private static final int BUFFER = 8192;
 
-    private HashUtils() {
-        // Utility class, no instances allowed
-    }
+    private HashUtils() {}
 
-    /**
-     * Computes CRC32 checksum for the given file.
-     */
+    /** CRC32 checksum */
     public static String crc32(Path path) throws Exception {
         CRC32 crc = new CRC32();
         try (InputStream in = Files.newInputStream(path)) {
             byte[] buf = new byte[BUFFER];
             int n;
-            while ((n = in.read(buf)) > 0) {
+            while ((n = in.read(buf)) > 0)
                 crc.update(buf, 0, n);
-            }
         }
         return Long.toHexString(crc.getValue());
     }
 
-    /**
-     * Computes a message digest using the specified algorithm (MD5, SHA-256).
-     */
+    /** Generic digest calculator */
     public static String digest(Path path, String algo) throws Exception {
         MessageDigest md = MessageDigest.getInstance(algo);
         try (InputStream in = Files.newInputStream(path)) {
-            // Discard output, only feed bytes to MessageDigest
             in.transferTo(new DigestOutputStream(OutputStream.nullOutputStream(), md));
         }
         return HexFormat.of().formatHex(md.digest());
     }
 
-    /**
-     * Generic compute function based on ChecksumAlg enum.
-     */
+    /** Main dispatcher */
     public static String compute(Path path, ChecksumAlg alg) throws Exception {
         return switch (alg) {
-            case CRC32 -> crc32(path);
-            case MD5   -> digest(path, "MD5");
-            case SHA256 -> digest(path, "SHA-256");
-		default -> throw new IllegalArgumentException("Unexpected value: " + alg);
+            case CRC32       -> crc32(path);
+            case MD5         -> digest(path, "MD5");
+            case SHA1        -> digest(path, "SHA-1");
+            case SHA256      -> digest(path, "SHA-256");
+            case SHA512      -> digest(path, "SHA-512");
+            case SHA3_256    -> digest(path, "SHA3-256");
+            case SHA3_512    -> digest(path, "SHA3-512");
+            case BLAKE2B_256 -> digest(path, "BLAKE2B-256");
         };
     }
 }

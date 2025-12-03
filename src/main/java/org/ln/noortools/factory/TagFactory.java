@@ -26,7 +26,9 @@ import org.ln.noortools.tag.Md5;
 import org.ln.noortools.tag.ModifyDate;
 import org.ln.noortools.tag.RandLet;
 import org.ln.noortools.tag.RandNum;
+import org.ln.noortools.tag.Sha1;
 import org.ln.noortools.tag.Sha256;
+import org.ln.noortools.tag.Sha512;
 import org.ln.noortools.tag.Subs;
 import org.ln.noortools.tag.Time;
 import org.ln.noortools.tag.Title;
@@ -99,7 +101,9 @@ public class TagFactory {
 
 
         // Checksum
+        register("Sha1", args -> new Sha1(i18n, args), new Object[0]);
         register("Sha256", args -> new Sha256(i18n, args), new Object[]{8});
+        register("Sha512", args -> new Sha512(i18n, args), new Object[0]);
         register("Crc32", args -> new Crc32(i18n, args), new Object[0]);
         register("Md5", args -> new Md5(i18n, args), new Object[0]);
 
