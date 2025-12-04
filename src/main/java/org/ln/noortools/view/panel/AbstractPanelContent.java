@@ -1,13 +1,18 @@
 package org.ln.noortools.view.panel;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URI;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
@@ -61,7 +66,8 @@ public abstract class AbstractPanelContent extends JPanel
     protected final JTextField renameField;
     protected final JComboBox<RenameMode> modeCombo;
     protected final I18n i18n;      
-	 
+    /** Help button in footer (bottom-left) */
+    protected final JButton helpButton;
 
 	 public AbstractPanelContent(I18n i18n) {
 		this.i18n = i18n;
@@ -74,6 +80,13 @@ public abstract class AbstractPanelContent extends JPanel
         // Hook changes
         renameField.getDocument().addDocumentListener(this);
         
+        // help button base config
+        this.helpButton = new JButton("?");
+        helpButton.setFocusable(false);
+        helpButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        helpButton.putClientProperty("JButton.buttonType", "help");
+        helpButton.setToolTipText("Aiuto");
+        
         setLayout(new BorderLayout());
     }
 	 
@@ -83,12 +96,25 @@ public abstract class AbstractPanelContent extends JPanel
             contentArea.setLayout(new GridBagLayout());
             add(contentArea, BorderLayout.CENTER);
 
-            // pannello footer con combo
-            JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-            footer.add(new JLabel(i18n.get("rename.mode")));
-            footer.add(modeCombo);
+         
+            // ---------- FOOTER ----------
+            // layout: [ help ]                               [ label + combo ]
+            JPanel footer = new JPanel(new BorderLayout());
+
+            // pannello sinistro: solo help
+            JPanel left = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
+            left.add(helpButton);
+
+            // pannello destro: label + combo rinomina
+            JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+            right.add(new JLabel(i18n.get("rename.mode")));
+            right.add(modeCombo);
+
+            footer.add(left, BorderLayout.WEST);
+            footer.add(right, BorderLayout.EAST);
+
             add(footer, BorderLayout.SOUTH);
-            // delega a sottoclasse per costruire controlli specifici
+             // delega a sottoclasse per costruire controlli specifici
             initComponents(contentArea);
      }
 	 
@@ -105,6 +131,31 @@ public abstract class AbstractPanelContent extends JPanel
 
     /** Subclasses must implement how data is updated when inputs change */
     protected abstract void updateView();
+    
+    
+    /**
+     * Configures the help button to open an online documentation URL.
+     */
+    protected void setHelpUrl(String url) {
+        helpButton.addActionListener(ev -> {
+            try {
+                Desktop.getDesktop().browse(new URI(url));
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this,
+                        "Impossibile aprire la documentazione:\n" + ex.getMessage(),
+                        "Errore", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+    }
+
+    /**
+     * Configures the help button to show inline text in a dialog.
+     */
+    protected void setHelpInline(String text) {
+        helpButton.addActionListener(ev ->
+                JOptionPane.showMessageDialog(this, text, "Aiuto", JOptionPane.INFORMATION_MESSAGE));
+    }
+
 
     // ---- Utility methods ----
     public JTextField getRenameField() {
