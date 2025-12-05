@@ -1,5 +1,5 @@
 -Normalizzare <>:"/\*? in rinomina (owner su windows etc.) (fatto, prevedere un warning)
 -org.jaudiotagger.audio.exceptions.CannotReadException: No Reader associated with this extension:pdf
--non funzionano i checksum (Deve calcolarlo una sola volta) - se si aggiunge testo sparisce (ok)
 -Preferenze: aggiungere ???? (fill) 
 -Aggiungere link alla docum
+-Messaggio conferma
