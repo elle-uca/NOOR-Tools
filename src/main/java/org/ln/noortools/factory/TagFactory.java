@@ -24,6 +24,7 @@ import org.ln.noortools.tag.IncrNum;
 import org.ln.noortools.tag.IncrRom;
 import org.ln.noortools.tag.Md5;
 import org.ln.noortools.tag.ModifyDate;
+import org.ln.noortools.tag.Name;
 import org.ln.noortools.tag.RandLet;
 import org.ln.noortools.tag.RandNum;
 import org.ln.noortools.tag.Sha1;
@@ -89,6 +90,7 @@ public class TagFactory {
         register("Subs", args -> new Subs(i18n, args), new Object[]{1, 1});
         register("Word", args -> new Word(i18n, args), new Object[]{1, 1});
         register("RandLet", args -> new RandLet(i18n, args), new Object[]{4});
+        register("Name", args -> new Name(i18n, args), new Object[0]);
 
         // Date/Time
         register("Date", args -> new Date(i18n, args), new Object[]{"yyyy-mm-dd"});
