@@ -34,6 +34,7 @@ import org.ln.noortools.service.ruleservice.RenamerService;
 import org.ln.noortools.util.SwingUtil;
 import org.ln.noortools.view.component.StatusBarPanel;
 import org.ln.noortools.view.dialog.AboutDialog;
+import org.ln.noortools.view.dialog.SplitDialog;
 import org.ln.noortools.view.panel.AccordionFactory;
 import org.ln.noortools.view.panel.AccordionPanel;
 import org.ln.noortools.view.panel.FileTablePanel;
@@ -142,7 +143,14 @@ public class MainFrame extends JFrame {
 		viewMenu.add(themeMenu);
 		
 		JMenu toolMenu = new JMenu(i18n.get("menu.tool"));
+		JMenuItem splitDialogItem = new JMenuItem(i18n.get("toolbar.button.file"));
+		splitDialogItem.addActionListener(e -> {
+			SplitDialog dialog = new SplitDialog(this);
+			dialog.setVisible(true);
+		});
 
+		toolMenu.add(splitDialogItem);
+		
 		JMenu helpMenu = new JMenu(i18n.get("menu.help"));
 		JMenuItem preferencesItem = new JMenuItem(i18n.get("menu.help.preferences"));
 		preferencesItem.addActionListener(e -> {
