@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -14,12 +15,15 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import org.ln.noortools.SpringContext;
 import org.ln.noortools.i18n.I18n;
+import org.ln.noortools.util.SplitMergeUtils;
 import org.ln.noortools.util.SwingUtil;
 import org.ln.noortools.view.component.IntegerSpinner;
 import org.ln.noortools.view.component.SourceTargetPanel;
@@ -57,7 +61,7 @@ public class SplitDialog extends JDialog {
 		I18n i18n =  SpringContext.getBean(I18n.class);
 		JPanel content = new JPanel();
 		textField = new JTextField(i18n.get("splitPanel.field.text"));
-		textField.setText(i18n.get("splitPanel.field.text"));
+		//textField.setText(i18n.get("splitPanel.field.text"));
 		textLabel = new JLabel(i18n.get("splitPanel.label.text"));
 		numberLabel = new JLabel(i18n.get("splitPanel.label.number"));
 		sizeLabel = new JLabel(i18n.get("splitPanel.label.size"));
@@ -80,23 +84,38 @@ public class SplitDialog extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String path = stp.getSourceFieldText();// aggiungere logica per cartella destinazione
-				System.out.println(path);
+				String sourcePath = stp.getSourceFieldText();// aggiungere logica per cartella destinazione
+				String targetPath = stp.getTargetFieldText();// aggiungere logica per cartella destinazione
+				
+				if((sourcePath == null || sourcePath.isEmpty())  
+						//|| (targetPath == null || targetPath.isEmpty())
+						){
+					
+					 JOptionPane.showMessageDialog(
+			                    null,
+			                    "Seleziona la directory origine",
+			                    "Errore",
+			                    JOptionPane.ERROR_MESSAGE
+			            );
+			            return;
+				}	
+				
+				
+				//System.out.println(sourcePath);
 
 				Map<String, List<File>> simulation;
 
-				//				if(jrbNumber.isSelected()) {
-				//					simulation = SplitMergeUtils.simulateSplitByCount(path, 
-				//							numberSpinner.getIntValue(), renameField.getText());
-				//				}
-				//				else {
-				//					simulation = SplitMergeUtils.simulateSplitBySize(path, 
-				//							sizeSpinner.getIntValue(), renameField.getText());
-				//				}
-				//				
-				//				SwingUtilities.invokeLater(() -> 
-				//					SplitMergeUtils.showSimulationTable(path, simulation));
+				if(jrbNumber.isSelected()) {
+					simulation = SplitMergeUtils.simulateSplitByCount(sourcePath, 
+							numberSpinner.getIntValue(), textField.getText());
+				}
+				else {
+					simulation = SplitMergeUtils.simulateSplitBySize(sourcePath, 
+							sizeSpinner.getIntValue(), textField.getText());
+				}
 
+				SwingUtilities.invokeLater(() -> 
+				SplitMergeUtils.showSimulationTable(sourcePath, simulation));
 			}
 		});
 
@@ -112,7 +131,6 @@ public class SplitDialog extends JDialog {
 		content.add(textLabel, 		"cell 0 5");
 		content.add(textField, 		"cell 1 5, growx");
 		content.add(go,  			"cell 0 6");
-
 
 		add(content);
 		setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
@@ -132,24 +150,37 @@ public class SplitDialog extends JDialog {
 	}
 	
 	private void chooseDirectorySource() {
-		JFileChooser fc = SwingUtil.getFileChooser(JFileChooser.DIRECTORIES_ONLY, false);
-		int returnVal = fc.showOpenDialog(null);
-		if (returnVal != JFileChooser.APPROVE_OPTION)
-			return;
-
-		String path = fc.getSelectedFile().getAbsolutePath();
-		stp.setSourceFieldText(path);
+		chooseDirectory(stp::setSourceFieldText, true);
 	}
 
 	private void chooseDirectoryTarget() {
-		JFileChooser fc = SwingUtil.getFileChooser(JFileChooser.DIRECTORIES_ONLY, false);
-		int returnVal = fc.showOpenDialog(null);
-		if (returnVal != JFileChooser.APPROVE_OPTION)
-			return;
+		chooseDirectory(stp::setSourceFieldText, false);
+	}
+	
+	private void chooseDirectory(Consumer<String> pathConsumer, boolean checkFiles) {
+	    JFileChooser fc = SwingUtil.getFileChooser(JFileChooser.DIRECTORIES_ONLY, false);
+	    int returnVal = fc.showOpenDialog(null);
+	    if (returnVal != JFileChooser.APPROVE_OPTION)
+	        return;
 
-		String path = fc.getSelectedFile().getAbsolutePath();
-		stp.setTargetFieldText(path);
+	    String path = fc.getSelectedFile().getAbsolutePath();
 
+	    if (checkFiles) {
+	        File dir = new File(path);
+	        File[] files = dir.listFiles(File::isFile);
+
+	        if (files == null || files.length == 0) {
+	            JOptionPane.showMessageDialog(
+	                    null,
+	                    "La directory non contiene file",
+	                    "Errore",
+	                    JOptionPane.ERROR_MESSAGE
+	            );
+	            return;
+	        }
+	    }
+
+	    pathConsumer.accept(path);
 	}
 }
 
