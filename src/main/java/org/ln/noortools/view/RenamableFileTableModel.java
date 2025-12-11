@@ -13,7 +13,7 @@ import org.ln.noortools.service.RenamerServiceListener;
 @SuppressWarnings("serial")
 public class RenamableFileTableModel extends AbstractTableModel implements RenamerServiceListener{
 
-	private List<RenamableFile> data = new ArrayList<>();
+	private List<RenamableFile> data = new ArrayList<RenamableFile>();
 
 	private final String[] columnNames;
 
@@ -68,16 +68,54 @@ public class RenamableFileTableModel extends AbstractTableModel implements Renam
 	}
 
 
+	public void addFiles(List<RenamableFile> files) {
+		data.clear();
+		data.addAll(files);
+		fireTableDataChanged();
+	}
 
+	public void addFile(RenamableFile file) {
+	    // controllo duplicato
+	    if(containsFile(file)) {
+	    	 return; // IGNORA
+	    }
 
+	    int row = data.size();
+	    data.add(file);
+	    fireTableRowsInserted(row, row);
+	}
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 		return false;
 	}
 
+	public boolean containsFile(RenamableFile f) {
+	    String abs = f.getSource().getAbsolutePath();
 
+	    for (RenamableFile rf : data) {
+	        if (rf.getSource().getAbsolutePath().equals(abs))
+	            return true;
+	    }
+	    return false;
+	}
 
+	
+	public void removeRow(int rowIndex) {
+	    if (rowIndex < 0 || rowIndex >= data.size()) return;
+
+	    data.remove(rowIndex);
+	    fireTableRowsDeleted(rowIndex, rowIndex);
+	}
+	
+	public void clear() {
+	    int size = data.size();
+	    if (size == 0) return;
+
+	    data.clear();
+	    fireTableRowsDeleted(0, size - 1);
+	}
+	
 	@Override
 	public void setValueAt(Object aValue, int row, int col) {
 		if (col == 0 && row >= 0 && row < data.size()) {

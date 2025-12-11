@@ -3,3 +3,4 @@
 -Preferenze: aggiungere ???? (fill) 
 -Aggiungere link alla docum
 -Messaggio conferma
+-Aggiorna view quando cambia la tabella

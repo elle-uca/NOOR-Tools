@@ -1,15 +1,21 @@
 package org.ln.noortools.view.panel;
 
-import java.awt.Color;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.io.File;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import javax.swing.table.TableRowSorter;
 
 import org.ln.noortools.i18n.I18n;
@@ -20,6 +26,7 @@ import org.ln.noortools.view.NewNameCellRenderer;
 import org.ln.noortools.view.RenamableFileTableModel;
 import org.ln.noortools.view.StatusCellRenderer;
 import org.ln.noortools.view.ToolbarBuilder;
+import org.ln.noortools.view.component.FileTransferHandler;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -31,6 +38,7 @@ public class FileTablePanel extends JPanel {
     private final JTable table;
     private final JLabel infoLabel;
     private final JLabel fileInfoLabel;
+    RenamableFileTableModel tableModel;
 
     public FileTablePanel(RenamerService renamerService, 
     		I18n i18n, 
@@ -43,7 +51,7 @@ public class FileTablePanel extends JPanel {
 
         JPanel container = new JPanel(new MigLayout("fill, insets 10", "[grow]", "[][grow][]"));
         JScrollPane tableScrollPane = new JScrollPane();
-        RenamableFileTableModel tableModel = new RenamableFileTableModel(i18n);
+        tableModel = new RenamableFileTableModel(i18n);
         this.renamerService.addListener(tableModel);
         table = new JTable(tableModel);
         table.putClientProperty("Table.alternateRowColor", null);
@@ -56,7 +64,39 @@ public class FileTablePanel extends JPanel {
         sorter.setComparator(1, new NaturalOrderComparator());
         sorter.setComparator(2, new NaturalOrderComparator());
         table.setRowSorter(sorter);
+        
 
+        FileTransferHandler dnd = new FileTransferHandler(
+                table,
+                this::handleDroppedFiles
+        );       
+        
+     // Tasto DELETE
+        KeyStroke delete = KeyStroke.getKeyStroke("DELETE");
+
+        table.getInputMap(JComponent.WHEN_FOCUSED).put(delete, "deleteRow");
+
+        table.getActionMap().put("deleteRow", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = table.getSelectedRow();
+                if (row == -1) return;
+
+                tableModel.removeRow(row);
+//                int answer = JOptionPane.showConfirmDialog(
+//                    table,
+//                    "Eliminare la riga selezionata?",
+//                    "Conferma eliminazione",
+//                    JOptionPane.YES_NO_OPTION
+//                );
+//
+//                if (answer == JOptionPane.YES_OPTION) {
+//                    tableModel.removeRow(row);
+//                }
+            }
+        });
+        
+        
         infoLabel = new JLabel(i18n.get("table.noFiles"));
         fileInfoLabel = new JLabel(i18n.get("table.noFileSelected"));
 
@@ -74,11 +114,15 @@ public class FileTablePanel extends JPanel {
         );
         container.add(tableScrollPane, "grow, push, wrap");
 
+        table.setTransferHandler(dnd);
+        tableScrollPane.setTransferHandler(dnd);
+ 
+        
         JPanel south = new JPanel(new MigLayout("insets 5 10 5 10, fillx", "[grow]", "[]5[]"));
         south.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(210, 210, 210)));
 
-        infoLabel.setFont(infoLabel.getFont().deriveFont(java.awt.Font.PLAIN, 12f));
-        fileInfoLabel.setFont(fileInfoLabel.getFont().deriveFont(java.awt.Font.ITALIC, 12f));
+        infoLabel.setFont(infoLabel.getFont().deriveFont(Font.PLAIN, 12f));
+        fileInfoLabel.setFont(fileInfoLabel.getFont().deriveFont(Font.ITALIC, 12f));
         fileInfoLabel.setForeground(new Color(100, 100, 100));
 
         south.add(infoLabel, "wrap");
@@ -87,8 +131,18 @@ public class FileTablePanel extends JPanel {
 
         add(container, BorderLayout.CENTER);
     }
+    
+    private void handleDroppedFiles(List<File> files) {
+        for (File f : files) {
+            if (f.isFile()) {
+                tableModel.addFile(new RenamableFile(f));
+            }
+        }
+    }
 
-    private void updateGlobalInfo(List<RenamableFile> files) {
+
+
+	private void updateGlobalInfo(List<RenamableFile> files) {
         if (files == null || files.isEmpty()) {
             infoLabel.setText(i18n.get("table.noFiles"));
             return;

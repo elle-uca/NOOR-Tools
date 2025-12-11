@@ -80,45 +80,96 @@ public class SplitDialog extends JDialog {
 		jrbSize.addActionListener(e ->updateView());
 		go = new JButton(i18n.get("splitPanel.button.go"));
 
-		go.addActionListener(new ActionListener() {
+//		go.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				String sourcePath = stp.getSourceFieldText();
+//				String targetPath = stp.getTargetFieldText();// aggiungere logica per cartella destinazione
+//				
+//				if((sourcePath == null || sourcePath.isEmpty())  
+//						//|| (targetPath == null || targetPath.isEmpty())
+//						){
+//					
+//					 JOptionPane.showMessageDialog(
+//			                    null,
+//			                    "Seleziona la directory origine",
+//			                    "Errore",
+//			                    JOptionPane.ERROR_MESSAGE
+//			            );
+//			            return;
+//				}	
+//	
+//				// SE NON SI SELEZIONA LA DESTINAZIONE SI ASSUME SIA LA STESSA
+//				if(targetPath == null || targetPath.isEmpty())  {
+//					targetPath = sourcePath;
+//				}
+//				
+//				Map<String, List<File>> simulation;
+//
+//				if(jrbNumber.isSelected()) {
+//					simulation = SplitMergeUtils.simulateSplitByCount(sourcePath, 
+//							numberSpinner.getIntValue(), textField.getText());
+//				}
+//				else {
+//					simulation = SplitMergeUtils.simulateSplitBySize(sourcePath, 
+//							sizeSpinner.getIntValue(), textField.getText());
+//				}
+//
+//				SwingUtilities.invokeLater(() -> 
+//				SplitMergeUtils.showSimulationTable(targetPath, simulation));
+//			}
+//		});
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String sourcePath = stp.getSourceFieldText();// aggiungere logica per cartella destinazione
-				String targetPath = stp.getTargetFieldText();// aggiungere logica per cartella destinazione
-				
-				if((sourcePath == null || sourcePath.isEmpty())  
-						//|| (targetPath == null || targetPath.isEmpty())
-						){
-					
-					 JOptionPane.showMessageDialog(
-			                    null,
-			                    "Seleziona la directory origine",
-			                    "Errore",
-			                    JOptionPane.ERROR_MESSAGE
-			            );
-			            return;
-				}	
-				
-				
-				//System.out.println(sourcePath);
+		go.addActionListener(e -> {
 
-				Map<String, List<File>> simulation;
+		    String sourcePath = stp.getSourceFieldText();
+		    String targetPathRaw = stp.getTargetFieldText();
 
-				if(jrbNumber.isSelected()) {
-					simulation = SplitMergeUtils.simulateSplitByCount(sourcePath, 
-							numberSpinner.getIntValue(), textField.getText());
-				}
-				else {
-					simulation = SplitMergeUtils.simulateSplitBySize(sourcePath, 
-							sizeSpinner.getIntValue(), textField.getText());
-				}
+		    // Controllo directory origine
+		    if (sourcePath == null || sourcePath.isEmpty()) {
+		        JOptionPane.showMessageDialog(
+		                null,
+		                "Seleziona la directory origine",
+		                "Errore",
+		                JOptionPane.ERROR_MESSAGE
+		        );
+		        return;
+		    }
 
-				SwingUtilities.invokeLater(() -> 
-				SplitMergeUtils.showSimulationTable(sourcePath, simulation));
-			}
+		    // Se non viene scelta, la destinazione è la stessa dell'origine
+		    String targetPath = (targetPathRaw == null || targetPathRaw.isEmpty())
+		            ? sourcePath
+		            : targetPathRaw;
+
+		    // Rendiamo final per la lambda
+		    final String finalTargetPath = targetPath;
+
+		    // Simulazione split
+		    Map<String, List<File>> simulation;
+
+		    if (jrbNumber.isSelected()) {
+		        simulation = SplitMergeUtils.simulateSplitByCount(
+		                sourcePath,
+		                numberSpinner.getIntValue(),
+		                textField.getText()
+		        );
+		    } else {
+		        simulation = SplitMergeUtils.simulateSplitBySize(
+		                sourcePath,
+		                sizeSpinner.getIntValue(),
+		                textField.getText()
+		        );
+		    }
+
+		    final Map<String, List<File>> finalSimulation = simulation;
+
+		    // Mostra tabella con i risultati della simulazione
+		    SwingUtilities.invokeLater(() ->
+		            SplitMergeUtils.showSimulationTable(finalTargetPath, finalSimulation)
+		    );
 		});
-
+		
 		content.setLayout(new MigLayout("", "[][grow]", "20[][][][][][][]20"));
 
 		content.add(stp, 			"cell 0 0 2 1, growx ");
