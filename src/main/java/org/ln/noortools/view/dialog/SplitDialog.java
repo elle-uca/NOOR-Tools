@@ -2,8 +2,6 @@ package org.ln.noortools.view.dialog;
 
 import java.awt.Dialog;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +59,6 @@ public class SplitDialog extends JDialog {
 		I18n i18n =  SpringContext.getBean(I18n.class);
 		JPanel content = new JPanel();
 		textField = new JTextField(i18n.get("splitPanel.field.text"));
-		//textField.setText(i18n.get("splitPanel.field.text"));
 		textLabel = new JLabel(i18n.get("splitPanel.label.text"));
 		numberLabel = new JLabel(i18n.get("splitPanel.label.number"));
 		sizeLabel = new JLabel(i18n.get("splitPanel.label.size"));
@@ -79,99 +76,9 @@ public class SplitDialog extends JDialog {
 		jrbNumber.addActionListener(e ->updateView());
 		jrbSize.addActionListener(e ->updateView());
 		go = new JButton(i18n.get("splitPanel.button.go"));
+		go.addActionListener(e -> runSplitSimulation());
 
-//		go.addActionListener(new ActionListener() {
-//
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				String sourcePath = stp.getSourceFieldText();
-//				String targetPath = stp.getTargetFieldText();// aggiungere logica per cartella destinazione
-//				
-//				if((sourcePath == null || sourcePath.isEmpty())  
-//						//|| (targetPath == null || targetPath.isEmpty())
-//						){
-//					
-//					 JOptionPane.showMessageDialog(
-//			                    null,
-//			                    "Seleziona la directory origine",
-//			                    "Errore",
-//			                    JOptionPane.ERROR_MESSAGE
-//			            );
-//			            return;
-//				}	
-//	
-//				// SE NON SI SELEZIONA LA DESTINAZIONE SI ASSUME SIA LA STESSA
-//				if(targetPath == null || targetPath.isEmpty())  {
-//					targetPath = sourcePath;
-//				}
-//				
-//				Map<String, List<File>> simulation;
-//
-//				if(jrbNumber.isSelected()) {
-//					simulation = SplitMergeUtils.simulateSplitByCount(sourcePath, 
-//							numberSpinner.getIntValue(), textField.getText());
-//				}
-//				else {
-//					simulation = SplitMergeUtils.simulateSplitBySize(sourcePath, 
-//							sizeSpinner.getIntValue(), textField.getText());
-//				}
-//
-//				SwingUtilities.invokeLater(() -> 
-//				SplitMergeUtils.showSimulationTable(targetPath, simulation));
-//			}
-//		});
-
-		go.addActionListener(e -> {
-
-		    String sourcePath = stp.getSourceFieldText();
-		    String targetPathRaw = stp.getTargetFieldText();
-
-		    // Controllo directory origine
-		    if (sourcePath == null || sourcePath.isEmpty()) {
-		        JOptionPane.showMessageDialog(
-		                null,
-		                "Seleziona la directory origine",
-		                "Errore",
-		                JOptionPane.ERROR_MESSAGE
-		        );
-		        return;
-		    }
-
-		    // Se non viene scelta, la destinazione è la stessa dell'origine
-		    String targetPath = (targetPathRaw == null || targetPathRaw.isEmpty())
-		            ? sourcePath
-		            : targetPathRaw;
-
-		    // Rendiamo final per la lambda
-		    final String finalTargetPath = targetPath;
-
-		    // Simulazione split
-		    Map<String, List<File>> simulation;
-
-		    if (jrbNumber.isSelected()) {
-		        simulation = SplitMergeUtils.simulateSplitByCount(
-		                sourcePath,
-		                numberSpinner.getIntValue(),
-		                textField.getText()
-		        );
-		    } else {
-		        simulation = SplitMergeUtils.simulateSplitBySize(
-		                sourcePath,
-		                sizeSpinner.getIntValue(),
-		                textField.getText()
-		        );
-		    }
-
-		    final Map<String, List<File>> finalSimulation = simulation;
-
-		    // Mostra tabella con i risultati della simulazione
-		    SwingUtilities.invokeLater(() ->
-		            SplitMergeUtils.showSimulationTable(finalTargetPath, finalSimulation)
-		    );
-		});
-		
 		content.setLayout(new MigLayout("", "[][grow]", "20[][][][][][][]20"));
-
 		content.add(stp, 			"cell 0 0 2 1, growx ");
 		content.add(jrbNumber, 		"cell 0 1 2 1");
 		content.add(numberLabel,	"cell 0 2");
@@ -190,6 +97,55 @@ public class SplitDialog extends JDialog {
 	}  
 
 
+	private void runSplitSimulation() {
+	    String sourcePath = stp.getSourceFieldText();
+	    String targetPathRaw = stp.getTargetFieldText();
+
+	    // Controllo directory origine
+	    if (sourcePath == null || sourcePath.isEmpty()) {
+	        JOptionPane.showMessageDialog(
+	                null,
+	                "Seleziona la directory origine",
+	                "Errore",
+	                JOptionPane.ERROR_MESSAGE
+	        );
+	        return;
+	    }
+
+	    // Se non viene scelta, la destinazione è la stessa dell'origine
+	    String targetPath = (targetPathRaw == null || targetPathRaw.isEmpty())
+	            ? sourcePath
+	            : targetPathRaw;
+
+	    // Rendiamo final per la lambda
+	    final String finalTargetPath = targetPath;
+
+	    // Simulazione split
+	    Map<String, List<File>> simulation;
+
+	    if (jrbNumber.isSelected()) {
+	        simulation = SplitMergeUtils.simulateSplitByCount(
+	                sourcePath,
+	                numberSpinner.getIntValue(),
+	                textField.getText()
+	        );
+	    } else {
+	        simulation = SplitMergeUtils.simulateSplitBySize(
+	                sourcePath,
+	                sizeSpinner.getIntValue(),
+	                textField.getText()
+	        );
+	    }
+
+	    final Map<String, List<File>> finalSimulation = simulation;
+
+	    // Mostra tabella con i risultati della simulazione
+	    SwingUtilities.invokeLater(() ->
+	            SplitMergeUtils.showSimulationTable(finalTargetPath, finalSimulation)
+	    );
+	}
+
+
 	void updateView() {
 		sizeSpinner.setEnabled(true);
 		numberSpinner.setEnabled(false);	
@@ -205,17 +161,15 @@ public class SplitDialog extends JDialog {
 	}
 
 	private void chooseDirectoryTarget() {
-		chooseDirectory(stp::setSourceFieldText, false);
+		chooseDirectory(stp::setTargetFieldText, false);
 	}
 	
 	private void chooseDirectory(Consumer<String> pathConsumer, boolean checkFiles) {
-	    JFileChooser fc = SwingUtil.getFileChooser(JFileChooser.DIRECTORIES_ONLY, false);
-	    int returnVal = fc.showOpenDialog(null);
-	    if (returnVal != JFileChooser.APPROVE_OPTION)
-	        return;
-
-	    String path = fc.getSelectedFile().getAbsolutePath();
-
+	    File[] res = SwingUtil.showOpenDialog(this, JFileChooser.DIRECTORIES_ONLY, false);
+	    
+	    if(res.length == 0) return; // user cancelled
+	    
+	    String path = res[0].getAbsolutePath();
 	    if (checkFiles) {
 	        File dir = new File(path);
 	        File[] files = dir.listFiles(File::isFile);
@@ -230,7 +184,6 @@ public class SplitDialog extends JDialog {
 	            return;
 	        }
 	    }
-
 	    pathConsumer.accept(path);
 	}
 }
