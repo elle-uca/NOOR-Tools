@@ -108,18 +108,18 @@ public class SplitMergeUtils {
     }
 
     /**
-     * Mostra la simulazione in una JTable.
+     * Mostra la simulazione in una JTable. Path path = Paths.get("dir1", "dir2");
      * @param path 
      */
     public static void showSimulationTable(String path, Map<String, List<File>> simulation) {
         String[] columns = {"Cartella", "Nome File", "Dimensione (KB)"};
         DefaultTableModel model = new DefaultTableModel(columns, 0);
-
+        
         for (Map.Entry<String, List<File>> entry : simulation.entrySet()) {
             String folder = entry.getKey();
             for (File file : entry.getValue()) {
                 model.addRow(new Object[]{
-                        folder,
+                		Paths.get(path, folder),
                         file.getName(),
                         file.length() / 1024
                 });
@@ -154,7 +154,7 @@ public class SplitMergeUtils {
     /**
      * Simula il merge: ritorna mappatura, conflitti e riepilogo per sottocartella.
      */
-    public static MergeResult simulateMerge(String parentDir, String targetDir) throws IOException {
+    public static MergeResult simulateMerge(String parentDir, String targetDir) {
         MergeResult result = new MergeResult();
         result.mapping = new ArrayList<>();
         result.conflicts = 0;
@@ -169,7 +169,9 @@ public class SplitMergeUtils {
         }
 
         Path targetPath = Paths.get(targetDir);
-        Files.createDirectories(targetPath);
+        try {
+			Files.createDirectories(targetPath);
+
 
         for (File subDir : subDirs) {
             result.sourceDirs.add(subDir);
@@ -205,6 +207,11 @@ public class SplitMergeUtils {
 
             result.filesPerFolder.put(subDir.getName(), countForFolder);
         }
+		} catch (IOException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Errore durante la simulazione:\n" + e.getMessage(),
+                  "Errore", JOptionPane.ERROR_MESSAGE);
+		}
         return result;
     }
 

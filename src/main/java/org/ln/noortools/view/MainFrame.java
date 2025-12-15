@@ -34,6 +34,7 @@ import org.ln.noortools.service.ruleservice.RenamerService;
 import org.ln.noortools.util.SwingUtil;
 import org.ln.noortools.view.component.StatusBarPanel;
 import org.ln.noortools.view.dialog.AboutDialog;
+import org.ln.noortools.view.dialog.MergeDialog;
 import org.ln.noortools.view.dialog.SplitDialog;
 import org.ln.noortools.view.panel.AccordionFactory;
 import org.ln.noortools.view.panel.AccordionPanel;
@@ -130,26 +131,43 @@ public class MainFrame extends JFrame {
 		JMenu viewMenu = new JMenu(i18n.get("menu.view"));
 		
 		JMenu themeMenu = new JMenu("Tema");
+		
+		Theme activeTheme = Theme.fromKey(prefs.getTheme());
+		if (activeTheme == null) {
+		    activeTheme = Theme.LIGHT;
+		}
+		
 		EnumMap<Theme, JRadioButtonMenuItem> themeMenuItems = new EnumMap<>(Theme.class);
 		ButtonGroup themeGroup = new ButtonGroup();
 		for (Theme theme : Theme.values()) {
 			JRadioButtonMenuItem themeItem = new JRadioButtonMenuItem(theme.toString());
-			//themeItem.setSelected(theme == ThemeSupport.getTheme());
 			themeItem.addActionListener(e -> updateTheme(theme));
+			   if (theme == activeTheme) {
+			        themeItem.setSelected(true);
+			    }
 			themeGroup.add(themeItem);
 			themeMenu.add(themeItem);
 			themeMenuItems.put(theme, themeItem);
 		}
+		
 		viewMenu.add(themeMenu);
 		
 		JMenu toolMenu = new JMenu(i18n.get("menu.tool"));
-		JMenuItem splitDialogItem = new JMenuItem(i18n.get("toolbar.button.file"));
+		JMenuItem splitDialogItem = new JMenuItem(i18n.get("menu.tool.split"));
 		splitDialogItem.addActionListener(e -> {
 			SplitDialog dialog = new SplitDialog(this);
 			dialog.setVisible(true);
 		});
 
 		toolMenu.add(splitDialogItem);
+		
+		JMenuItem mergeDialogItem = new JMenuItem(i18n.get("menu.tool.merge"));
+		
+		mergeDialogItem.addActionListener(e -> {
+			MergeDialog dialog = new MergeDialog(this);
+			dialog.setVisible(true);
+		});
+		toolMenu.add(mergeDialogItem);
 		
 		JMenu helpMenu = new JMenu(i18n.get("menu.help"));
 		JMenuItem preferencesItem = new JMenuItem(i18n.get("menu.help.preferences"));
@@ -158,7 +176,6 @@ public class MainFrame extends JFrame {
 			dialog.setVisible(true);
 		});
 
-		// preferencesItem.addActionListener(e -> showPreferences());
 		helpMenu.add(preferencesItem);
 		JMenuItem aboutItem = new JMenuItem(i18n.get("menu.help.about"));
 		aboutItem.addActionListener(e -> AboutDialog.show(this, i18n));
@@ -176,6 +193,8 @@ public class MainFrame extends JFrame {
 
 	private void updateTheme(Theme theme) {
 		ThemeManager.applyTheme(theme);
+		prefs.setTheme(theme.getKey());
+		updateStatusBar();
 	}
 
 
@@ -226,6 +245,7 @@ public class MainFrame extends JFrame {
 			renamerService.setFiles(files);
 		}
 	}
+	
 	private void updateStatusBar() {
 		String theme = prefs.getTheme();
 		int ruleCount = (accordion != null) ? accordion.getPanelCount() : 0;

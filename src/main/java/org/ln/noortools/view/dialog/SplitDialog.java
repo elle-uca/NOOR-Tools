@@ -1,37 +1,26 @@
 package org.ln.noortools.view.dialog;
 
-import java.awt.Dialog;
-import java.awt.Dimension;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import org.ln.noortools.SpringContext;
-import org.ln.noortools.i18n.I18n;
 import org.ln.noortools.util.SplitMergeUtils;
-import org.ln.noortools.util.SwingUtil;
 import org.ln.noortools.view.component.IntegerSpinner;
-import org.ln.noortools.view.component.SourceTargetPanel;
 
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
-public class SplitDialog extends JDialog {
+public class SplitDialog extends SplitMergeDialog {
 
-	private SourceTargetPanel stp;
+	private JTextField textField;
 	private JLabel textLabel;
 	private JLabel numberLabel;
 	private JLabel sizeLabel;
@@ -40,24 +29,18 @@ public class SplitDialog extends JDialog {
 	private ButtonGroup group;
 	private JRadioButton jrbNumber;
 	private JRadioButton jrbSize;
-	private JButton go;
-	private JTextField textField;
-
 
 
 	public SplitDialog(JFrame owner) {
 		super(owner);
 		setTitle("Split file in Directory");
-		initComponents();
 	}
 
 
 	/**
 	 *
 	 */
-	void initComponents() {
-		I18n i18n =  SpringContext.getBean(I18n.class);
-		JPanel content = new JPanel();
+	protected void initComponents() {
 		textField = new JTextField(i18n.get("splitPanel.field.text"));
 		textLabel = new JLabel(i18n.get("splitPanel.label.text"));
 		numberLabel = new JLabel(i18n.get("splitPanel.label.number"));
@@ -65,17 +48,12 @@ public class SplitDialog extends JDialog {
 		numberSpinner = new IntegerSpinner(1, 1 ,500 ,1);
 		sizeSpinner = new IntegerSpinner(1, 1, 500, 1);
 		sizeSpinner.setEnabled(false);
-		stp = new SourceTargetPanel();
 		jrbNumber = new JRadioButton(i18n.get("splitPanel.radioButton.number"), true);
 		jrbSize = new JRadioButton(i18n.get("splitPanel.radioButton.size"));
 		group = new ButtonGroup();
 		group.add(jrbNumber);
 		group.add(jrbSize);
-		stp.onSourceChosen(t -> chooseDirectorySource());
-		stp.onTargetChosen(t -> chooseDirectoryTarget());		
-		jrbNumber.addActionListener(e ->updateView());
 		jrbSize.addActionListener(e ->updateView());
-		go = new JButton(i18n.get("splitPanel.button.go"));
 		go.addActionListener(e -> runSplitSimulation());
 
 		content.setLayout(new MigLayout("", "[][grow]", "20[][][][][][][]20"));
@@ -89,11 +67,6 @@ public class SplitDialog extends JDialog {
 		content.add(textLabel, 		"cell 0 5");
 		content.add(textField, 		"cell 1 5, growx");
 		content.add(go,  			"cell 0 6");
-
-		add(content);
-		setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-		setMinimumSize(new Dimension(700, 480));
-		setLocationRelativeTo(getOwner());
 	}  
 
 
@@ -155,37 +128,7 @@ public class SplitDialog extends JDialog {
 			numberSpinner.setEnabled(true);
 		}
 	}
-	
-	private void chooseDirectorySource() {
-		chooseDirectory(stp::setSourceFieldText, true);
-	}
 
-	private void chooseDirectoryTarget() {
-		chooseDirectory(stp::setTargetFieldText, false);
-	}
-	
-	private void chooseDirectory(Consumer<String> pathConsumer, boolean checkFiles) {
-	    File[] res = SwingUtil.showOpenDialog(this, JFileChooser.DIRECTORIES_ONLY, false);
-	    
-	    if(res.length == 0) return; // user cancelled
-	    
-	    String path = res[0].getAbsolutePath();
-	    if (checkFiles) {
-	        File dir = new File(path);
-	        File[] files = dir.listFiles(File::isFile);
-
-	        if (files == null || files.length == 0) {
-	            JOptionPane.showMessageDialog(
-	                    null,
-	                    "La directory non contiene file",
-	                    "Errore",
-	                    JOptionPane.ERROR_MESSAGE
-	            );
-	            return;
-	        }
-	    }
-	    pathConsumer.accept(path);
-	}
 }
 
 

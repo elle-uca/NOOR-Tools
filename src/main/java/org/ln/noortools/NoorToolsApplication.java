@@ -6,7 +6,9 @@ import org.ln.noortools.enums.Theme;
 import org.ln.noortools.preferences.PreferencesService;
 import org.ln.noortools.service.ThemeManager;
 import org.ln.noortools.view.MainFrame;
-import org.ln.noortools.view.component.SplashScreen;
+import org.ln.noortools.view.component.BootProgressListener;
+import org.ln.noortools.view.component.BootSplash;
+import org.ln.noortools.view.component.SplashScreenSafe;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -21,32 +23,30 @@ public class NoorToolsApplication {
 	
     public static void main(String[] args) {
     	FlatLightLaf.setup();
-        // 1) Mostra lo splash
-        SplashScreen splash = new SplashScreen();
+         
+        BootSplash splash = new SplashScreenSafe(); 
         splash.showSplash();
-     // Simulazione caricamento while Spring parte (progress finto)
-        new Thread(() -> {
-            for (int i = 0; i <= 100; i++) {
-                splash.setProgress(i, "Caricamento... " + i + "%");
-                try {
-                    Thread.sleep(30);
-                } catch (InterruptedException ignored) {}
-            }
-        }).start();
-
+        splash.setProgress(5, "Avvio…");
         
-        ConfigurableApplicationContext context =
-            new SpringApplicationBuilder(NoorToolsApplication.class)
-                .headless(false)
-                .web(WebApplicationType.NONE)
-                .run(args);
+        SpringApplicationBuilder builder =
+                new SpringApplicationBuilder(NoorToolsApplication.class)
+                        .headless(false)
+                        .web(WebApplicationType.NONE);
+        
+        builder.listeners(new BootProgressListener(splash));
+        
+        ConfigurableApplicationContext context = builder.run(args);
+        
+        
         // 1) recupera le preferenze
         PreferencesService prefs = context.getBean(PreferencesService.class);
 
         // 2) applica il tema PRIMA di creare le finestre
         ThemeManager.applyTheme(Theme.fromKey(prefs.getTheme()));
+        System.out.println("main   "+prefs.getTheme());
         SwingUtilities.invokeLater(() -> {
             MainFrame frame = context.getBean(MainFrame.class);
+            splash.setProgress(100, "Caricamento completato.");
             splash.close();
             frame.setVisible(true);
         });
