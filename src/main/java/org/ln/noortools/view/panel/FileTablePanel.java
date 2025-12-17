@@ -83,16 +83,6 @@ public class FileTablePanel extends JPanel {
                 if (row == -1) return;
 
                 tableModel.removeRow(row);
-//                int answer = JOptionPane.showConfirmDialog(
-//                    table,
-//                    "Eliminare la riga selezionata?",
-//                    "Conferma eliminazione",
-//                    JOptionPane.YES_NO_OPTION
-//                );
-//
-//                if (answer == JOptionPane.YES_OPTION) {
-//                    tableModel.removeRow(row);
-//                }
             }
         });
         

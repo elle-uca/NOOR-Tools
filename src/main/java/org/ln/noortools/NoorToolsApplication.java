@@ -8,7 +8,7 @@ import org.ln.noortools.service.ThemeManager;
 import org.ln.noortools.view.MainFrame;
 import org.ln.noortools.view.component.BootProgressListener;
 import org.ln.noortools.view.component.BootSplash;
-import org.ln.noortools.view.component.SplashScreenSafe;
+import org.ln.noortools.view.component.SplashScreen;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -24,7 +24,7 @@ public class NoorToolsApplication {
     public static void main(String[] args) {
     	FlatLightLaf.setup();
          
-        BootSplash splash = new SplashScreenSafe(); 
+        BootSplash splash = new SplashScreen(); 
         splash.showSplash();
         splash.setProgress(5, "Avvio…");
         
