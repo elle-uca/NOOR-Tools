@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
-import org.ln.noor.core.factory.TagFactory;
 import org.ln.noor.core.i18n.I18n;
+import org.ln.noor.tools.rename.factory.TagFactory;
 import org.ln.noor.tools.rename.tag.AbstractTag;
 import org.springframework.context.support.StaticMessageSource;
 

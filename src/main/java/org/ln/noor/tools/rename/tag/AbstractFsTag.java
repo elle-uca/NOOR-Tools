@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.ln.noor.core.i18n.I18n;
-import org.ln.noor.core.model.RenamableFile;
-import org.ln.noor.service.FileAwareTag;
+import org.ln.noor.tools.rename.model.RenamableFile;
+import org.ln.noor.tools.rename.service.FileAwareTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

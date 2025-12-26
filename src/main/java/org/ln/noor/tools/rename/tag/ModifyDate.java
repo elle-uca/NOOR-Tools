@@ -1,9 +1,9 @@
 package org.ln.noor.tools.rename.tag;
 
 import org.ln.noor.core.i18n.I18n;
-import org.ln.noor.core.model.RenamableFile;
-import org.ln.noor.util.DateTimeFormatMapper;
-import org.ln.noor.util.FileMetadataUtil;
+import org.ln.noor.tools.rename.model.RenamableFile;
+import org.ln.noor.tools.rename.util.DateTimeFormatMapper;
+import org.ln.noor.tools.rename.util.FileMetadataUtil;
 
 public class ModifyDate extends AbstractFsTag {
     

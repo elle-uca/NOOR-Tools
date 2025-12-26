@@ -9,8 +9,8 @@ import java.util.Locale;
 import org.junit.jupiter.api.Test;
 import org.ln.noor.core.enums.RenameMode;
 import org.ln.noor.core.i18n.I18n;
-import org.ln.noor.core.model.RenamableFile;
-import org.ln.noor.service.TemplateApplier;
+import org.ln.noor.tools.rename.model.RenamableFile;
+import org.ln.noor.tools.rename.service.TemplateApplier;
 import org.ln.noor.tools.rename.tag.AbstractTag;
 import org.springframework.context.support.StaticMessageSource;
 

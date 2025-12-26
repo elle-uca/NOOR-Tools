@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.ln.noor.service.TagToken;
-import org.ln.noor.service.TemplateComponent;
-import org.ln.noor.service.TemplateTokenizer;
-import org.ln.noor.service.TextComponent;
+import org.ln.noor.tools.rename.service.TagToken;
+import org.ln.noor.tools.rename.service.TemplateComponent;
+import org.ln.noor.tools.rename.service.TemplateTokenizer;
+import org.ln.noor.tools.rename.service.TextComponent;
 
 class TemplateTokenizerTest {
 

@@ -2,8 +2,8 @@ package org.ln.noor.tools.rename.tag;
 
 import org.ln.noor.core.enums.AudioTagType;
 import org.ln.noor.core.i18n.I18n;
-import org.ln.noor.core.model.RenamableFile;
-import org.ln.noor.util.AudioUtil;
+import org.ln.noor.tools.rename.model.RenamableFile;
+import org.ln.noor.tools.rename.util.AudioUtil;
 
 /**
  * Tag <Album>

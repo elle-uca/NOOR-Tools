@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ln.noor.core.i18n.I18n;
-import org.ln.noor.util.StringUtil;
+import org.ln.noor.tools.rename.util.StringUtil;
 
 /**
  * Base class for all renaming tags used by NOOR Tools.

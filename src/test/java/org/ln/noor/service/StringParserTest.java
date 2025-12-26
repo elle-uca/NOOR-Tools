@@ -9,13 +9,13 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.ln.noor.core.enums.RenameMode;
-import org.ln.noor.core.model.RenamableFile;
-import org.ln.noor.service.StringParser;
-import org.ln.noor.service.TagBuilder;
-import org.ln.noor.service.TemplateApplier;
-import org.ln.noor.service.TemplateComponent;
-import org.ln.noor.service.TemplateTokenizer;
-import org.ln.noor.service.TextComponent;
+import org.ln.noor.tools.rename.model.RenamableFile;
+import org.ln.noor.tools.rename.service.StringParser;
+import org.ln.noor.tools.rename.service.TagBuilder;
+import org.ln.noor.tools.rename.service.TemplateApplier;
+import org.ln.noor.tools.rename.service.TemplateComponent;
+import org.ln.noor.tools.rename.service.TemplateTokenizer;
+import org.ln.noor.tools.rename.service.TextComponent;
 
 class StringParserTest {
 

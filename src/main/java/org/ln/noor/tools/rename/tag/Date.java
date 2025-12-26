@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import org.ln.noor.core.i18n.I18n;
-import org.ln.noor.util.DateTimeFormatMapper;
+import org.ln.noor.tools.rename.util.DateTimeFormatMapper;
 
 /**
  * Tag <Date:format>

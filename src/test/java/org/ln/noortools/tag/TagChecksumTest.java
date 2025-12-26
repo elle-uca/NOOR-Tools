@@ -10,7 +10,7 @@ import java.util.Locale;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ln.noor.core.i18n.I18n;
-import org.ln.noor.core.model.RenamableFile;
+import org.ln.noor.tools.rename.model.RenamableFile;
 import org.ln.noor.tools.rename.tag.Crc32;
 import org.ln.noor.tools.rename.tag.Md5;
 import org.ln.noor.tools.rename.tag.Sha256;

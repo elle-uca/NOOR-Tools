@@ -3,7 +3,7 @@ package org.ln.noor.tools.rename.tag;
 import java.nio.file.Files;
 
 import org.ln.noor.core.i18n.I18n;
-import org.ln.noor.core.model.RenamableFile;
+import org.ln.noor.tools.rename.model.RenamableFile;
 
 public class FileOwner extends AbstractFsTag {
     

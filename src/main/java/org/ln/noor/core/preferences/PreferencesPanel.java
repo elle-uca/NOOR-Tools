@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import org.ln.noor.core.enums.Theme;
-import org.ln.noor.service.ThemeManager;
+import org.ln.noor.core.service.ThemeManager;
 
 import net.miginfocom.swing.MigLayout;
 

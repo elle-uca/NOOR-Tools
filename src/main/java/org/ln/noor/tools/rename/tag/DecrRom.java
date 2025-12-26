@@ -1,7 +1,7 @@
 package org.ln.noor.tools.rename.tag;
 
 import org.ln.noor.core.i18n.I18n;
-import org.ln.noor.util.RomanNumberUtil;
+import org.ln.noor.tools.rename.util.RomanNumberUtil;
 
 /**
  * Tag <DecrRom>
