@@ -39,7 +39,6 @@ public class RenamerService {
             ruleRegistry.put(key, service);
             logger.info("Registered rule: {} -> {}", key, service.getClass().getName());
         }
-       // this.panelFactory = panelFactory;
     }
    
     
@@ -86,10 +85,16 @@ public class RenamerService {
     }
 
     
+    public void reapplyRules() {
+        if (files.isEmpty()) return;
+       // riusa la pipeline esistente
+        setFiles(new ArrayList<>(files));
+    }
+    
     public void setFiles(List<RenamableFile> newFiles) {
     	files.clear();
     	files.addAll(newFiles);
-        checkConflicts();
+    	checkConflicts();
         notifyListeners();
     }
     
@@ -186,7 +191,7 @@ public class RenamerService {
         listeners.remove(listener);
     }
 
-    private void notifyListeners() {
+    public void notifyListeners() {
         for (RenamerServiceListener l : listeners) {
             l.onFilesUpdated(getFiles());
         }

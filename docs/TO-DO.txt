@@ -1,5 +1,4 @@
 -Normalizzare <>:"/\*? in rinomina (owner su windows etc.) (fatto, prevedere un warning)
--org.jaudiotagger.audio.exceptions.CannotReadException: No Reader associated with this extension:pdf
 -Preferenze: aggiungere ???? (fill) 
 -Aggiungere link alla docum
 -Messaggio conferma

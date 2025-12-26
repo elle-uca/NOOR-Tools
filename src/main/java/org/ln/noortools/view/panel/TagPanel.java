@@ -155,8 +155,7 @@ public class TagPanel extends AbstractPanelContent {
 
 
 	@Override
-	protected
-	void updateView() {
+	protected 	void updateView() {
 
 		// ✅ Non fare nulla se il testo non è ancora valido
 		if (!StringParser.isParsable(renameField.getText())) {

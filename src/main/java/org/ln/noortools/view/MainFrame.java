@@ -230,6 +230,7 @@ public class MainFrame extends JFrame {
 				files.add(file);
 			}
 			renamerService.setFiles(files);
+			renamerService.reapplyRules();
 		}
 	}
 
@@ -243,6 +244,7 @@ public class MainFrame extends JFrame {
 				files.add(file);
 			}
 			renamerService.setFiles(files);
+			renamerService.reapplyRules();
 		}
 	}
 	

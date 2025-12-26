@@ -16,7 +16,7 @@ import org.ln.noortools.util.StringUtil;
  */
 public class RenamableFile {
 
-    private final File source;              // original file
+    private File source;              // original file
     private FileStatus fileStatus;          // status (OK, KO, etc.)
     private String destinationName;         // new name without path
     private boolean selected = true;        // default = selected
@@ -34,6 +34,13 @@ public class RenamableFile {
     }
 
 
+
+	/**
+	 * @param source the source to set
+	 */
+	public void setSource(File source) {
+		this.source = source;
+	}
 
 	/** @return original source file */
     public File getSource() {

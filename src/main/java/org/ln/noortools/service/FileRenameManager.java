@@ -110,7 +110,7 @@ public class FileRenameManager {
 	 */
 	public void commitRename(List<RenamableFile> files) throws IOException {
 
-		System.out.println("commitRename  "+files.size());
+		//System.out.println("commitRename  "+files.size());
 		
 		// 🔥 1) PRIMA DI QUALSIASI RENAME → esegui azioni con conferma
 		StringBuilder confirmMsg = new StringBuilder();
@@ -121,7 +121,7 @@ public class FileRenameManager {
 			Path oldPath = rf.getSource().toPath();
 			Path newPath = oldPath.resolveSibling(rf.getDestinationName());
 			
-			System.out.println("old  "+oldPath+"  new  "+newPath);
+			//System.out.println("old  "+oldPath+"  new  "+newPath);
 			//if (oldPath.equals(newPath)) continue;
 			
 			// renameCount++;
@@ -167,7 +167,10 @@ public class FileRenameManager {
 				}
 				
 				rf.setFileStatus(FileStatus.OK);
+				rf.setSource(newPath.toFile());
+				rf.setDestinationName(newPath.getFileName().toString());
 				operations.add(new RenameOperation(oldPath, newPath));
+				renamerService.notifyListeners();
 			}
 
 			// Save batch for undo
