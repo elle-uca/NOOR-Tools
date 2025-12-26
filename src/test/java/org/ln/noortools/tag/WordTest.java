@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
-import org.ln.noortools.i18n.I18n;
+import org.ln.noor.core.i18n.I18n;
+import org.ln.noor.tools.rename.tag.Word;
 import org.springframework.context.support.StaticMessageSource;
 
 class WordTest {

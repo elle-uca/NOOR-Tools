@@ -1,0 +1,81 @@
+package org.ln.noor.core.preferences;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import org.ln.noor.core.enums.Theme;
+import org.ln.noor.service.ThemeManager;
+
+import net.miginfocom.swing.MigLayout;
+
+@SuppressWarnings("serial")
+public class PreferencesPanel extends JPanel {
+
+	private final PreferencesService prefs;
+
+	private JComboBox<String> languageBox;
+	private JComboBox<Theme> themeBox;
+
+
+	public PreferencesPanel(PreferencesService prefs) {
+		this.prefs = prefs;
+		initUI();
+	}
+
+
+	private void initUI() {
+		setLayout(new MigLayout(
+				"fill, insets 15",     // layout generale
+				"[right][grow, fill]", // colonne: label + campo espandibile
+				""));                 // righe automatiche
+
+		setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+
+		// ---------------------------------------------------------
+		// LINGUA
+		// ---------------------------------------------------------
+		add(new JLabel("Lingua:"));
+		languageBox = new JComboBox<>(new String[]{"it", "en"});
+		languageBox.setSelectedItem(prefs.getLanguage());
+		add(languageBox, "wrap");
+
+		// ---------------------------------------------------------
+		// TEMA
+		// ---------------------------------------------------------
+		add(new JLabel("Tema:"));
+		themeBox = new JComboBox<Theme>(Theme.values());
+		themeBox.setSelectedItem(Theme.fromKey(prefs.getTheme()));
+		add(themeBox, "wrap para");
+
+		// ---------------------------------------------------------
+		// PULSANTI
+		// ---------------------------------------------------------
+		JPanel buttonPanel = new JPanel(new MigLayout("insets 0", "[]10[]", ""));
+		JButton applyBtn = new JButton("Applica");
+		JButton saveBtn = new JButton("OK");
+
+		applyBtn.addActionListener(e -> applyPreferences(false));
+		saveBtn.addActionListener(e -> applyPreferences(true));
+
+		buttonPanel.add(applyBtn);
+		buttonPanel.add(saveBtn);
+
+		add(buttonPanel, "span 2, right");
+	}
+
+	private void applyPreferences(boolean closeAfter) {
+		prefs.setLanguage((String) languageBox.getSelectedItem());
+		Theme selectedTheme = (Theme) themeBox.getSelectedItem();
+
+		prefs.setTheme(selectedTheme.getKey());
+		ThemeManager.applyTheme(selectedTheme);
+
+		if (closeAfter) {
+			SwingUtilities.getWindowAncestor(this).dispose();
+		}
+	}
+}

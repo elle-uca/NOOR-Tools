@@ -11,12 +11,22 @@ import java.util.Locale;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.ln.noortools.SpringContext;
-import org.ln.noortools.enums.FillOption;
-import org.ln.noortools.factory.TagFactory;
-import org.ln.noortools.i18n.I18n;
-import org.ln.noortools.model.RenamableFile;
-import org.ln.noortools.preferences.PreferencesService;
+import org.ln.noor.app.SpringContext;
+import org.ln.noor.core.enums.FillOption;
+import org.ln.noor.core.factory.TagFactory;
+import org.ln.noor.core.i18n.I18n;
+import org.ln.noor.core.model.RenamableFile;
+import org.ln.noor.core.preferences.PreferencesService;
+import org.ln.noor.tools.rename.tag.AbstractTag;
+import org.ln.noor.tools.rename.tag.Album;
+import org.ln.noor.tools.rename.tag.Artist;
+import org.ln.noor.tools.rename.tag.Crc32;
+import org.ln.noor.tools.rename.tag.CreationDate;
+import org.ln.noor.tools.rename.tag.FileOwner;
+import org.ln.noor.tools.rename.tag.Md5;
+import org.ln.noor.tools.rename.tag.ModifyDate;
+import org.ln.noor.tools.rename.tag.Sha256;
+import org.ln.noor.tools.rename.tag.Title;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
@@ -149,7 +159,7 @@ class TagBehaviorTest {
     private AbstractTag prepareFileTag(String name, Object... args) {
         AbstractTag tag = factory.create(name, args);
         tag.setOldNames(baseNames.subList(0, 2));
-        if (tag instanceof org.ln.noortools.service.FileAwareTag fileAware) {
+        if (tag instanceof org.ln.noor.service.FileAwareTag fileAware) {
             fileAware.setFilesContext(tempFiles);
         }
         return tag;
