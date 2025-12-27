@@ -154,21 +154,6 @@ public class MainFrame extends JFrame {
 		viewMenu.add(themeMenu);
 		
 		JMenu toolMenu = new JMenu(i18n.get("menu.tool"));
-//		JMenuItem splitDialogItem = new JMenuItem(i18n.get("menu.tool.split"));
-//		splitDialogItem.addActionListener(e -> {
-//			SplitDialog dialog = new SplitDialog(this);
-//			dialog.setVisible(true);
-//		});
-//
-//		toolMenu.add(splitDialogItem);
-//		
-//		JMenuItem mergeDialogItem = new JMenuItem(i18n.get("menu.tool.merge"));
-//		
-//		mergeDialogItem.addActionListener(e -> {
-//			MergeDialog dialog = new MergeDialog(this);
-//			dialog.setVisible(true);
-//		});
-//		toolMenu.add(mergeDialogItem);
 		
 		List<NoorTool> tools = List.of(
 			    new SplitMergeTool(this),
