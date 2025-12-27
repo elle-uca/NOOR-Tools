@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.8</version>
+        <version>3.5.9</version>
         <relativePath/>
     </parent>
 
@@ -66,9 +66,14 @@
             <artifactId>flatlaf-extras</artifactId>
             <version>3.6.2</version>
         </dependency>
-
-        <!-- Reflections -->
         <dependency>
+		    <groupId>org.ln.noor</groupId>
+		    <artifactId>noor-tools-directory</artifactId>
+		    <version>0.1.0</version>
+			</dependency>
+		<dependency>
+        <!-- Reflections -->
+        
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.10.2</version>
@@ -104,8 +109,16 @@
 	
 	
 	<build>
-	    <plugins>
-	
+		<plugins>
+		
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-compiler-plugin</artifactId>
+			    <configuration>
+			        <release>21</release>
+			    </configuration>
+			</plugin>
+
 	        <!-- Surefire: versione gestita da Spring Boot (NO override, NO warning) -->
 	        <plugin>
 	            <groupId>org.apache.maven.plugins</groupId>
