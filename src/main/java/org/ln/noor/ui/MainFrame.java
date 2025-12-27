@@ -28,6 +28,8 @@ import org.ln.noor.core.i18n.I18n;
 import org.ln.noor.core.preferences.PreferencesDialog;
 import org.ln.noor.core.preferences.PreferencesService;
 import org.ln.noor.core.service.ThemeManager;
+import org.ln.noor.core.tool.NoorTool;
+import org.ln.noor.tools.directory.DirectoryTool;
 import org.ln.noor.tools.rename.model.RenamableFile;
 import org.ln.noor.tools.rename.service.RenameController;
 import org.ln.noor.tools.rename.service.RenamerService;
@@ -37,8 +39,7 @@ import org.ln.noor.tools.rename.ui.panel.FileTablePanel;
 import org.ln.noor.tools.rename.ui.panel.PanelFactory;
 import org.ln.noor.tools.rename.ui.panel.RuleButtonBar;
 import org.ln.noor.tools.rename.util.SwingUtil;
-import org.ln.noor.tools.splitmerge.ui.MergeDialog;
-import org.ln.noor.tools.splitmerge.ui.SplitDialog;
+import org.ln.noor.tools.splitmerge.SplitMergeTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -153,21 +154,32 @@ public class MainFrame extends JFrame {
 		viewMenu.add(themeMenu);
 		
 		JMenu toolMenu = new JMenu(i18n.get("menu.tool"));
-		JMenuItem splitDialogItem = new JMenuItem(i18n.get("menu.tool.split"));
-		splitDialogItem.addActionListener(e -> {
-			SplitDialog dialog = new SplitDialog(this);
-			dialog.setVisible(true);
-		});
+//		JMenuItem splitDialogItem = new JMenuItem(i18n.get("menu.tool.split"));
+//		splitDialogItem.addActionListener(e -> {
+//			SplitDialog dialog = new SplitDialog(this);
+//			dialog.setVisible(true);
+//		});
+//
+//		toolMenu.add(splitDialogItem);
+//		
+//		JMenuItem mergeDialogItem = new JMenuItem(i18n.get("menu.tool.merge"));
+//		
+//		mergeDialogItem.addActionListener(e -> {
+//			MergeDialog dialog = new MergeDialog(this);
+//			dialog.setVisible(true);
+//		});
+//		toolMenu.add(mergeDialogItem);
+		
+		List<NoorTool> tools = List.of(
+			    new SplitMergeTool(this),
+			    new DirectoryTool(this)
+			);
 
-		toolMenu.add(splitDialogItem);
-		
-		JMenuItem mergeDialogItem = new JMenuItem(i18n.get("menu.tool.merge"));
-		
-		mergeDialogItem.addActionListener(e -> {
-			MergeDialog dialog = new MergeDialog(this);
-			dialog.setVisible(true);
-		});
-		toolMenu.add(mergeDialogItem);
+		for (NoorTool tool : tools) {
+		    JMenuItem item = new JMenuItem(tool.getDisplayName());
+		    item.addActionListener(e -> tool.open());
+		    toolMenu.add(item);
+		}
 		
 		JMenu helpMenu = new JMenu(i18n.get("menu.help"));
 		JMenuItem preferencesItem = new JMenuItem(i18n.get("menu.help.preferences"));
