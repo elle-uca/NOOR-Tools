@@ -3,12 +3,12 @@ package org.ln.noor.tools.directory;
 import javax.swing.JFrame;
 
 import org.ln.noor.core.tool.NoorTool;
+import org.ln.noor.directory.api.DirectoryToolLauncher;
 
 
 public class DirectoryTool implements NoorTool {
 
-    @SuppressWarnings("unused")
-	private final JFrame owner;
+    private final JFrame owner;
 
     public DirectoryTool(JFrame owner) {
         this.owner = owner;
@@ -26,6 +26,6 @@ public class DirectoryTool implements NoorTool {
 
     @Override
     public void open() {
-       DirectoryToolLauncher.open();
+       DirectoryToolLauncher.openModal(owner);
     }
 }
