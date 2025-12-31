@@ -1,6 +1,11 @@
 package org.ln.noor.tools.rename.tag;
 
 import org.ln.noor.core.i18n.I18n;
+/**
+ * TagHeader.
+ *
+ * @author Luca Noale
+ */
 
 public class TagHeader extends AbstractTag {
     

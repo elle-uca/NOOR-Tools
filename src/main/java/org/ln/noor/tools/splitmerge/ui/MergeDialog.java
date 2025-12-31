@@ -11,6 +11,11 @@ import org.ln.noor.tools.splitmerge.util.SplitMergeUtils;
 import org.ln.noor.tools.splitmerge.util.SplitMergeUtils.MergeResult;
 
 import net.miginfocom.swing.MigLayout;
+/**
+ * MergeDialog.
+ *
+ * @author Luca Noale
+ */
 
 @SuppressWarnings("serial")
 public class MergeDialog extends SplitMergeDialog {

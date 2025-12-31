@@ -4,6 +4,11 @@ import org.ln.noor.core.i18n.I18n;
 import org.ln.noor.tools.rename.model.RenamableFile;
 import org.ln.noor.tools.rename.util.DateTimeFormatMapper;
 import org.ln.noor.tools.rename.util.FileMetadataUtil;
+/**
+ * ModifyDate.
+ *
+ * @author Luca Noale
+ */
 
 public class ModifyDate extends AbstractFsTag {
     

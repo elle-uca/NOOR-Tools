@@ -11,6 +11,11 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 import javax.swing.border.Border;
+/**
+ * FileTransferHandler.
+ *
+ * @author Luca Noale
+ */
 
 @SuppressWarnings("serial")
 public class FileTransferHandler extends TransferHandler {

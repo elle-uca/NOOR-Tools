@@ -8,6 +8,8 @@ import java.util.Comparator;
  * within the strings are compared numerically (e.g., "file2" comes before "file10").
  * 
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public class NaturalOrderComparator implements Comparator<String> {
 

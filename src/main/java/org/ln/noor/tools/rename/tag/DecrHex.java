@@ -19,6 +19,8 @@ import org.ln.noor.core.i18n.I18n;
  *   - A list of uppercase hexadecimal strings (e.g., "A", "1F", "2A").
  *
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public class DecrHex extends AbstractTag {
 

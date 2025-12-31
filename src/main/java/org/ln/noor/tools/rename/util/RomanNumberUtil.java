@@ -4,6 +4,8 @@ package org.ln.noor.tools.rename.util;
  * Utility class for Roman numeral conversions.
  * 
  * Supports conversion from integers (1–3999) to Roman numeral strings.
+ *
+ * @author Luca Noale
  */
 public final class RomanNumberUtil {
 

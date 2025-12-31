@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
  *   Result: "MYDOCUMENT"
  *
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 @Service("caseruleservice")
 public class CaseRuleService extends AbstractRuleService {

@@ -16,6 +16,8 @@ import com.formdev.flatlaf.FlatLightLaf;
  * at runtime. The methods are static so the UI layer can easily
  * apply a theme before creating windows or refresh all open ones
  * when the preference changes.
+ *
+ * @author Luca Noale
  */
 public class ThemeManager {
 

@@ -29,6 +29,7 @@ import net.miginfocom.swing.MigLayout;
  * 
  * Author: Luca Noale
  * 
+ * @author Luca Noale
  */
 @SuppressWarnings("serial")
 @Component

@@ -17,6 +17,8 @@ import org.ln.noor.tools.rename.util.RomanNumberUtil;
  *   <IncR:1:2> → [I, III, V, VII, IX...]
  *
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public class IncrRom extends AbstractTag {
 

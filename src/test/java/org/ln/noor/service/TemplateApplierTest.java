@@ -13,6 +13,11 @@ import org.ln.noor.tools.rename.model.RenamableFile;
 import org.ln.noor.tools.rename.service.TemplateApplier;
 import org.ln.noor.tools.rename.tag.AbstractTag;
 import org.springframework.context.support.StaticMessageSource;
+/**
+ * TemplateApplierTest.
+ *
+ * @author Luca Noale
+ */
 
 class TemplateApplierTest {
 
@@ -52,6 +57,11 @@ class TemplateApplierTest {
 
         assertThat(result.getFirst().getDestinationName()).isEqualTo("demo.TXT");
     }
+    /**
+     * UpperCaseTag.
+     *
+     * @author Luca Noale
+     */
 
     private static class UpperCaseTag extends AbstractTag {
 

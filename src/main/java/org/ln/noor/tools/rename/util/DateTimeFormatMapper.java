@@ -3,6 +3,11 @@ package org.ln.noor.tools.rename.util;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+/**
+ * DateTimeFormatMapper.
+ *
+ * @author Luca Noale
+ */
 
 public class DateTimeFormatMapper {
 

@@ -33,6 +33,8 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
  *  - Soft shadow card effect
  *  
  *  Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 @SuppressWarnings("serial")
 public class SlidingPanel extends JPanel {

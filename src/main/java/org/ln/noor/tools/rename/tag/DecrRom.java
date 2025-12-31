@@ -17,6 +17,8 @@ import org.ln.noor.tools.rename.util.RomanNumberUtil;
  *   <DecR:10:2> → [X, VIII, VI, IV, II...]
  *
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public class DecrRom extends AbstractTag {
 

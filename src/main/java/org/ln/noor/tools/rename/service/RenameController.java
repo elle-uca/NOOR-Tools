@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
  * Mediates rename/undo operations between the UI and {@link FileRenameManager}.
  * Having this intermediate layer allows the Swing views to stay focused on UI
  * concerns while delegating filesystem operations to a dedicated service.
+ *
+ * @author Luca Noale
  */
 @Service
 public class RenameController {

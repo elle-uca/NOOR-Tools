@@ -7,6 +7,11 @@ import java.util.Objects;
 
 import org.ln.noor.core.app.SpringContext;
 import org.ln.noor.core.preferences.PreferencesService;
+/**
+ * NumberSequenceUtil.
+ *
+ * @author Luca Noale
+ */
 
 public class NumberSequenceUtil {
 

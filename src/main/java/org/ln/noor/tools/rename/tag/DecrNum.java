@@ -16,6 +16,8 @@ import org.ln.noor.tools.rename.util.NumberSequenceUtil;
  *   <DecN:10:2> → [10, 8, 6, 4, ...]
  * 
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public class DecrNum extends AbstractTag {
 

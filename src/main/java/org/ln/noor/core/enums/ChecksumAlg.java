@@ -1,4 +1,9 @@
 package org.ln.noor.core.enums;
+/**
+ * ChecksumAlg.
+ *
+ * @author Luca Noale
+ */
 
 public enum ChecksumAlg {
 	CRC32,

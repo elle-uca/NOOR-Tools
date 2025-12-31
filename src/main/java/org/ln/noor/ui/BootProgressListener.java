@@ -8,6 +8,11 @@ import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.boot.context.event.ApplicationStartingEvent;
 import org.springframework.boot.context.event.SpringApplicationEvent;
 import org.springframework.context.ApplicationListener;
+/**
+ * BootProgressListener.
+ *
+ * @author Luca Noale
+ */
 
 public class BootProgressListener
 implements ApplicationListener<SpringApplicationEvent> {

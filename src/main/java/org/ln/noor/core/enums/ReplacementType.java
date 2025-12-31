@@ -6,6 +6,8 @@ package org.ln.noor.core.enums;
  * a substring should be replaced.
  * 
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public enum ReplacementType {
     

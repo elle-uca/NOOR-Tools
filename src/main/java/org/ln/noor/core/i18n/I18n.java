@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
  * localized messages (text strings).
  * 
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 @Component
 public class I18n {

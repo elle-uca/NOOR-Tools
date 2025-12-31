@@ -15,6 +15,8 @@ import org.ln.noor.tools.rename.util.DateTimeFormatMapper;
  *   <Date:dd/mm/yyyy> -> "26/10/2025"
  *
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public class Date extends AbstractTag {
 

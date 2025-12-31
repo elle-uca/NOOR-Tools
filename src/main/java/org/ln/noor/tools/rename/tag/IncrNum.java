@@ -13,6 +13,8 @@ import org.ln.noor.tools.rename.util.NumberSequenceUtil;
  * Example: <IncN:1:2> → 1, 3, 5, 7...
  * 
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public class IncrNum extends AbstractTag {
 	

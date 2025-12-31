@@ -1,6 +1,11 @@
 package org.ln.noor.tools.rename.util;
 
 import org.ln.noor.core.enums.FillOption;
+/**
+ * ZeroPadder.
+ *
+ * @author Luca Noale
+ */
 
 public class ZeroPadder {
 

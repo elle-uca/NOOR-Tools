@@ -27,6 +27,8 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
  * It also implements custom hover and selection coloring using UIManager colors and FlatLaf icons.
  * 
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 @SuppressWarnings("serial")
 public class TagListCellRenderer extends JPanel implements ListCellRenderer<AbstractTag> {

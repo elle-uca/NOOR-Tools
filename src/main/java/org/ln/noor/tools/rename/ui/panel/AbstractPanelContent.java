@@ -56,6 +56,8 @@ import jakarta.annotation.PostConstruct;
  * the {@code PanelFactory} immediately after the panel instance is created.
  *
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 
 @SuppressWarnings("serial")

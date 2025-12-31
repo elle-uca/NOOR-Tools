@@ -8,6 +8,8 @@ import org.ln.noor.core.i18n.I18n;
 
  *   
  *    Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public class Genre extends AbstractTag {
 

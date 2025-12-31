@@ -28,6 +28,11 @@ import com.formdev.flatlaf.FlatLightLaf;
 	        "org.ln.noor.tools"
 	    }
 	)
+/**
+ * NoorToolsApplication.
+ *
+ * @author Luca Noale
+ */
 public class NoorToolsApplication {
 
 

@@ -12,6 +12,11 @@ import javax.swing.JProgressBar;
 import javax.swing.JWindow;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+/**
+ * SplashScreen.
+ *
+ * @author Luca Noale
+ */
 
 @SuppressWarnings("serial")
 public class SplashScreen extends JWindow implements BootSplash {

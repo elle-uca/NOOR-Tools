@@ -44,6 +44,8 @@ import org.springframework.stereotype.Component;
  * exposed via dozens of near-identical creator methods. This makes it easier
  * to add new tags and to iterate over all available ones when populating the
  * UI catalogue.
+ *
+ * @author Luca Noale
  */
 @Component
 @Scope("singleton")
@@ -123,6 +125,11 @@ public class TagFactory {
         Object[] nonNull = Objects.requireNonNullElse(args, new Object[0]);
         return nonNull.clone();
     }
+    /**
+     * TagRegistration.
+     *
+     * @author Luca Noale
+     */
 
     private record TagRegistration(Function<Object[], AbstractTag> factory, Object[] previewArgs) { }
 }

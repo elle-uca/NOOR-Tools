@@ -14,6 +14,11 @@ import org.ln.noor.core.i18n.I18n;
 
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+/**
+ * ToolbarBuilder.
+ *
+ * @author Luca Noale
+ */
 
 public class ToolbarBuilder {
 

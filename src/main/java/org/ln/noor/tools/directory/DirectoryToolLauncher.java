@@ -2,6 +2,11 @@ package org.ln.noor.tools.directory;
 
 import javax.swing.SwingUtilities;
 import org.ln.noor.directory.view.CrocodileView;
+/**
+ * DirectoryToolLauncher.
+ *
+ * @author Luca Noale
+ */
 
 public final class DirectoryToolLauncher {
 

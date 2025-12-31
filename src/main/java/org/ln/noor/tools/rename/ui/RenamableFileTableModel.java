@@ -9,6 +9,11 @@ import org.ln.noor.core.enums.FileStatus;
 import org.ln.noor.core.i18n.I18n;
 import org.ln.noor.tools.rename.model.RenamableFile;
 import org.ln.noor.tools.rename.service.RenamerServiceListener;
+/**
+ * RenamableFileTableModel.
+ *
+ * @author Luca Noale
+ */
 
 @SuppressWarnings("serial")
 public class RenamableFileTableModel extends AbstractTableModel implements RenamerServiceListener{

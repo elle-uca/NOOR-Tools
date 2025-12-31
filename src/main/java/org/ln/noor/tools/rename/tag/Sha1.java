@@ -2,6 +2,11 @@ package org.ln.noor.tools.rename.tag;
 
 import org.ln.noor.core.enums.ChecksumAlg;
 import org.ln.noor.core.i18n.I18n;
+/**
+ * Sha1.
+ *
+ * @author Luca Noale
+ */
 
 public class Sha1 extends AbstractChecksumTag {
 

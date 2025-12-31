@@ -29,6 +29,8 @@ import net.miginfocom.swing.MigLayout;
  * the file list and notifies the table view on the right.
  * 
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 @SuppressWarnings("serial")
 @Component

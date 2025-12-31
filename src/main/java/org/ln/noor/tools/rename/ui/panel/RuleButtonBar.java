@@ -14,6 +14,8 @@ import net.miginfocom.swing.MigLayout;
 
 /**
  * Horizontal bar with shortcuts to add rule panels inside the accordion.
+ *
+ * @author Luca Noale
  */
 @SuppressWarnings("serial")
 public class RuleButtonBar extends JPanel {

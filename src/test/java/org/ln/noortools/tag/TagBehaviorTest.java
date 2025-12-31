@@ -36,6 +36,8 @@ import org.springframework.context.support.StaticMessageSource;
  * Integration-style tests that exercise every tag registered in {@link TagFactory}.
  * The goal is to ensure that initialization never fails and the produced output
  * matches the expected size or known values for deterministic tags.
+ *
+ * @author Luca Noale
  */
 class TagBehaviorTest {
 

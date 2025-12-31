@@ -1,4 +1,9 @@
 package org.ln.noor.core.enums;
+/**
+ * AudioTagType.
+ *
+ * @author Luca Noale
+ */
 
 public enum AudioTagType {
 

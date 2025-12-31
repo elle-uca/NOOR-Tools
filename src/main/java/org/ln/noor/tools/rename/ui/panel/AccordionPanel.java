@@ -19,6 +19,8 @@ import org.springframework.stereotype.Component;
  * which is crucial for UI components that may be used in multiple views.
  * 
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 @SuppressWarnings("serial")
 @Component

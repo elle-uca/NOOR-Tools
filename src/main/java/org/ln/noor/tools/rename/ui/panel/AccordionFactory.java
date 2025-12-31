@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
  * across different windows or contexts.
  * 
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 @Component
 public class AccordionFactory {

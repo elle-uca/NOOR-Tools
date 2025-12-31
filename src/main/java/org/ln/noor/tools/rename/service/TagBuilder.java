@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
  * Translates template tokens into concrete components that can be used by
  * the renaming pipeline. Plain text is kept as strings while tag tokens are
  * resolved through {@link org.ln.noor.tools.rename.factory.TagFactory}.
+ *
+ * @author Luca Noale
  */
 @Component
 public class TagBuilder {

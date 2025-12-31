@@ -30,6 +30,8 @@ import org.springframework.stereotype.Component;
  * that logic belongs to RenamerService/StringParser.
  * 
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 @Component
 public class FileRenameManager {
@@ -42,6 +44,8 @@ public class FileRenameManager {
 	/**
 	 * Represents a single rename action: (old path → new path).
 	 * Stored so that it can be undone later.
+ *
+ * @author Luca Noale
 	 */
 	public static class RenameOperation {
 		public final Path oldPath;

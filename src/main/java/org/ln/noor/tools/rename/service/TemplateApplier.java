@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 /**
  * Applies a parsed rename template to a list of files, producing new
  * {@link RenamableFile} instances with computed destination names.
+ *
+ * @author Luca Noale
  */
 @Component
 public class TemplateApplier {

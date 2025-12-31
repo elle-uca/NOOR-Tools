@@ -9,6 +9,11 @@ import org.ln.noor.core.i18n.I18n;
 import org.ln.noor.tools.rename.factory.TagFactory;
 import org.ln.noor.tools.rename.tag.AbstractTag;
 import org.springframework.context.support.StaticMessageSource;
+/**
+ * TagFactoryTest.
+ *
+ * @author Luca Noale
+ */
 
 class TagFactoryTest {
 

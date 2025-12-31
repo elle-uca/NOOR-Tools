@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
  * Splits a template string into literal text components and tag tokens.
  * This class contains no Spring dependencies beyond the stereotype,
  * which makes it straightforward to unit test.
+ *
+ * @author Luca Noale
  */
 @Component
 public class TemplateTokenizer {

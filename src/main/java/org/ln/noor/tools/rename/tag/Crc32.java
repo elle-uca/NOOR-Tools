@@ -7,6 +7,8 @@ import org.ln.noor.core.i18n.I18n;
  * CRC32 checksum tag.
  *
  * Produces a lowercase hexadecimal CRC32 hash.
+ *
+ * @author Luca Noale
  */
 public class Crc32 extends AbstractChecksumTag {
 

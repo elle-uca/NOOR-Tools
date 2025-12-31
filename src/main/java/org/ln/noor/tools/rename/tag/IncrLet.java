@@ -11,6 +11,8 @@ import org.ln.noor.core.i18n.I18n;
  * Example: A, B, C ... Z, AA, AB ...
  *
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public class IncrLet extends AbstractTag {
 

@@ -17,6 +17,8 @@ import org.ln.noor.core.i18n.I18n;
  * Status bar displayed at the bottom of the {@code MainFrame}. It exposes
  * methods to update the displayed status and to react to theme/undo actions
  * without leaking the underlying buttons to callers.
+ *
+ * @author Luca Noale
  */
 @SuppressWarnings("serial")
 public class StatusBarPanel extends JPanel {

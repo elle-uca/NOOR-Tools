@@ -11,6 +11,11 @@ import org.ln.noor.core.enums.Theme;
 import org.ln.noor.core.service.ThemeManager;
 
 import net.miginfocom.swing.MigLayout;
+/**
+ * PreferencesPanel.
+ *
+ * @author Luca Noale
+ */
 
 @SuppressWarnings("serial")
 public class PreferencesPanel extends JPanel {

@@ -4,6 +4,11 @@ import java.nio.file.Files;
 
 import org.ln.noor.core.i18n.I18n;
 import org.ln.noor.tools.rename.model.RenamableFile;
+/**
+ * FileOwner.
+ *
+ * @author Luca Noale
+ */
 
 public class FileOwner extends AbstractFsTag {
     

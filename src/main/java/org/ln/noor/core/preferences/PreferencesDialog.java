@@ -3,6 +3,11 @@ package org.ln.noor.core.preferences;
 import java.awt.Frame;
 
 import javax.swing.JDialog;
+/**
+ * PreferencesDialog.
+ *
+ * @author Luca Noale
+ */
 
 @SuppressWarnings("serial")
 public class PreferencesDialog extends JDialog {

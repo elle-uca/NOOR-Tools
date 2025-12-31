@@ -7,6 +7,11 @@ import javax.swing.JFrame;
 import org.ln.noor.core.tool.NoorTool;
 import org.ln.noor.tools.splitmerge.ui.MergeDialog;
 import org.ln.noor.tools.splitmerge.ui.SplitDialog;
+/**
+ * SplitMergeTool.
+ *
+ * @author Luca Noale
+ */
 
 public class SplitMergeTool implements NoorTool {
 

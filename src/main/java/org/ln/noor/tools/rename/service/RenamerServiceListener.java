@@ -11,6 +11,8 @@ import org.ln.noor.tools.rename.model.RenamableFile;
  * * This is the 'Listener' part of the Observer pattern.
  * 
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public interface RenamerServiceListener {
     

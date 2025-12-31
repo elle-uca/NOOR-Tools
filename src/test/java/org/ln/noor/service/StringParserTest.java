@@ -16,6 +16,11 @@ import org.ln.noor.tools.rename.service.TemplateApplier;
 import org.ln.noor.tools.rename.service.TemplateComponent;
 import org.ln.noor.tools.rename.service.TemplateTokenizer;
 import org.ln.noor.tools.rename.service.TextComponent;
+/**
+ * StringParserTest.
+ *
+ * @author Luca Noale
+ */
 
 class StringParserTest {
 

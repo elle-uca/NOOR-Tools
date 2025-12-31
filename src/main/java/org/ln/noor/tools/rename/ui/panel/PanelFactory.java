@@ -37,6 +37,8 @@ import org.springframework.stereotype.Component;
  * to be easily added without modifying UI code.</p>
  *
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 @Component
 @Scope("singleton")

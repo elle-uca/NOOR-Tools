@@ -6,6 +6,8 @@ import javax.swing.JTextArea;
 
 /**
  * Standard confirmation dialog used before executing ActionTags.
+ *
+ * @author Luca Noale
  */
 public class ActionConfirmationDialog {
 

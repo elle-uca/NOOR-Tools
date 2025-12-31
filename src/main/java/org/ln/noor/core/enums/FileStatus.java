@@ -6,6 +6,8 @@ package org.ln.noor.core.enums;
  * It stores a user-friendly string representation (title) for each status.
  * 
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public enum FileStatus {
     
