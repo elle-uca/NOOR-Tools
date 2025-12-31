@@ -1,7 +1,8 @@
 package org.ln.noor.tools.directory;
 
 import javax.swing.SwingUtilities;
-import org.ln.noor.directory.view.CrocodileView;
+
+import org.ln.noor.directory.view.DirectoryToolView;
 /**
  * DirectoryToolLauncher.
  *
@@ -14,7 +15,7 @@ public final class DirectoryToolLauncher {
 
     public static void open() {
         SwingUtilities.invokeLater(() -> {
-            new CrocodileView().setVisible(true);
+            new DirectoryToolView().setVisible(true);
         });
     }
 }
