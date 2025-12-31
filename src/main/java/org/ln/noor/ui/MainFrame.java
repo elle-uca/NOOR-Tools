@@ -43,6 +43,11 @@ import org.ln.noor.tools.splitmerge.SplitMergeTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+/**
+ * MainFrame.
+ *
+ * @author Luca Noale
+ */
 
 @SuppressWarnings("serial")
 @Component

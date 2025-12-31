@@ -18,6 +18,11 @@ import org.ln.noor.tools.rename.model.RenamableFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+/**
+ * RenamerService.
+ *
+ * @author Luca Noale
+ */
 
 @Service
 public class RenamerService {

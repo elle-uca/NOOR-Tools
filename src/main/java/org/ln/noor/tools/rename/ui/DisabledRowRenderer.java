@@ -1,3 +1,8 @@
+/**
+ * DisabledRowRenderer placeholder.
+ *
+ * @author Luca Noale
+ */
 //package org.ln.noortools.view;
 //import java.awt.Color;
 //import java.awt.Component;

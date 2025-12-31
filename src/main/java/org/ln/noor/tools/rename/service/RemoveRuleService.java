@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
  *     "file.txt", position=5, count=3 → "filet"   (removed ".tx")
  *   
  *    Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 @Service("removeruleservice")
 public class RemoveRuleService extends AbstractRuleService {

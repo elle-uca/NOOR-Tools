@@ -7,6 +7,8 @@ import javax.swing.SpinnerNumberModel;
 /**
  * A specialization of JSpinner that works with integer values.
  * Provides a convenient getIntValue() method to avoid explicit casts.
+ *
+ * @author Luca Noale
  */
 @SuppressWarnings("serial")
 public class IntegerSpinner extends JSpinner {

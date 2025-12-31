@@ -22,6 +22,8 @@ import org.springframework.stereotype.Component;
  *  - type filter (one or more TagType)
  *
  * Keeps a master list (all tags) and a filtered view.
+ *
+ * @author Luca Noale
  */
 @SuppressWarnings("serial")
 @Component

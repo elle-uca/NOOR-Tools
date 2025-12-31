@@ -1,6 +1,11 @@
 package org.ln.noor.core.policy;
 
 import java.io.File;
+/**
+ * MustContainDirectoriesPolicy.
+ *
+ * @author Luca Noale
+ */
 
 public class MustContainDirectoriesPolicy implements DirectoryContentPolicy {
 

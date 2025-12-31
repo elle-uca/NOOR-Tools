@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
  * Base class for file-system related tags (creation date, owner, etc.).
  * It exposes helpers to normalize the files context and to safely work
  * with metadata even on platforms that may lack certain attributes.
+ *
+ * @author Luca Noale
  */
 public abstract class AbstractFsTag extends AbstractTag implements FileAwareTag {
 

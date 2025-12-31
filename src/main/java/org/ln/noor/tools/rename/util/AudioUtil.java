@@ -12,6 +12,11 @@ import org.jaudiotagger.tag.mp4.Mp4Tag;
 import org.ln.noor.core.enums.AudioTagType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+/**
+ * AudioUtil.
+ *
+ * @author Luca Noale
+ */
 
 public class AudioUtil {
 

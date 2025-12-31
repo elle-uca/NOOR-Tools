@@ -1,6 +1,11 @@
 package org.ln.noor.core.policy;
 
 import java.io.File;
+/**
+ * NoCheckPolicy.
+ *
+ * @author Luca Noale
+ */
 
 public class NoCheckPolicy implements DirectoryContentPolicy {
 

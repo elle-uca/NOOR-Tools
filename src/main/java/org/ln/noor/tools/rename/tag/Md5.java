@@ -7,6 +7,8 @@ import org.ln.noor.core.i18n.I18n;
  * MD5 checksum tag.
  *
  * Produces a lowercase hexadecimal MD5 hash.
+ *
+ * @author Luca Noale
  */
 public class Md5 extends AbstractChecksumTag {
 

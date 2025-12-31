@@ -16,6 +16,8 @@ import org.ln.noor.core.i18n.I18n;
  *   <RandL:3> → ["ABC", "ZQP", "LMN"]
  *
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public class RandLet extends AbstractTag {
 

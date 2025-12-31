@@ -16,6 +16,8 @@ import org.ln.noor.core.i18n.I18n;
  *   result: ["file", "name", "test"]
  *
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public class Word extends AbstractTag {
 

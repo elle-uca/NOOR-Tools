@@ -10,6 +10,8 @@ import org.ln.noor.core.enums.ModeCase;
  * Utility class for transforming the case of strings based on {@link ModeCase}.
  * 
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public class StringUtil {
 

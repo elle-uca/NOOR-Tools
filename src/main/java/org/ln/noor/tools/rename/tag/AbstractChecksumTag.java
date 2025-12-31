@@ -17,6 +17,8 @@ import org.ln.noor.tools.rename.util.HashUtils;
  *  - Centralized caching to avoid recomputing hashes.
  *  - Uses HashUtils for unified hashing logic.
  *  - Supports substring truncation (e.g., <Md5:8>).
+ *
+ * @author Luca Noale
  */
 public abstract class AbstractChecksumTag extends AbstractTag implements FileAwareTag {
 

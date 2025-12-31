@@ -16,6 +16,11 @@ import org.ln.noor.tools.rename.ui.IntegerSpinner;
 import org.ln.noor.tools.splitmerge.util.SplitMergeUtils;
 
 import net.miginfocom.swing.MigLayout;
+/**
+ * SplitDialog.
+ *
+ * @author Luca Noale
+ */
 
 @SuppressWarnings("serial")
 public class SplitDialog extends SplitMergeDialog {

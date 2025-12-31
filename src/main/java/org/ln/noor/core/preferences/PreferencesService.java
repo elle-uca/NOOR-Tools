@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
  * This service exposes a singleton instance so that preferences can be
  * accessed from any part of the application, regardless of whether Spring
  * dependency injection is available.
+ *
+ * @author Luca Noale
  */
 
 @Service

@@ -18,6 +18,11 @@ import org.ln.noor.tools.rename.util.StringUtil;
  * @author Luca Noale
  */
 public abstract class AbstractTag  {
+    /**
+     * TagType.
+     *
+     * @author Luca Noale
+     */
 
     public enum TagType {
         NUMERIC,

@@ -19,6 +19,8 @@ import org.ln.noor.tools.rename.model.RenamableFile;
  * It shows an icon (OK/KO) based on the FileStatus enumeration value.
  * 
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 @SuppressWarnings("serial")
 public class StatusCellRenderer extends  DefaultTableCellRenderer  {

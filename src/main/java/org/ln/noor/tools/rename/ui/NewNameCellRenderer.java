@@ -7,6 +7,11 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.ln.noor.tools.rename.model.RenamableFile;
+/**
+ * NewNameCellRenderer.
+ *
+ * @author Luca Noale
+ */
 
 @SuppressWarnings("serial")
 public class NewNameCellRenderer extends DefaultTableCellRenderer {

@@ -15,6 +15,8 @@ import org.ln.noor.core.i18n.I18n;
  *   <Subs:1:3> applied to "Filename.txt" → "Fil"
  *
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public class Subs extends AbstractTag {
 

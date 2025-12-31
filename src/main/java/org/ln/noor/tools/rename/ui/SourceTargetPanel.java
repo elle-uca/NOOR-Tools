@@ -16,6 +16,8 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Reusable panel to select source and destination folders.
  * Does not open JFileChooser, but notifies events via listener or Consumer
+ *
+ * @author Luca Noale
  */
 @SuppressWarnings("serial")
 public class SourceTargetPanel extends JPanel {

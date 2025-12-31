@@ -15,6 +15,8 @@ import org.ln.noor.tools.rename.util.DateTimeFormatMapper;
  *   <Time:HH:nn:ss> -> "23:45:12"
  *
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public class Time extends AbstractTag {
 

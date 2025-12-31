@@ -9,6 +9,11 @@ import org.junit.jupiter.api.Test;
 import org.ln.noor.core.i18n.I18n;
 import org.ln.noor.tools.rename.tag.Word;
 import org.springframework.context.support.StaticMessageSource;
+/**
+ * WordTest.
+ *
+ * @author Luca Noale
+ */
 
 class WordTest {
 

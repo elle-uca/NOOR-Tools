@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
  *   <Add:123:3>        -> Fil123eName   (after 3rd character)
  *
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 @Service("addruleservice")
 public class AddRuleService extends AbstractRuleService {

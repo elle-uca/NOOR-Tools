@@ -14,6 +14,11 @@ import org.ln.noor.tools.rename.service.TagToken;
 import org.ln.noor.tools.rename.service.TemplateTokenizer;
 import org.ln.noor.tools.rename.service.TextComponent;
 import org.springframework.context.support.StaticMessageSource;
+/**
+ * TagBuilderTest.
+ *
+ * @author Luca Noale
+ */
 
 class TagBuilderTest {
 

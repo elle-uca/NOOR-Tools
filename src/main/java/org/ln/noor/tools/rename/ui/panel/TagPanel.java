@@ -34,6 +34,11 @@ import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
 import net.miginfocom.swing.MigLayout;
+/**
+ * TagPanel.
+ *
+ * @author Luca Noale
+ */
 
 
 

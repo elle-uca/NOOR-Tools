@@ -6,6 +6,8 @@ package org.ln.noor.core.enums;
  * (upper/lower/title, etc.) of the file name should be modified.
  * 
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public enum ModeCase {
     

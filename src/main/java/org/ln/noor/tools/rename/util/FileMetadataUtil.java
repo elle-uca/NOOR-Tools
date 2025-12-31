@@ -27,6 +27,8 @@ import org.ln.noor.core.i18n.I18n;
  * Works on:
  *  - Windows: uses DosFileAttributeView when available
  *  - Linux / macOS: uses BasicFileAttributeView (creationTime may be unsupported)
+ *
+ * @author Luca Noale
  */
 public final class FileMetadataUtil {
 

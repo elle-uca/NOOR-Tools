@@ -4,6 +4,8 @@ package org.ln.noor.tools.rename.util;
  * Utility class for working with file names and extensions.
  *
  * Provides safe methods to split and combine base name and extension.
+ *
+ * @author Luca Noale
  */
 public final class FileNameUtil {
 

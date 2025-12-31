@@ -19,6 +19,8 @@ import org.ln.noor.tools.rename.util.FileNameUtil;
  * - Delegates string transformation to subclasses via {@link #transformName}.
  * 
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public abstract class AbstractRuleService implements RuleService {
 	

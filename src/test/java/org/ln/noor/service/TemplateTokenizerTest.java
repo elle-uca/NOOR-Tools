@@ -9,6 +9,11 @@ import org.ln.noor.tools.rename.service.TagToken;
 import org.ln.noor.tools.rename.service.TemplateComponent;
 import org.ln.noor.tools.rename.service.TemplateTokenizer;
 import org.ln.noor.tools.rename.service.TextComponent;
+/**
+ * TemplateTokenizerTest.
+ *
+ * @author Luca Noale
+ */
 
 class TemplateTokenizerTest {
 

@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
  *   FULL:      "file.txt" + replace("l","X")  -> "fiXe.txX"
  * 
  *  Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 @Service("replaceruleservice")
 public class ReplaceRuleService extends AbstractRuleService {

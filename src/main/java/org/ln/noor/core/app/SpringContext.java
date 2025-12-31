@@ -3,6 +3,11 @@ package org.ln.noor.core.app;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
+/**
+ * SpringContext.
+ *
+ * @author Luca Noale
+ */
 
 @Component
 public class SpringContext implements ApplicationContextAware {

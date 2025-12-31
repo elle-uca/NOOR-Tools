@@ -16,6 +16,8 @@ import org.ln.noor.core.i18n.I18n;
  *   <RandN:3> → ["123", "045", "678"]
  *
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public class RandNum extends AbstractTag {
 

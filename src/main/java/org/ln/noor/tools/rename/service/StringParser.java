@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 /**
  * Parses a rename template containing tags (e.g., <IncN:1>)
  * and applies them to a list of files according to the selected RenameMode.
+ *
+ * @author Luca Noale
  */
 @Component
 public class StringParser {

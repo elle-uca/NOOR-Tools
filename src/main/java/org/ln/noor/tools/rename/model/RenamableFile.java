@@ -13,6 +13,8 @@ import org.ln.noor.tools.rename.util.StringUtil;
  * selection status and rename result.
  * 
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public class RenamableFile {
 

@@ -3,6 +3,7 @@ package org.ln.noor.core.enums;
 /**
  * An enumeration to define the type of padding to apply.
  *
+ * @author Luca Noale
  */
 public enum FillOption {
 	NO_FILL("Nessun riempimento"),

@@ -15,6 +15,11 @@ import org.ln.noor.tools.rename.tag.Crc32;
 import org.ln.noor.tools.rename.tag.Md5;
 import org.ln.noor.tools.rename.tag.Sha256;
 import org.springframework.context.support.StaticMessageSource;
+/**
+ * TagChecksumTest.
+ *
+ * @author Luca Noale
+ */
 
 public class TagChecksumTest {
 

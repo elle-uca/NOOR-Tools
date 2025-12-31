@@ -7,6 +7,8 @@ import org.ln.noor.core.i18n.I18n;
  * SHA-256 checksum tag.
  *
  * Produces a lowercase hexadecimal SHA-256 hash.
+ *
+ * @author Luca Noale
  */
 public class Sha256 extends AbstractChecksumTag  {
 

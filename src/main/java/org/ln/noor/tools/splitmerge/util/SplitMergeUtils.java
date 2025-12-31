@@ -24,8 +24,18 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
+/**
+ * SplitMergeUtils.
+ *
+ * @author Luca Noale
+ */
 
 public class SplitMergeUtils {
+    /**
+     * MergeResult.
+     *
+     * @author Luca Noale
+     */
 
     public static class MergeResult {
         public List<String[]> mapping;               // lista [origine, destinazione]

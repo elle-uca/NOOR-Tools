@@ -19,6 +19,11 @@ import org.ln.noor.core.policy.MustContainFilesPolicy;
 import org.ln.noor.core.policy.NoCheckPolicy;
 import org.ln.noor.tools.rename.ui.SourceTargetPanel;
 import org.ln.noor.tools.rename.util.SwingUtil;
+/**
+ * SplitMergeDialog.
+ *
+ * @author Luca Noale
+ */
 
 @SuppressWarnings("serial")
 public abstract class SplitMergeDialog extends JDialog {

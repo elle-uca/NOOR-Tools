@@ -17,6 +17,8 @@ import net.miginfocom.swing.MigLayout;
 
 /**
  * Simple "About" dialog showing application metadata.
+ *
+ * @author Luca Noale
  */
 public final class AboutDialog {
 

@@ -15,6 +15,8 @@ import org.ln.noor.core.preferences.PreferencesService;
  * Provides helpers for consistent, reusable UI components.
  *
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public final class SwingUtil {
 

@@ -7,6 +7,8 @@ import javax.swing.JTextArea;
 /**
  * Dialog shown after all ActionTags have been executed.
  * Displays a detailed log.
+ *
+ * @author Luca Noale
  */
 public class ActionLogDialog {
 

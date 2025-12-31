@@ -1,4 +1,9 @@
 package org.ln.noor.core.enums;
+/**
+ * Theme.
+ *
+ * @author Luca Noale
+ */
 
 public enum Theme {
 

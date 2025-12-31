@@ -1,4 +1,9 @@
 package org.ln.noor.ui;
+/**
+ * BootSplash.
+ *
+ * @author Luca Noale
+ */
 
 public interface BootSplash {
     void showSplash();

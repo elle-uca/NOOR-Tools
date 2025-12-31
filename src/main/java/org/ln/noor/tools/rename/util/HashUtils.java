@@ -23,6 +23,8 @@ import org.ln.noor.core.enums.ChecksumAlg;
  *   - SHA3-256
  *   - SHA3-512
  *   - BLAKE2B-256 (Java 21 native)
+ *
+ * @author Luca Noale
  */
 public final class HashUtils {
 

@@ -11,6 +11,8 @@ import org.ln.noor.tools.rename.util.AudioUtil;
 
  *   
  *    Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public class Title extends AbstractAudioTag {
 

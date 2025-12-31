@@ -6,6 +6,8 @@ package org.ln.noor.core.enums;
  * This enum specifies which parts of the file name should be affected by the renaming process.
  * 
  * Author: Luca Noale
+ *
+ * @author Luca Noale
  */
 public enum RenameMode {
     

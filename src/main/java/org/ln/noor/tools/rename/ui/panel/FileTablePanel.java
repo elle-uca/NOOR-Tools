@@ -29,6 +29,11 @@ import org.ln.noor.tools.rename.ui.StatusCellRenderer;
 import org.ln.noor.ui.ToolbarBuilder;
 
 import net.miginfocom.swing.MigLayout;
+/**
+ * FileTablePanel.
+ *
+ * @author Luca Noale
+ */
 
 @SuppressWarnings("serial")
 public class FileTablePanel extends JPanel {
