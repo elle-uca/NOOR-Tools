@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -128,11 +129,13 @@ public class FileTablePanel extends JPanel {
     }
     
     private void handleDroppedFiles(List<File> files) {
-        for (File f : files) {
-            if (f.isFile()) {
-                tableModel.addFile(new RenamableFile(f));
-            }
-        }
+ 		List<RenamableFile> update = new ArrayList<>();
+		for (File f : files) {
+			RenamableFile file = new RenamableFile(f);
+			update.add(file);
+		}
+		renamerService.setFiles(update);
+		renamerService.reapplyRules();
     }
 
 
