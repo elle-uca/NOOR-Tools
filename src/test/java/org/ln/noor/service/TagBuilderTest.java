@@ -8,11 +8,11 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.ln.noor.core.i18n.I18n;
-import org.ln.noor.tools.rename.factory.TagFactory;
 import org.ln.noor.tools.rename.service.TagBuilder;
 import org.ln.noor.tools.rename.service.TagToken;
 import org.ln.noor.tools.rename.service.TemplateTokenizer;
 import org.ln.noor.tools.rename.service.TextComponent;
+import org.ln.noor.tools.rename.tag.TagFactory;
 import org.springframework.context.support.StaticMessageSource;
 /**
  * TagBuilderTest.

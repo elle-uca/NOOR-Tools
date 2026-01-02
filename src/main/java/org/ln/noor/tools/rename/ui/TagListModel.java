@@ -10,8 +10,8 @@ import java.util.Objects;
 
 import javax.swing.AbstractListModel;
 
-import org.ln.noor.tools.rename.factory.TagFactory;
 import org.ln.noor.tools.rename.tag.AbstractTag;
+import org.ln.noor.tools.rename.tag.TagFactory;
 import org.ln.noor.tools.rename.tag.AbstractTag.TagType;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

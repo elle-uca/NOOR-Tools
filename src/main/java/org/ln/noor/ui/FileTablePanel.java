@@ -1,4 +1,4 @@
-package org.ln.noor.tools.rename.ui.panel;
+package org.ln.noor.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -27,7 +27,6 @@ import org.ln.noor.tools.rename.ui.NaturalOrderComparator;
 import org.ln.noor.tools.rename.ui.NewNameCellRenderer;
 import org.ln.noor.tools.rename.ui.RenamableFileTableModel;
 import org.ln.noor.tools.rename.ui.StatusCellRenderer;
-import org.ln.noor.ui.ToolbarBuilder;
 
 import net.miginfocom.swing.MigLayout;
 /**
@@ -70,18 +69,14 @@ public class FileTablePanel extends JPanel {
         sorter.setComparator(1, new NaturalOrderComparator());
         sorter.setComparator(2, new NaturalOrderComparator());
         table.setRowSorter(sorter);
-        
 
         FileTransferHandler dnd = new FileTransferHandler(
                 table,
                 this::handleDroppedFiles
         );       
         
-     // Tasto DELETE
         KeyStroke delete = KeyStroke.getKeyStroke("DELETE");
-
         table.getInputMap(JComponent.WHEN_FOCUSED).put(delete, "deleteRow");
-
         table.getActionMap().put("deleteRow", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -91,7 +86,6 @@ public class FileTablePanel extends JPanel {
                 tableModel.removeRow(row);
             }
         });
-        
         
         infoLabel = new JLabel(i18n.get("table.noFiles"));
         fileInfoLabel = new JLabel(i18n.get("table.noFileSelected"));

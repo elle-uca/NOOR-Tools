@@ -35,7 +35,6 @@ import org.ln.noor.tools.rename.service.RenameController;
 import org.ln.noor.tools.rename.service.RenamerService;
 import org.ln.noor.tools.rename.ui.panel.AccordionFactory;
 import org.ln.noor.tools.rename.ui.panel.AccordionPanel;
-import org.ln.noor.tools.rename.ui.panel.FileTablePanel;
 import org.ln.noor.tools.rename.ui.panel.PanelFactory;
 import org.ln.noor.tools.rename.ui.panel.RuleButtonBar;
 import org.ln.noor.tools.rename.util.SwingUtil;

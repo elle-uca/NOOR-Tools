@@ -3,14 +3,14 @@ package org.ln.noor.tools.rename.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ln.noor.tools.rename.factory.TagFactory;
 import org.ln.noor.tools.rename.tag.AbstractTag;
+import org.ln.noor.tools.rename.tag.TagFactory;
 import org.springframework.stereotype.Component;
 
 /**
  * Translates template tokens into concrete components that can be used by
  * the renaming pipeline. Plain text is kept as strings while tag tokens are
- * resolved through {@link org.ln.noor.tools.rename.factory.TagFactory}.
+ * resolved through {@link org.ln.noor.tools.rename.tag.TagFactory}.
  *
  * @author Luca Noale
  */

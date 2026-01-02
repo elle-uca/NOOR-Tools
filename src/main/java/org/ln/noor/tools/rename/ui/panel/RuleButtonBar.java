@@ -24,7 +24,10 @@ public class RuleButtonBar extends JPanel {
     private final AccordionPanel accordion;
     private final Runnable statusUpdater;
 
-    public RuleButtonBar(PanelFactory panelFactory, AccordionPanel accordion, Runnable statusUpdater) {
+    public RuleButtonBar(
+    		PanelFactory panelFactory, 
+    		AccordionPanel accordion, 
+    		Runnable statusUpdater) {
     	super(new MigLayout("", "[][][]", "[][][]"));
         this.panelFactory = panelFactory;
         this.accordion = accordion;

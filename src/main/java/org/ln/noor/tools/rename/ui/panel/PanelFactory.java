@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
  * <p>This approach keeps panel creation consistent and allows future panels
  * to be easily added without modifying UI code.</p>
  *
- * Author: Luca Noale
+ * 
  *
  * @author Luca Noale
  */
