@@ -38,7 +38,7 @@ import javax.swing.table.DefaultTableModel;
  * </ul>
  *
  * <p>
- * All operations are designed to be previewed before execution
+ * All operations are designed to be previewed before apply steps
  * to prevent accidental filesystem changes.
  *
  * @author Luca Noale
@@ -72,7 +72,8 @@ public class SplitMergeUtils {
      * @param sourceDir     source directory containing files
      * @param maxFiles      maximum number of files per target folder
      * @param folderPrefix  prefix for generated folder names
-     * @return a map where keys are target folder names and values are file lists
+     * @return a map where keys are target folder names and values are file lists;
+     *         no filesystem modifications occur
      */
     public static Map<String, List<File>> simulateSplitByCount(
             String sourceDir,
@@ -115,7 +116,8 @@ public class SplitMergeUtils {
      * @param sourceDir     source directory containing files
      * @param maxSizeMB     maximum size per folder (in MB)
      * @param folderPrefix prefix for generated folder names
-     * @return a map where keys are target folder names and values are file lists
+     * @return a map where keys are target folder names and values are file lists;
+     *         no filesystem modifications occur
      */
     public static Map<String, List<File>> simulateSplitBySize(
             String sourceDir,
@@ -246,7 +248,8 @@ public class SplitMergeUtils {
      *
      * @param parentDir parent directory containing subfolders
      * @param targetDir destination directory
-     * @return a {@link MergeResult} containing preview data
+     * @return a {@link MergeResult} containing preview data; no filesystem
+     *         modifications occur during simulation
      */
     public static MergeResult simulateMerge(
             String parentDir,
