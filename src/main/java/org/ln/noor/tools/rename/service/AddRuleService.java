@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  *   <Add:World:END>    -> FileWorld
  *   <Add:123:3>        -> Fil123eName   (after 3rd character)
  *
- * Author: Luca Noale
+ * 
  *
  * @author Luca Noale
  */

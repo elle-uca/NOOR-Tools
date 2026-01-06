@@ -18,7 +18,7 @@ import org.ln.noor.tools.rename.util.FileNameUtil;
  * - Supports RenameMode: FULL, NAME_ONLY, EXT_ONLY
  * - Delegates string transformation to subclasses via {@link #transformName}.
  * 
- * Author: Luca Noale
+ *
  *
  * @author Luca Noale
  */

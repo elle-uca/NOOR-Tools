@@ -24,71 +24,121 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
+
 /**
- * SplitMergeUtils.
+ * Utility class providing split and merge operations for files.
+ * <p>
+ * {@code SplitMergeUtils} supports:
+ * <ul>
+ *   <li>Simulating file splitting into multiple folders</li>
+ *   <li>Applying split operations on the filesystem</li>
+ *   <li>Simulating merge operations from subfolders</li>
+ *   <li>Applying merge operations with conflict resolution</li>
+ *   <li>Displaying detailed previews using Swing dialogs</li>
+ * </ul>
+ *
+ * <p>
+ * All operations are designed to be previewed before execution
+ * to prevent accidental filesystem changes.
  *
  * @author Luca Noale
  */
-
 public class SplitMergeUtils {
-    /**
-     * MergeResult.
-     *
-     * @author Luca Noale
-     */
 
+    /**
+     * Result object returned by merge simulations.
+     * <p>
+     * It contains the full source-to-destination mapping,
+     * conflict statistics and per-folder summaries.
+     */
     public static class MergeResult {
-        public List<String[]> mapping;               // lista [origine, destinazione]
-        public int conflicts;                        // quanti file hanno richiesto suffisso
-        public Map<String, Integer> filesPerFolder;  // riepilogo per sottocartella
-        public List<File> sourceDirs;                // elenco sottocartelle
+
+        /** List of source → destination mappings */
+        public List<String[]> mapping;
+
+        /** Number of filename conflicts resolved via suffixes */
+        public int conflicts;
+
+        /** Number of processed files per source folder */
+        public Map<String, Integer> filesPerFolder;
+
+        /** List of source directories involved in the merge */
+        public List<File> sourceDirs;
     }
 
     /**
-     * Simulazione suddivisione per numero file.
+     * Simulates a split operation based on a maximum number of files per folder.
+     *
+     * @param sourceDir     source directory containing files
+     * @param maxFiles      maximum number of files per target folder
+     * @param folderPrefix  prefix for generated folder names
+     * @return a map where keys are target folder names and values are file lists
      */
-    public static Map<String, List<File>> simulateSplitByCount(String sourceDir, int maxFiles, String folderPrefix) {
+    public static Map<String, List<File>> simulateSplitByCount(
+            String sourceDir,
+            int maxFiles,
+            String folderPrefix) {
+
         Map<String, List<File>> simulation = new LinkedHashMap<>();
 
         File folder = new File(sourceDir);
         File[] files = folder.listFiles(File::isFile);
-        if (files == null || files.length == 0) return simulation;
+        if (files == null || files.length == 0) {
+            return simulation;
+        }
 
         int folderIndex = 1;
         int fileCounter = 0;
+
         String currentFolder = folderPrefix + folderIndex;
         simulation.put(currentFolder, new ArrayList<>());
 
         for (File file : files) {
+
             if (fileCounter >= maxFiles) {
                 folderIndex++;
                 currentFolder = folderPrefix + folderIndex;
                 simulation.put(currentFolder, new ArrayList<>());
                 fileCounter = 0;
             }
+
             simulation.get(currentFolder).add(file);
             fileCounter++;
         }
+
         return simulation;
     }
 
     /**
-     * Simulazione suddivisione per dimensione (MB).
+     * Simulates a split operation based on a maximum folder size in megabytes.
+     *
+     * @param sourceDir     source directory containing files
+     * @param maxSizeMB     maximum size per folder (in MB)
+     * @param folderPrefix prefix for generated folder names
+     * @return a map where keys are target folder names and values are file lists
      */
-    public static Map<String, List<File>> simulateSplitBySize(String sourceDir, long maxSizeMB, String folderPrefix) {
+    public static Map<String, List<File>> simulateSplitBySize(
+            String sourceDir,
+            long maxSizeMB,
+            String folderPrefix) {
+
         Map<String, List<File>> simulation = new LinkedHashMap<>();
         long maxBytes = maxSizeMB * 1024 * 1024;
 
         File folder = new File(sourceDir);
         File[] files = folder.listFiles(File::isFile);
-        if (files == null || files.length == 0) return simulation;
+        if (files == null || files.length == 0) {
+            return simulation;
+        }
 
         int folderIndex = 1;
         long currentSize = 0;
+
         String currentFolder = folderPrefix + folderIndex;
         simulation.put(currentFolder, new ArrayList<>());
 
         for (File file : files) {
+
             long fileSize = file.length();
 
             if (currentSize + fileSize > maxBytes) {
@@ -97,39 +147,62 @@ public class SplitMergeUtils {
                 simulation.put(currentFolder, new ArrayList<>());
                 currentSize = 0;
             }
+
             simulation.get(currentFolder).add(file);
             currentSize += fileSize;
         }
+
         return simulation;
     }
 
     /**
-     * Applica realmente lo split in base a una simulazione.
+     * Applies a previously simulated split operation.
+     *
+     * @param sourceDir  source directory
+     * @param simulation split simulation data
+     * @throws IOException if a filesystem error occurs
      */
-    public static void applySplit(String sourceDir, Map<String, List<File>> simulation) throws IOException {
+    public static void applySplit(
+            String sourceDir,
+            Map<String, List<File>> simulation) throws IOException {
+
         for (Map.Entry<String, List<File>> entry : simulation.entrySet()) {
+
             Path targetDir = Paths.get(sourceDir, entry.getKey());
             Files.createDirectories(targetDir);
 
             for (File file : entry.getValue()) {
-                Files.move(file.toPath(), targetDir.resolve(file.getName()), StandardCopyOption.REPLACE_EXISTING);
+                Files.move(
+                        file.toPath(),
+                        targetDir.resolve(file.getName()),
+                        StandardCopyOption.REPLACE_EXISTING);
             }
         }
     }
 
     /**
-     * Mostra la simulazione in una JTable. Path path = Paths.get("dir1", "dir2");
-     * @param path 
+     * Displays a split simulation in a table and optionally applies it.
+     *
+     * @param path        base directory path
+     * @param simulation split simulation data
      */
-    public static void showSimulationTable(String path, Map<String, List<File>> simulation) {
-        String[] columns = {"Cartella", "Nome File", "Dimensione (KB)"};
+    public static void showSimulationTable(
+            String path,
+            Map<String, List<File>> simulation) {
+
+        String[] columns = {
+                "Target Folder",
+                "File Name",
+                "Size (KB)"
+        };
+
         DefaultTableModel model = new DefaultTableModel(columns, 0);
-        
+
         for (Map.Entry<String, List<File>> entry : simulation.entrySet()) {
             String folder = entry.getKey();
             for (File file : entry.getValue()) {
                 model.addRow(new Object[]{
-                		Paths.get(path, folder),
+                        Paths.get(path, folder),
                         file.getName(),
                         file.length() / 1024
                 });
@@ -142,29 +215,43 @@ public class SplitMergeUtils {
         int result = JOptionPane.showConfirmDialog(
                 null,
                 scrollPane,
-                "Simulazione suddivisione",
+                "Split simulation preview",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE
         );
 
         if (result == JOptionPane.OK_OPTION) {
-            int confirm = JOptionPane.showConfirmDialog(null, "Vuoi applicare davvero lo split?");
+
+            int confirm = JOptionPane.showConfirmDialog(
+                    null,
+                    "Do you want to apply the split operation?");
+
             if (confirm == JOptionPane.YES_OPTION) {
                 try {
-                    applySplit(path, simulation); 
-                    JOptionPane.showMessageDialog(null, "Split completato!");
+                    applySplit(path, simulation);
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Split completed successfully.");
                 } catch (IOException e) {
-                    JOptionPane.showMessageDialog(null, "Errore: " + e.getMessage());
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Error: " + e.getMessage());
                 }
             }
         }
     }
-    
-    
+
     /**
-     * Simula il merge: ritorna mappatura, conflitti e riepilogo per sottocartella.
+     * Simulates a merge operation by collecting files from subfolders.
+     *
+     * @param parentDir parent directory containing subfolders
+     * @param targetDir destination directory
+     * @return a {@link MergeResult} containing preview data
      */
-    public static MergeResult simulateMerge(String parentDir, String targetDir) {
+    public static MergeResult simulateMerge(
+            String parentDir,
+            String targetDir) {
+
         MergeResult result = new MergeResult();
         result.mapping = new ArrayList<>();
         result.conflicts = 0;
@@ -179,53 +266,85 @@ public class SplitMergeUtils {
         }
 
         Path targetPath = Paths.get(targetDir);
+
         try {
-			Files.createDirectories(targetPath);
+            Files.createDirectories(targetPath);
 
+            for (File subDir : subDirs) {
 
-        for (File subDir : subDirs) {
-            result.sourceDirs.add(subDir);
+                result.sourceDirs.add(subDir);
 
-            File[] files = subDir.listFiles(File::isFile);
-            if (files == null) continue;
-
-            int countForFolder = 0;
-
-            for (File file : files) {
-                Path targetFile = targetPath.resolve(file.getName());
-                boolean conflict = false;
-
-                // gestisce conflitti con suffisso _n
-                int counter = 1;
-                while (Files.exists(targetFile) || containsTarget(result.mapping, targetFile)) {
-                    conflict = true;
-                    String name = file.getName();
-                    int dot = name.lastIndexOf(".");
-                    String base = (dot == -1) ? name : name.substring(0, dot);
-                    String ext = (dot == -1) ? "" : name.substring(dot);
-                    targetFile = targetPath.resolve(base + "_" + counter + ext);
-                    counter++;
+                File[] files = subDir.listFiles(File::isFile);
+                if (files == null) {
+                    continue;
                 }
 
-                if (conflict) result.conflicts++;
-                result.mapping.add(new String[]{
-                        file.getAbsolutePath(),
-                        targetFile.toString()
-                });
-                countForFolder++;
+                int countForFolder = 0;
+
+                for (File file : files) {
+
+                    Path targetFile = targetPath.resolve(file.getName());
+                    boolean conflict = false;
+                    int counter = 1;
+
+                    // Resolve conflicts using incremental suffixes
+                    while (Files.exists(targetFile)
+                            || containsTarget(result.mapping, targetFile)) {
+
+                        conflict = true;
+                        String name = file.getName();
+                        int dot = name.lastIndexOf('.');
+                        String base = (dot == -1)
+                                ? name
+                                : name.substring(0, dot);
+                        String ext = (dot == -1)
+                                ? ""
+                                : name.substring(dot);
+
+                        targetFile = targetPath.resolve(
+                                base + "_" + counter + ext);
+                        counter++;
+                    }
+
+                    if (conflict) {
+                        result.conflicts++;
+                    }
+
+                    result.mapping.add(new String[]{
+                            file.getAbsolutePath(),
+                            targetFile.toString()
+                    });
+
+                    countForFolder++;
+                }
+
+                result.filesPerFolder.put(
+                        subDir.getName(),
+                        countForFolder);
             }
 
-            result.filesPerFolder.put(subDir.getName(), countForFolder);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Error during merge simulation:\n" + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
-		} catch (IOException e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Errore durante la simulazione:\n" + e.getMessage(),
-                  "Errore", JOptionPane.ERROR_MESSAGE);
-		}
+
         return result;
     }
 
-    private static boolean containsTarget(List<String[]> mapping, Path targetFile) {
+    /**
+     * Checks whether a target path already exists in the mapping.
+     *
+     * @param mapping    current mapping list
+     * @param targetFile target path
+     * @return {@code true} if the target already exists
+     */
+    private static boolean containsTarget(
+            List<String[]> mapping,
+            Path targetFile) {
+
         for (String[] entry : mapping) {
             if (entry[1].equals(targetFile.toString())) {
                 return true;
@@ -235,23 +354,41 @@ public class SplitMergeUtils {
     }
 
     /**
-     * Applica il merge vero e proprio, con opzione elimina cartelle vuote.
+     * Applies a merge operation using the provided simulation.
+     *
+     * @param simulation       merge simulation data
+     * @param move             {@code true} to move files, {@code false} to copy
+     * @param deleteEmptyDirs  whether to delete empty source directories
+     * @throws IOException if a filesystem error occurs
      */
-    public static void applyMerge(MergeResult simulation, boolean move, boolean deleteEmptyDirs) throws IOException {
+    public static void applyMerge(
+            MergeResult simulation,
+            boolean move,
+            boolean deleteEmptyDirs) throws IOException {
+
         for (String[] entry : simulation.mapping) {
+
             Path source = Paths.get(entry[0]);
             Path target = Paths.get(entry[1]);
+
             if (move) {
-                Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+                Files.move(
+                        source,
+                        target,
+                        StandardCopyOption.REPLACE_EXISTING);
             } else {
-                Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(
+                        source,
+                        target,
+                        StandardCopyOption.REPLACE_EXISTING);
             }
         }
 
-        // Cancella le cartelle vuote se richiesto e se era una move
+        // Optionally remove empty source directories
         if (move && deleteEmptyDirs) {
             for (File dir : simulation.sourceDirs) {
-                if (dir.isDirectory() && Objects.requireNonNull(dir.list()).length == 0) {
+                if (dir.isDirectory()
+                        && Objects.requireNonNull(dir.list()).length == 0) {
                     dir.delete();
                 }
             }
@@ -259,42 +396,60 @@ public class SplitMergeUtils {
     }
 
     /**
-     * Mostra simulazione con riepilogo, report per sottocartella e tabella.
+     * Displays a merge simulation preview and optionally applies it.
+     *
+     * @param simulation merge simulation data
+     * @param move       {@code true} for move, {@code false} for copy
      */
-    public static void showSimulation(MergeResult simulation, boolean move) {
-        String[] columns = {"File originale", "File destinazione"};
-        DefaultTableModel model = new DefaultTableModel(columns, 0);
+    public static void showSimulation(
+            MergeResult simulation,
+            boolean move) {
 
+        String[] columns = {
+                "Source File",
+                "Target File"
+        };
+
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
         for (String[] entry : simulation.mapping) {
             model.addRow(new Object[]{entry[0], entry[1]});
         }
 
         JTable table = new JTable(model);
         table.setFillsViewportHeight(true);
+
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(700, 300));
 
-        // Riepilogo numerico
-        int total = simulation.mapping.size();
-        int conflicts = simulation.conflicts;
-
+        // Build summary text
         StringBuilder summaryBuilder = new StringBuilder();
-        summaryBuilder.append("Totale file: ").append(total)
-                .append(" | Conflitti risolti: ").append(conflicts)
-                .append("\n\nFile per sottocartella:\n");
-        for (Map.Entry<String, Integer> entry : simulation.filesPerFolder.entrySet()) {
-            summaryBuilder.append(" - ").append(entry.getKey())
-                    .append(": ").append(entry.getValue()).append(" file\n");
+        summaryBuilder.append("Total files: ")
+                .append(simulation.mapping.size())
+                .append(" | Conflicts resolved: ")
+                .append(simulation.conflicts)
+                .append("\n\nFiles per source folder:\n");
+
+        for (Map.Entry<String, Integer> entry
+                : simulation.filesPerFolder.entrySet()) {
+
+            summaryBuilder.append(" - ")
+                    .append(entry.getKey())
+                    .append(": ")
+                    .append(entry.getValue())
+                    .append(" files\n");
         }
 
         JTextArea summaryArea = new JTextArea(summaryBuilder.toString());
         summaryArea.setEditable(false);
         summaryArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        summaryArea.setBackground(UIManager.getColor("Label.background"));
-        summaryArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        summaryArea.setBackground(
+                UIManager.getColor("Label.background"));
+        summaryArea.setBorder(
+                BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        JCheckBox deleteDirsCheckbox = new JCheckBox("Cancella cartelle vuote dopo merge");
-        deleteDirsCheckbox.setEnabled(move); // ha senso solo se sposto i file
+        JCheckBox deleteDirsCheckbox =
+                new JCheckBox("Delete empty source folders after merge");
+        deleteDirsCheckbox.setEnabled(move);
 
         JPanel northPanel = new JPanel(new BorderLayout());
         northPanel.add(summaryArea, BorderLayout.CENTER);
@@ -307,22 +462,32 @@ public class SplitMergeUtils {
         int result = JOptionPane.showConfirmDialog(
                 null,
                 panel,
-                "Anteprima merge (" + (move ? "SPOSTA" : "COPIA") + ")",
+                "Merge preview (" + (move ? "MOVE" : "COPY") + ")",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE
         );
 
         if (result == JOptionPane.OK_OPTION) {
-            int confirm = JOptionPane.showConfirmDialog(null, "Vuoi applicare davvero il merge?");
+
+            int confirm = JOptionPane.showConfirmDialog(
+                    null,
+                    "Do you want to apply the merge operation?");
+
             if (confirm == JOptionPane.YES_OPTION) {
                 try {
-                    applyMerge(simulation, move, deleteDirsCheckbox.isSelected());
-                    JOptionPane.showMessageDialog(null, "Merge completato!");
+                    applyMerge(
+                            simulation,
+                            move,
+                            deleteDirsCheckbox.isSelected());
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Merge completed successfully.");
                 } catch (IOException e) {
-                    JOptionPane.showMessageDialog(null, "Errore: " + e.getMessage());
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Error: " + e.getMessage());
                 }
             }
         }
     }
-
 }

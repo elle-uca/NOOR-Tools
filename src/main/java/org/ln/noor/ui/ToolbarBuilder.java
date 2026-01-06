@@ -14,18 +14,39 @@ import org.ln.noor.core.i18n.I18n;
 
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+
 /**
  * ToolbarBuilder.
+ * Builds the main application toolbar.
+ * <p>
+ * The toolbar provides quick access to the most common actions:
+ * <ul>
+ *   <li>Add files</li>
+ *   <li>Add directories</li>
+ *   <li>Rename files</li>
+ *   <li>Clear the file table</li>
+ * </ul>
  *
- * @author Luca Noale
+ * All buttons share the same FlatLaf-based style with SVG icons
+ * and adaptive colors for light and dark themes.
+ *
+ * @param i18n       internationalization service
+ * @param onAddFile  action invoked when the "Add File" button is pressed
+ * @param onAddDir   action invoked when the "Add Directory" button is pressed
+ * @param onRename   action invoked when the "Rename" button is pressed
+ * @param onClear    action invoked when the "Clear" button is pressed
+ *
+ * @return a configured {@link JToolBar} instance
+ * 
+ *  @author Luca Noale
  */
-
 public class ToolbarBuilder {
 
     public static JToolBar buildToolbar(
             I18n i18n,
             Runnable onAddFile,
             Runnable onAddDir,
+            Runnable onClear,
             Runnable onRename
     ) {
         // 🔹 Toolbar base
@@ -41,7 +62,8 @@ public class ToolbarBuilder {
         Color fileColor   = dark ? new Color(0x64B5F6) : new Color(0x1E88E5);
         Color folderColor = dark ? new Color(0xFFB74D) : new Color(0xFB8C00);
         Color renameColor = dark ? new Color(0x81C784) : new Color(0x43A047);
-
+        Color clearColor  = dark ? new Color(0xE57373) : new Color(0xE53935);
+        Color hoverClear  = adjustBrightness(clearColor, 1.3f);
         Color hoverFile   = adjustBrightness(fileColor, 1.3f);
         Color hoverFolder = adjustBrightness(folderColor, 1.3f);
         Color hoverRename = adjustBrightness(renameColor, 1.3f);
@@ -64,6 +86,15 @@ public class ToolbarBuilder {
                 hoverFolder,
                 onAddDir
         );
+        
+        JButton btnClear = createToolbarButton(
+                i18n.get("toolbar.button.clear"),
+                i18n.get("toolbar.button.clear.tooltip"),
+                new FlatSVGIcon("icons/clear.svg", 32, 32),
+                clearColor,
+                hoverClear,
+                onClear
+        );
 
         JButton btnRename = createToolbarButton(
                 i18n.get("toolbar.button.rename"),
@@ -75,11 +106,12 @@ public class ToolbarBuilder {
         );
 
         // 🔹 Uniforma dimensioni
-        makeUniformSize(btnFile, btnDir, btnRename);
+        makeUniformSize(btnFile, btnDir, btnClear, btnRename);
 
         // 🔹 Aggiungi alla toolbar
         toolBar.add(btnFile);
         toolBar.add(btnDir);
+        toolBar.add(btnClear);
         toolBar.addSeparator(new Dimension(15, 0));
         toolBar.add(btnRename);
 
