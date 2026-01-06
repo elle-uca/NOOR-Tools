@@ -77,7 +77,7 @@ public class DateTimeFormatMapper {
             DateTimeFormatter fmt = DateTimeFormatter.ofPattern(pattern);
             return dt.format(fmt);
         } catch (IllegalArgumentException ex) {
-            // Fallback se il pattern è sbagliato
+            // Provide a sane fallback when the user pattern is invalid.
             DateTimeFormatter fallback = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             return dt.format(fallback);
         }

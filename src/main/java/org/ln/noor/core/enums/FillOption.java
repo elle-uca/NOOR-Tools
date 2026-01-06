@@ -1,7 +1,8 @@
 package org.ln.noor.core.enums;
 
 /**
- * An enumeration to define the type of padding to apply.
+ * Enumerates the padding strategies available to the application lifecycle.
+ * The value determines how numeric fields are rendered without touching the filesystem.
  *
  * @author Luca Noale
  */
@@ -26,27 +27,27 @@ public enum FillOption {
 //		return fromString(RnPrefs.getInstance().getGlobalProperty("FILL_TYPE"));
 //
 //	}
-	/**
-	 * Questo metodo è case-insensitive (non fa distinzione tra maiuscole e minuscole)
-	 * e restituisce un valore di default se la stringa non corrisponde a nessuna costante.
-	 *
-	 * @param text Il nome della costante da cercare (es. "TOTAL_DIGITS").
-	 * @param defaultType Il valore da restituire se 'text' non è valido o è nullo.
-	 * @return Il PaddingType corrispondente o il valore di default.
-	 */
-	public static FillOption fromString(String text) {
-		if (text == null) {
-			return NO_FILL;
-		}
+        /**
+         * Resolves a {@link FillOption} from a user-facing string in a case-insensitive way,
+         * falling back to {@link #NO_FILL} when the input does not match any constant.
+         * This method does not interact with the filesystem.
+         *
+         * @param text the name of the constant to resolve (for example "FILL_TO_ZERO").
+         * @param defaultType the value returned when {@code text} is null or invalid.
+         * @return the resolved option or {@link #NO_FILL} when resolution fails.
+         */
+        public static FillOption fromString(String text) {
+                if (text == null) {
+                        return NO_FILL;
+                }
 
-		try {
-			// valueOf() cerca una corrispondenza esatta (case-sensitive)
-			// quindi convertiamo il testo in maiuscolo per renderlo flessibile.
-			return FillOption.valueOf(text.trim().toUpperCase());
-		} catch (IllegalArgumentException e) {
-			// Se la stringa non corrisponde a nessuna costante dell'enum...
-			return NO_FILL;
-		}
-	} 
+                try {
+                        // valueOf() is case-sensitive, so uppercase the text to accept mixed input.
+                        return FillOption.valueOf(text.trim().toUpperCase());
+                } catch (IllegalArgumentException e) {
+                        // Default to NO_FILL when the input does not map to a known constant.
+                        return NO_FILL;
+                }
+        }
 
 }
