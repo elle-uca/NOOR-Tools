@@ -29,18 +29,29 @@ import com.formdev.flatlaf.FlatLightLaf;
 	    }
 	)
 /**
- * NoorToolsApplication.
+ * Boots the NOOR Tools desktop application by wiring the Spring context and
+ * constructing the initial Swing frame. This class defines the lifecycle entry
+ * point and ensures the UI starts in a desktop-only configuration without
+ * exposing any web endpoints.
  *
  * @author Luca Noale
  */
 public class NoorToolsApplication {
 
 
-	
+
+    /**
+     * Launches the application, preparing the splash screen, initializing the
+     * Spring container, and presenting the main window. This method schedules UI
+     * creation on the Event Dispatch Thread and does not directly touch the
+     * filesystem.
+     *
+     * @param args runtime arguments supplied by the user
+     */
     public static void main(String[] args) {
-    	FlatLightLaf.setup();
-         
-        BootSplash splash = new SplashScreen(); 
+        FlatLightLaf.setup();
+
+        BootSplash splash = new SplashScreen();
         splash.showSplash();
         splash.setProgress(5, "Avvio…");
         
@@ -52,12 +63,14 @@ public class NoorToolsApplication {
         builder.listeners(new BootProgressListener(splash));
         
         ConfigurableApplicationContext context = builder.run(args);
-        
-        
-        // 1) recupera le preferenze
+
+
+        // Load preferences early so the saved look and feel applies before any
+        // window is created.
         PreferencesService prefs = context.getBean(PreferencesService.class);
 
-        // 2) applica il tema PRIMA di creare le finestre
+        // Apply the preferred theme before constructing Swing components to avoid
+        // repaint flicker during startup.
         ThemeManager.applyTheme(Theme.fromKey(prefs.getTheme()));
         System.out.println("main   "+prefs.getTheme());
         SwingUtilities.invokeLater(() -> {

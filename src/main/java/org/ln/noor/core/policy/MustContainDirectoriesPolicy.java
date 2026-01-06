@@ -2,7 +2,8 @@ package org.ln.noor.core.policy;
 
 import java.io.File;
 /**
- * MustContainDirectoriesPolicy.
+ * Ensures that a directory holds at least one subdirectory before a workflow
+ * continues. This protects components that rely on nested paths being present.
  *
  * @author Luca Noale
  */

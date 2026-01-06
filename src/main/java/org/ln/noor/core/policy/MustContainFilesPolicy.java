@@ -2,7 +2,8 @@ package org.ln.noor.core.policy;
 
 import java.io.File;
 /**
- * MustContainFilesPolicy.
+ * Validates that a directory contains at least one regular file before tool
+ * workflows proceed. This guards operations that assume a non-empty file list.
  *
  * @author Luca Noale
  */

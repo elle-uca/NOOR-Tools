@@ -2,7 +2,9 @@ package org.ln.noor.core.policy;
 
 import java.io.File;
 /**
- * NoCheckPolicy.
+ * Skips directory validation while satisfying the {@link DirectoryContentPolicy}
+ * contract. Useful when a tool must operate regardless of the initial
+ * filesystem state.
  *
  * @author Luca Noale
  */
