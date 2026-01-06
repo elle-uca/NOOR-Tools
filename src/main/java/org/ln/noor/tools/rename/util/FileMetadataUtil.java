@@ -81,15 +81,15 @@ public final class FileMetadataUtil {
     }
 
     // =====================================================================================
-    //  🧩 FORMATTAZIONE PER I TAG (solo lettura)
+    //  🧩 FORMATTING FOR TAGS (read-only)
     // =====================================================================================
 
     /**
-     * Formats the given LocalDateTime using a user-friendly pattern
-     * (e.g. "dd-mm-yy") converted to a Java DateTimeFormatter pattern.
+     * Formats a timestamp for display in rename preview tags by mapping user-friendly
+     * patterns (for example, "dd-mm-yy") to Java {@link DateTimeFormatter} patterns.
+     * This method only operates in memory and does not touch the filesystem.
      *
-     * If pattern is null/blank, a default is used.
-     * If date is null, returns empty string.
+     * If the pattern is null or blank, a default is used. If the date is null, an empty string is returned.
      */
     public static String formatDate(LocalDateTime dateTime, String userPattern) {
         if (dateTime == null) {
@@ -97,10 +97,10 @@ public final class FileMetadataUtil {
         }
 
         String pattern = (userPattern == null || userPattern.isBlank())
-                ? "yyyy-mm-dd HH:nn:ss"   // default “umano”
+                ? "yyyy-mm-dd HH:nn:ss"   // human-friendly default pattern
                 : userPattern;
 
-        // Usa il tuo mapper già esistente (come nel tag <Date>)
+        // Delegate to the existing pattern mapper used by the <Date> tag.
         String javaPattern = DateTimeFormatMapper.toJavaPattern(pattern);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(javaPattern);
@@ -108,15 +108,14 @@ public final class FileMetadataUtil {
     }
 
     /**
-     * Variante che, se vuoi, può usare messaggi I18n in futuro.
-     * Al momento non è strettamente necessario, ma la metto per estendibilità.
+     * Variant preserved for future localization needs; currently delegates to {@link #formatDate(LocalDateTime, String)}.
      */
     public static String formatDate(LocalDateTime dateTime, String userPattern, I18n i18n) {
         return formatDate(dateTime, userPattern); // per ora delega
     }
 
     // =====================================================================================
-    //  ✏️ SCRITTURA ATTRIBUTI (per i WriteTag)
+    //  ✏️ WRITING ATTRIBUTES (for WriteTag operations)
     // =====================================================================================
 
     public static void setCreationDate(Path path, LocalDateTime dateTime) throws IOException {
@@ -125,13 +124,13 @@ public final class FileMetadataUtil {
         FileTime ft = FileTime.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
 
         if (IS_WINDOWS) {
-            // Windows: usa DosFileAttributeView se disponibile
+            // On Windows prefer DosFileAttributeView when present to avoid unsupported attribute errors.
             DosFileAttributeView dosView = Files.getFileAttributeView(path, DosFileAttributeView.class);
             if (dosView != null) {
                 BasicFileAttributes attrs = dosView.readAttributes();
                 FileTime lastModified = attrs.lastModifiedTime();
                 FileTime lastAccess   = attrs.lastAccessTime();
-                // setTimes(lastModifiedTime, lastAccessTime, createTime)
+                // Apply creation time while preserving last modified and last access values.
                 dosView.setTimes(lastModified, lastAccess, ft);
                 return;
             }
@@ -147,7 +146,7 @@ public final class FileMetadataUtil {
                 FileTime lastAccess   = attrs.lastAccessTime();
                 basicView.setTimes(lastModified, lastAccess, ft);
             } catch (UnsupportedOperationException ex) {
-                // alcuni FS non supportano la creazione → ignora
+                // Some filesystems ignore creation time; swallow and continue.
             }
         }
     }

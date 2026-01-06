@@ -4,7 +4,8 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 /**
- * NumberConverter.
+ * Converts numbers between bases while logging each intermediate calculation.
+ * The utility is intended for rename preview workflows and does not touch the filesystem.
  *
  * @author Luca Noale
  */
@@ -14,18 +15,20 @@ public class NumberConverter {
     private static final Logger logger = LoggerFactory.getLogger(NumberConverter.class);
 
     /**
-     * Esegue la conversione di un numero tra due basi, mostrando i passaggi.
-     * @param number Il numero da convertire (come String).
-     * @param baseIn La base di partenza (es. 2, 10, 16).
-     * @param baseOut La base di arrivo (es. 2, 10, 16).
-     * @return Il numero convertito (come String).
+     * Converts a number from one base to another while emitting detailed logs for the rename preview flow.
+     * This method only performs in-memory calculations and does not interact with the filesystem.
+     *
+     * @param number the number to convert.
+     * @param baseIn the source base (for example 2, 10, or 16).
+     * @param baseOut the destination base (for example 2, 10, or 16).
+     * @return the converted number represented as a string.
      */
     public String convert(String number, int baseIn, int baseOut) {
         if (baseIn == baseOut) {
             return number;
         }
 
-        // --- PASSO 1: Conversione dalla Base di Partenza alla Base 10 ---
+        // Log the decimal conversion first to keep the preview trace easy to read.
         logger.info("\n--- PASSO 1: Da Base {} a Base 10 ---", baseIn);
         long decimalValue = toDecimal(number, baseIn);
         logger.info("\nRisultato in Base 10: {}", decimalValue);
@@ -34,7 +37,7 @@ public class NumberConverter {
             return String.valueOf(decimalValue);
         }
 
-        // --- PASSO 2: Conversione dalla Base 10 alla Base di Arrivo ---
+        // Conversion back to the target base keeps the trace aligned with the UI output.
         logger.info("\n--- PASSO 2: Da Base 10 a Base {} ---", baseOut);
         String result = fromDecimal(decimalValue, baseOut);
         logger.info("\nRisultato Finale in Base {}: {}", baseOut, result);
@@ -43,21 +46,21 @@ public class NumberConverter {
     }
 
     /**
-     * Converte un numero da una base N alla base 10 (Decimale).
+     * Converts a number from any supported base to decimal without touching the filesystem.
      */
     private long toDecimal(String number, int base) {
         long decimalValue = 0;
-        String digits = "0123456789ABCDEF"; // Simboli usati per le basi > 10
+        String digits = "0123456789ABCDEF"; // Digits beyond 9 support hexadecimal-style inputs.
         number = number.toUpperCase();
 
         logger.debug("  Calcolo: Somma dei (Simbolo * Base ^ Posizione)");
 
         for (int i = 0; i < number.length(); i++) {
             char digitChar = number.charAt(i);
-            int digitValue = digits.indexOf(digitChar); // Valore numerico del simbolo (es. 'A' è 10)
-            int power = number.length() - 1 - i; // Posizione (partendo da 0 a destra)
+            int digitValue = digits.indexOf(digitChar); // Translate symbol to numeric value (e.g. 'A' is 10).
+            int power = number.length() - 1 - i; // Preserve positional weight from left to right.
 
-            // Il contributo di questa cifra al valore decimale
+            // Track each contribution to keep the logged preview readable.
             long contribution = digitValue * (long) Math.pow(base, power);
             decimalValue += contribution;
 
@@ -68,7 +71,7 @@ public class NumberConverter {
     }
 
     /**
-     * Converte un numero dalla base 10 (Decimale) alla base N.
+     * Converts a decimal number into the requested base, producing an in-memory preview.
      */
     private String fromDecimal(long decimalValue, int base) {
         if (decimalValue == 0) return "0";
@@ -78,18 +81,18 @@ public class NumberConverter {
         long currentNumber = decimalValue;
 
         logger.debug("  Calcolo: Divisioni successive per la Base {}", base);
-        
+
         while (currentNumber > 0) {
-            // Calcola il resto, che è la prossima cifra nella nuova base
+            // Track the remainder to capture the next symbol for the preview trace.
             long remainder = currentNumber % base;
-            
-            // Calcola il quoziente, che è il nuovo numero da dividere
+
+            // Update the quotient so the loop progresses toward zero.
             long quotient = currentNumber / base;
 
-            // Il simbolo corrispondente al resto (es. 10 -> 'A')
+            // Map the remainder to the symbol expected by the rename preview.
             char digitChar = digits.charAt((int) remainder);
-            
-            // Aggiunge la cifra all'inizio del risultato
+
+            // Prepend to build the representation in the correct order.
             result = digitChar + result;
 
             logger.debug("  {} / {} = Quoziente {}, Resto {} ({})",

@@ -36,7 +36,7 @@ public abstract class AbstractFsTag extends AbstractTag implements FileAwareTag 
     }
 
     protected String fallbackToFileName(RenamableFile rf) {
-        // rf.getSource() è un File
+        // Use the source file name when metadata is unavailable.
         String name = rf.getSource().getName();
         int dot = name.lastIndexOf('.');
         if (dot > 0) {
@@ -46,11 +46,11 @@ public abstract class AbstractFsTag extends AbstractTag implements FileAwareTag 
     }
     
     protected LocalDateTime parseDateTime(String arg) {
-        // TODO: parse formati supportati
+        // TODO: parse supported formats instead of relying on the default parser.
         return LocalDateTime.parse(arg); // placeholder
     }
-    
-    /** Utility per scrivere FileTime */
+
+    /** Writes a {@link FileTime} attribute while shielding callers from platform differences. */
     protected void writeTime(RenamableFile rf, String attribute, FileTime time) {
         try {
             Files.setAttribute(rf.getSource().toPath(), attribute, time);

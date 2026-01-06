@@ -31,7 +31,7 @@ public abstract class AbstractAudioTag extends AbstractTag implements FileAwareT
     }
 
     protected String fallbackToFileName(RenamableFile rf) {
-        // rf.getSource() è un File
+        // Use the source file name when audio metadata is missing.
         String name = rf.getSource().getName();
         int dot = name.lastIndexOf('.');
         if (dot > 0) {

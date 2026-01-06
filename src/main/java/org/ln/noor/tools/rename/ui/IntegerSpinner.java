@@ -16,16 +16,16 @@ public class IntegerSpinner extends JSpinner {
 
 
     /**
-     * Costruttore di default.
-     * Crea uno JIntegerSpinner con valori di default (1, 0, max int, 1).
+     * Builds an integer spinner with the default value range (1, 0, max int, 1).
+     * This constructor has no filesystem side effects.
      */
     public IntegerSpinner() {
-    	this(1, 0, Integer.MAX_VALUE, 1);
+        this(1, 0, Integer.MAX_VALUE, 1);
     }
-    
+
     /**
-     * Costruttore di default.
-     * Crea uno JIntegerSpinner con valori di default (1, 0, max int, 1).
+     * Builds an integer spinner with a custom starting value and default bounds.
+     * This constructor has no filesystem side effects.
      */
     public IntegerSpinner(int value) {
         this(value, 0, Integer.MAX_VALUE, 1);
@@ -45,15 +45,12 @@ public class IntegerSpinner extends JSpinner {
     }
     
     /**
-     * Restituisce il valore corrente dello spinner come un primitivo int.
+     * Retrieves the current spinner value as a primitive int without touching the filesystem.
      *
-     * @return il valore intero dello spinner.
+     * @return the numeric value of the spinner.
      */
     public int getIntValue() {
-        // Poiché abbiamo garantito che il modello è un SpinnerNumberModel,
-        // possiamo tranquillamente ottenere il valore come Number e poi
-        // convertirlo in int. Usare .intValue() è più sicuro che
-        // castare direttamente a (Integer).
+        // The model is constrained to SpinnerNumberModel, so Number ensures safe conversion.
         return ((Number) super.getValue()).intValue();
     }
 }

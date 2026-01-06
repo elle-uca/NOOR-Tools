@@ -137,7 +137,7 @@ public class TagPanel extends AbstractPanelContent {
 				}
 			}
 		});
-		// ✅ 1. Crea la barra categorie PRIMA
+                // Build the category bar first so the layout always reserves space for it.
 		categoryBar = new JPanel(new MigLayout("insets 0, gap 6"));
 		categoryBar.putClientProperty("JPanel.style", "rounded");
 		buildCategoryButtons();
@@ -145,16 +145,15 @@ public class TagPanel extends AbstractPanelContent {
 		filterScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		filterScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		filterScroll.setBorder(BorderFactory.createEmptyBorder());
-		filterScroll.getHorizontalScrollBar().setUnitIncrement(12); // scorrimento fluido
+                filterScroll.getHorizontalScrollBar().setUnitIncrement(12); // keep horizontal scrolling smooth for long lists
 		filterScroll.setOpaque(false);
 		filterScroll.getViewport().setOpaque(false);
 
-		// 🔹 Aggiunta dei componenti con MigLayout
-		contentArea.add(tagLabel, "wrap");
-		contentArea.add(renameField, "growx, h 28!, wrap");
-		contentArea.add(searchField, "growx, h 28!, wrap");
-		contentArea.add(filterScroll,  "growx, h 40!, wrap");
-		contentArea.add(scrollPane, "grow, push, h 300!");
+                contentArea.add(tagLabel, "wrap");
+                contentArea.add(renameField, "growx, h 28!, wrap");
+                contentArea.add(searchField, "growx, h 28!, wrap");
+                contentArea.add(filterScroll,  "growx, h 40!, wrap");
+                contentArea.add(scrollPane, "grow, push, h 300!");
 	}
 
 
@@ -162,10 +161,10 @@ public class TagPanel extends AbstractPanelContent {
 	@Override
 	protected 	void updateView() {
 
-		// ✅ Non fare nulla se il testo non è ancora valido
-		if (!StringParser.isParsable(renameField.getText())) {
-			return;
-		}
+                // Skip updates until the rename template is valid for parsing.
+                if (!StringParser.isParsable(renameField.getText())) {
+                        return;
+                }
 
 		List<RenamableFile> updated =
 				stringParser.parse(renameField.getText(),
@@ -192,26 +191,23 @@ public class TagPanel extends AbstractPanelContent {
 	}
 
 
-	// Da eliminare
-	private Icon getScaledIcon(String path) {
-		ImageIcon originalIcon = new ImageIcon(getClass().getResource(path)); 
+        private Icon getScaledIcon(String path) {
+                ImageIcon originalIcon = new ImageIcon(getClass().getResource(path));
 
-		//        if (originalIcon.getImageLoadStatus() == MediaTracker.ERRORED) {
-		//             System.err.println("Errore: Impossibile caricare l'immagine. Controlla il percorso.");
-		//             // Usa un'icona di fallback o termina
-		//             return; 
-		//        }
-		// 2. SCALA L'IMMAGINE ORIGINALE
-		// Otteniamo l'oggetto Image sottostante
+                //        if (originalIcon.getImageLoadStatus() == MediaTracker.ERRORED) {
+                //             System.err.println("Error: unable to load icon. Verify the path.");
+                //             // Consider a fallback icon or abort rendering
+                //             return;
+                //        }
+                // 2. Scale the original image rather than rely on defaults.
+                // Obtain the underlying Image object.
 		Image originalImage = originalIcon.getImage(); 
 
-		// Usiamo getScaledInstance per ridimensionare l'immagine a 16x16.
-		// Image.SCALE_SMOOTH è un algoritmo di scalatura di alta qualità.
-		Image scaledImage = originalImage.getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+                // Use getScaledInstance to retain a smooth 16x16 icon for the toolbar buttons.
+                Image scaledImage = originalImage.getScaledInstance(16, 16, Image.SCALE_SMOOTH);
 
-		// 3. CREA LA NUOVA ICONA SCALATA
-		// Creiamo una nuova ImageIcon dall'Image ridimensionata
-		ImageIcon scaledIcon = new ImageIcon(scaledImage);
+                // 3. Build the scaled ImageIcon for consistent button sizing.
+                ImageIcon scaledIcon = new ImageIcon(scaledImage);
 
 		return scaledIcon;
 	}
@@ -260,31 +256,31 @@ public class TagPanel extends AbstractPanelContent {
 
 
 	private static Color resolveAccentColor() {
-		// Ordine di preferenza: chiavi disponibili nei vari temi FlatLaf
-		String[] keys = {
-				"Component.accentColor",          // FlatLaf >= 3.x (se disponibile)
-				"Actions.Blue",                    // palette azzurra standard FlatLaf
-				"Link.foreground",                 // spesso azzurrino tenue
-				"Table.selectionBackground",       // selezione tabella
-				"TextField.selectionBackground",   // selezione testo
-				"CheckBox.icon.selectedBackground" // accento checkbox
-		};
+                // Preference order across FlatLaf themes keeps accent colors consistent in the UI.
+                String[] keys = {
+                                "Component.accentColor",          // FlatLaf >= 3.x (when available)
+                                "Actions.Blue",                    // standard FlatLaf blue palette
+                                "Link.foreground",                 // often a muted accent
+                                "Table.selectionBackground",       // table selection highlight
+                                "TextField.selectionBackground",   // text selection highlight
+                                "CheckBox.icon.selectedBackground" // checkbox accent
+                };
 
-		for (String k : keys) {
-			Color c = UIManager.getColor(k);
-			if (c != null) return c;
-		}
-		// fallback neutro (azzurrino tenue) se proprio non troviamo nulla
-		return new Color(0x4DA3FF);
-	}
+                for (String k : keys) {
+                        Color c = UIManager.getColor(k);
+                        if (c != null) return c;
+                }
+                // Provide a neutral fallback when no accent color is defined.
+                return new Color(0x4DA3FF);
+        }
 
-	/** versione "tint" che non crasha se base è null */
-	private static Color tint(Color base, float amount) {
-		if (base == null) base = resolveAccentColor();
-		// niente ColorFunctions: facciamo un mix manuale verso il bianco
-		int r = base.getRed();
-		int g = base.getGreen();
-		int b = base.getBlue();
+        /** Safely tints the provided color, falling back to the resolved accent when {@code base} is null. */
+        private static Color tint(Color base, float amount) {
+                if (base == null) base = resolveAccentColor();
+                // Avoid ColorFunctions to reduce dependencies and mix manually toward white.
+                int r = base.getRed();
+                int g = base.getGreen();
+                int b = base.getBlue();
 		int nr = Math.round(r + (255 - r) * amount);
 		int ng = Math.round(g + (255 - g) * amount);
 		int nb = Math.round(b + (255 - b) * amount);
