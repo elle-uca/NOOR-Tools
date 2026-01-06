@@ -14,15 +14,15 @@ import org.ln.noor.core.preferences.PreferencesService;
  * Swing utility methods.
  * Provides helpers for consistent, reusable UI components.
  *
- * Author: Luca Noale
+ * 
  *
  * @author Luca Noale
  */
 public final class SwingUtil {
 
-    private SwingUtil() {
+    private SwingUtil() {}
         // utility class: prevent instantiation
-    }
+    
 
     /**
      * Creates a configured {@link JFileChooser} starting from the last used directory.

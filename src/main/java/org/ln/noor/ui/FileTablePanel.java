@@ -49,12 +49,14 @@ public class FileTablePanel extends JPanel {
     		I18n i18n, 
     		Runnable onFileChooser, 
     		Runnable onDirChooser, 
-    		Runnable onRename) {
+    		Runnable onRename
+    		) {
         super(new BorderLayout());
         this.renamerService = renamerService;
         this.i18n = i18n;
 
-        JPanel container = new JPanel(new MigLayout("fill, insets 10", "[grow]", "[][grow][]"));
+        JPanel container = new JPanel(
+        		new MigLayout("fill, insets 10", "[grow]", "[][grow][]"));
         JScrollPane tableScrollPane = new JScrollPane();
         tableModel = new RenamableFileTableModel(i18n);
         this.renamerService.addListener(tableModel);
@@ -84,6 +86,8 @@ public class FileTablePanel extends JPanel {
                 if (row == -1) return;
 
                 tableModel.removeRow(row);
+                updateFileInfo();
+                updateGlobalInfo();	
             }
         });
         
@@ -93,7 +97,12 @@ public class FileTablePanel extends JPanel {
         table.getSelectionModel().addListSelectionListener(e -> updateFileInfo());
         this.renamerService.addListener(this::updateGlobalInfo);
 
-        JToolBar toolBar = ToolbarBuilder.buildToolbar(i18n, onFileChooser, onDirChooser, onRename);
+        JToolBar toolBar = ToolbarBuilder.buildToolbar(
+        		i18n, 
+        		onFileChooser, 
+        		onDirChooser, 
+        		this::onClearTable,  
+        		onRename);
 
         container.add(toolBar, "wrap");
 
@@ -106,10 +115,10 @@ public class FileTablePanel extends JPanel {
 
         table.setTransferHandler(dnd);
         tableScrollPane.setTransferHandler(dnd);
- 
-        
-        JPanel south = new JPanel(new MigLayout("insets 5 10 5 10, fillx", "[grow]", "[]5[]"));
-        south.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(210, 210, 210)));
+        JPanel south = new JPanel(
+        		new MigLayout("insets 5 10 5 10, fillx", "[grow]", "[]5[]"));
+        south.setBorder(
+        		BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(210, 210, 210)));
 
         infoLabel.setFont(infoLabel.getFont().deriveFont(Font.PLAIN, 12f));
         fileInfoLabel.setFont(fileInfoLabel.getFont().deriveFont(Font.ITALIC, 12f));
@@ -122,6 +131,11 @@ public class FileTablePanel extends JPanel {
         add(container, BorderLayout.CENTER);
     }
     
+    private void onClearTable() {
+       renamerService.clear();
+       tableModel.clear();
+    }
+    
     private void handleDroppedFiles(List<File> files) {
  		List<RenamableFile> update = new ArrayList<>();
 		for (File f : files) {
@@ -130,9 +144,14 @@ public class FileTablePanel extends JPanel {
 		}
 		renamerService.setFiles(update);
 		renamerService.reapplyRules();
+		updateGlobalInfo();		
     }
+    
 
 
+	private void updateGlobalInfo() {
+		updateGlobalInfo(tableModel.getData());
+    }
 
 	private void updateGlobalInfo(List<RenamableFile> files) {
         if (files == null || files.isEmpty()) {
@@ -161,22 +180,13 @@ public class FileTablePanel extends JPanel {
 
         java.io.File src = file.getSource();
         String name = src.getName();
-        String ext = file.getExtension().isEmpty() ? i18n.get("table.noExtension") : file.getExtension();
+        String ext = file.getExtension().isEmpty() ? 
+        		i18n.get("table.noExtension") : file.getExtension();
         long size = src.length() / 1024;
-        String readableSize = size == 0 ? i18n.get("table.size.lessThanOneKb") : size + " KB";
+        String readableSize = size == 0 ? 
+        		i18n.get("table.size.lessThanOneKb") : size + " KB";
 
         fileInfoLabel.setText(i18n.get("table.fileInfo", name, ext, readableSize));
     }
 
-    public JTable getTable() {
-        return table;
-    }
-
-    public JLabel getInfoLabel() {
-        return infoLabel;
-    }
-
-    public JLabel getFileInfoLabel() {
-        return fileInfoLabel;
-    }
 }

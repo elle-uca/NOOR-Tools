@@ -21,13 +21,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import com.formdev.flatlaf.FlatLightLaf;
 
-
-@SpringBootApplication(
-	    scanBasePackages = {
-	        "org.ln.noor.core",
-	        "org.ln.noor.tools"
-	    }
-	)
 /**
  * Boots the NOOR Tools desktop application by wiring the Spring context and
  * constructing the initial Swing frame. This class defines the lifecycle entry
@@ -36,6 +29,12 @@ import com.formdev.flatlaf.FlatLightLaf;
  *
  * @author Luca Noale
  */
+@SpringBootApplication(
+    scanBasePackages = {
+        "org.ln.noor.core",
+        "org.ln.noor.tools"
+    }
+)
 public class NoorToolsApplication {
 
 
@@ -53,15 +52,18 @@ public class NoorToolsApplication {
 
         BootSplash splash = new SplashScreen();
         splash.showSplash();
-        splash.setProgress(5, "Avvio…");
-        
+        splash.setProgress(5, "Starting…");
+
+        // Build the Spring application in non-web (desktop) mode
         SpringApplicationBuilder builder =
                 new SpringApplicationBuilder(NoorToolsApplication.class)
                         .headless(false)
                         .web(WebApplicationType.NONE);
-        
+
+        // Attach a listener to update splash progress during boot
         builder.listeners(new BootProgressListener(splash));
-        
+
+        // Start the Spring context
         ConfigurableApplicationContext context = builder.run(args);
 
 
@@ -72,18 +74,22 @@ public class NoorToolsApplication {
         // Apply the preferred theme before constructing Swing components to avoid
         // repaint flicker during startup.
         ThemeManager.applyTheme(Theme.fromKey(prefs.getTheme()));
-        System.out.println("main   "+prefs.getTheme());
+
+        // Create and show the main window on the Swing Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
-            //MainFrame frame = context.getBean(MainFrame.class);
+
             MainFrame frame = new MainFrame(
-            		context.getBean(I18n.class),
-            		context.getBean(RenamerService.class),
-            		context.getBean(PanelFactory.class),
-            		context.getBean(AccordionFactory.class),
-            		context.getBean(RenameController.class),
-            		context.getBean(PreferencesService.class),
-            		context::close         );
-            splash.setProgress(100, "Caricamento completato.");
+                    context.getBean(I18n.class),
+                    context.getBean(RenamerService.class),
+                    context.getBean(PanelFactory.class),
+                    context.getBean(AccordionFactory.class),
+                    context.getBean(RenameController.class),
+                    context.getBean(PreferencesService.class),
+                    context::close
+            );
+
+            // Finalize splash screen and show the UI
+            splash.setProgress(100, "Loading completed.");
             splash.close();
             frame.setVisible(true);
         });

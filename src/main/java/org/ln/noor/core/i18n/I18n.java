@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * It acts as a wrapper around Spring's MessageSource to simplify access to 
  * localized messages (text strings).
  * 
- * Author: Luca Noale
+ * 
  *
  * @author Luca Noale
  */

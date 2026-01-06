@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
  * It does NOT decide *what* the new name should be — 
  * that logic belongs to RenamerService/StringParser.
  * 
- * Author: Luca Noale
+ * 
  *
  * @author Luca Noale
  */
@@ -44,8 +44,8 @@ public class FileRenameManager {
 	/**
 	 * Represents a single rename action: (old path → new path).
 	 * Stored so that it can be undone later.
- *
- * @author Luca Noale
+	 *
+	 * @author Luca Noale
 	 */
 	public static class RenameOperation {
 		public final Path oldPath;
@@ -124,10 +124,6 @@ public class FileRenameManager {
 			Path oldPath = rf.getSource().toPath();
 			Path newPath = oldPath.resolveSibling(rf.getDestinationName());
 			
-			//System.out.println("old  "+oldPath+"  new  "+newPath);
-			//if (oldPath.equals(newPath)) continue;
-			
-			// renameCount++;
 			confirmMsg.append("+ rename file ")
 			.append(oldPath.getFileName())
 			.append(" → ")
@@ -151,7 +147,7 @@ public class FileRenameManager {
 				String oldName = oldPath.getFileName().toString();
 				String newName = newPath.getFileName().toString();
 
-				//  è Windows
+				//  Windows
 				if (System.getProperty("os.name").toLowerCase().contains("win") && 
 						(oldName.toLowerCase().equals(newName.toLowerCase())  && 
 						!oldName.equals(newName))) {

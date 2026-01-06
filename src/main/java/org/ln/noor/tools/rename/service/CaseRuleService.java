@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
  *   Mode: UPPER
  *   Result: "MYDOCUMENT"
  *
- * Author: Luca Noale
+ * 
  *
  * @author Luca Noale
  */

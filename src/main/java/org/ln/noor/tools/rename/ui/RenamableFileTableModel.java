@@ -137,11 +137,15 @@ public class RenamableFileTableModel extends AbstractTableModel implements Renam
 	}		
 
 
-
-
 	public RenamableFile getFileAt(int rowIndex) {
 		if (rowIndex < 0 || rowIndex >= data.size()) return null;
 		return data.get(rowIndex);
 	}
+
+	public List<RenamableFile> getData() {
+		return data;
+	}
+	
+	
 
 }

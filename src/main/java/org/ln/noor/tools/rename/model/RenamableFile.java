@@ -12,8 +12,7 @@ import org.ln.noor.tools.rename.util.StringUtil;
  * Wraps the original {@link File}, the destination name, 
  * selection status and rename result.
  * 
- * Author: Luca Noale
- *
+ * 
  * @author Luca Noale
  */
 public class RenamableFile {
