@@ -22,19 +22,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 import com.formdev.flatlaf.FlatLightLaf;
 
 /**
- * Application entry point for NOOR Tools.
- * <p>
- * {@code NoorToolsApplication} bootstraps the desktop application by:
- * <ul>
- *   <li>Initializing the Look & Feel</li>
- *   <li>Displaying the splash screen and tracking boot progress</li>
- *   <li>Starting the Spring application context in non-web mode</li>
- *   <li>Applying user preferences (theme)</li>
- *   <li>Creating and showing the main application window</li>
- * </ul>
- *
- * This class intentionally disables any web environment and runs
- * as a pure desktop Swing application.
+ * Boots the NOOR Tools desktop application by wiring the Spring context and
+ * constructing the initial Swing frame. This class defines the lifecycle entry
+ * point and ensures the UI starts in a desktop-only configuration without
+ * exposing any web endpoints.
  *
  * @author Luca Noale
  */
@@ -46,17 +37,19 @@ import com.formdev.flatlaf.FlatLightLaf;
 )
 public class NoorToolsApplication {
 
+
+
     /**
-     * Main entry point of the application.
+     * Launches the application, preparing the splash screen, initializing the
+     * Spring container, and presenting the main window. This method schedules UI
+     * creation on the Event Dispatch Thread and does not directly touch the
+     * filesystem.
      *
-     * @param args command-line arguments
+     * @param args runtime arguments supplied by the user
      */
     public static void main(String[] args) {
-
-        // Install a default Look & Feel early to avoid UI flicker
         FlatLightLaf.setup();
 
-        // Create and display the splash screen
         BootSplash splash = new SplashScreen();
         splash.showSplash();
         splash.setProgress(5, "Starting…");
@@ -73,11 +66,13 @@ public class NoorToolsApplication {
         // Start the Spring context
         ConfigurableApplicationContext context = builder.run(args);
 
-        // Retrieve user preferences from the context
-        PreferencesService prefs =
-                context.getBean(PreferencesService.class);
 
-        // Apply the preferred theme BEFORE creating any Swing windows
+        // Load preferences early so the saved look and feel applies before any
+        // window is created.
+        PreferencesService prefs = context.getBean(PreferencesService.class);
+
+        // Apply the preferred theme before constructing Swing components to avoid
+        // repaint flicker during startup.
         ThemeManager.applyTheme(Theme.fromKey(prefs.getTheme()));
 
         // Create and show the main window on the Swing Event Dispatch Thread
