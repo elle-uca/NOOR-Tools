@@ -24,6 +24,23 @@ public class NumberConverter {
      * @return the converted number represented as a string.
      */
     public String convert(String number, int baseIn, int baseOut) {
+    	
+
+        // ---- Input validation ----
+        if (number == null || number.isBlank()) {
+            throw new IllegalArgumentException("Number must not be null or blank");
+        }
+        
+        number = number.trim();
+
+        if (baseIn < 2 || baseIn > 16) {
+            throw new IllegalArgumentException("baseIn must be between 2 and 16");
+        }
+
+        if (baseOut < 2 || baseOut > 16) {
+            throw new IllegalArgumentException("baseOut must be between 2 and 16");
+        }
+    	
         if (baseIn == baseOut) {
             return number;
         }
@@ -53,18 +70,24 @@ public class NumberConverter {
         String digits = "0123456789ABCDEF"; // Digits beyond 9 support hexadecimal-style inputs.
         number = number.toUpperCase();
 
-        logger.debug("  Calcolo: Somma dei (Simbolo * Base ^ Posizione)");
+        logger.info("  Calcolo: Somma dei (Simbolo * Base ^ Posizione)");
 
         for (int i = 0; i < number.length(); i++) {
             char digitChar = number.charAt(i);
             int digitValue = digits.indexOf(digitChar); // Translate symbol to numeric value (e.g. 'A' is 10).
+          
+         // ---- Digit validation ----
+            if (digitValue < 0 || digitValue >= base) {
+                throw new IllegalArgumentException(
+                        "Invalid digit '" + digitChar + "' for base " + base);
+            }  
             int power = number.length() - 1 - i; // Preserve positional weight from left to right.
 
             // Track each contribution to keep the logged preview readable.
             long contribution = digitValue * (long) Math.pow(base, power);
             decimalValue += contribution;
 
-            logger.debug("  Posizione {}: {} ({}) * {}^{} = {}",
+            logger.info("  Posizione {}: {} ({}) * {}^{} = {}",
                               power, digitChar, digitValue, base, power, contribution);
         }
         return decimalValue;
@@ -80,7 +103,7 @@ public class NumberConverter {
         String digits = "0123456789ABCDEF";
         long currentNumber = decimalValue;
 
-        logger.debug("  Calcolo: Divisioni successive per la Base {}", base);
+        logger.info("  Calcolo: Divisioni successive per la Base {}", base);
 
         while (currentNumber > 0) {
             // Track the remainder to capture the next symbol for the preview trace.
@@ -95,7 +118,7 @@ public class NumberConverter {
             // Prepend to build the representation in the correct order.
             result = digitChar + result;
 
-            logger.debug("  {} / {} = Quoziente {}, Resto {} ({})",
+            logger.info("  {} / {} = Quoziente {}, Resto {} ({})",
                               currentNumber, base, quotient, remainder, digitChar);
             
             currentNumber = quotient;
