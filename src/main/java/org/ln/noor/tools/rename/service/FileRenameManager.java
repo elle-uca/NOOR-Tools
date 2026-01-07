@@ -18,18 +18,11 @@ import org.springframework.stereotype.Component;
 
 
 /**
- * Handles the final filesystem rename operations.
- *
- * Responsibilities:
- *  - apply renames to disk
- *  - execute registered ActionTag (metadata writes…)
- *  - manage UNDO history
- *  - show global confirm/log dialogs
- *
- * It does NOT decide *what* the new name should be — 
- * that logic belongs to RenamerService/StringParser.
- * 
- * 
+ * Applies rename batches to the filesystem and tracks undo history for the
+ * rename tool. This component confirms pending changes, performs the final
+ * rename apply step, and notifies interested listeners about undo state.
+ * Naming rules and rename preview generation remain the responsibility of
+ * {@link RenamerService} and its collaborators.
  *
  * @author Luca Noale
  */
@@ -57,7 +50,7 @@ public class FileRenameManager {
 		}
 	}
 
-	/** A stack of rename batches. Last batch can be undone (LIFO). */
+        /** A stack of rename batches. Last batch can be undone (LIFO). */
     private final Deque<List<RenameOperation>> history = new ArrayDeque<>();
 
     /** UI listeners for undo availability state (toolbar button enable/disable). */
@@ -72,13 +65,20 @@ public class FileRenameManager {
             ActionConfirmationDialog::show;
 
 
-	// --------------------------------------------------------------------
-	// Undo Listener Management
-	// --------------------------------------------------------------------
+        // --------------------------------------------------------------------
+        // Undo Listener Management
+        // --------------------------------------------------------------------
 
-	public void addUndoStateListener(UndoStateListener l) {
-		undoListeners.add(l);
-	}
+        /**
+         * Subscribes a listener interested in undo availability changes. This
+         * method updates only in-memory listener registration and does not touch
+         * the filesystem.
+         *
+         * @param l listener invoked when undo state changes
+         */
+        public void addUndoStateListener(UndoStateListener l) {
+                undoListeners.add(l);
+        }
 
     public void removeUndoStateListener(UndoStateListener l) {
         undoListeners.remove(l);
@@ -101,23 +101,21 @@ public class FileRenameManager {
 	}
 
 
-	// --------------------------------------------------------------------
-	// Rename Execution
-	// --------------------------------------------------------------------
+        // --------------------------------------------------------------------
+        // Rename Execution
+        // --------------------------------------------------------------------
 
-	/**
-	 * Performs the actual file renaming on disk.
-	 * If one rename fails, previous renames are rolled back.
-	 *
-	 * @param files The list of files with their computed destination names
-	 */
-	public void commitRename(List<RenamableFile> files) throws IOException {
-
-		//System.out.println("commitRename  "+files.size());
-		
-		// 🔥 1) PRIMA DI QUALSIASI RENAME → esegui azioni con conferma
-		StringBuilder confirmMsg = new StringBuilder();
-		confirmMsg.append("The following actions will be executed:\n\n");
+        /**
+         * Applies the rename preview to the filesystem. When any rename fails,
+         * prior operations in the same batch are rolled back to avoid partial
+         * conflicts.
+         *
+         * @param files the file list with destination names ready to apply
+         * @throws IOException when a filesystem rename cannot be completed
+         */
+        public void commitRename(List<RenamableFile> files) throws IOException {
+                StringBuilder confirmMsg = new StringBuilder();
+                confirmMsg.append("The following actions will be executed:\n\n");
 
 		for (RenamableFile rf : files) {
 
@@ -147,23 +145,21 @@ public class FileRenameManager {
 				String oldName = oldPath.getFileName().toString();
 				String newName = newPath.getFileName().toString();
 
-				//  Windows
-				if (System.getProperty("os.name").toLowerCase().contains("win") && 
-						(oldName.toLowerCase().equals(newName.toLowerCase())  && 
-						!oldName.equals(newName))) {
-					
-					Path tempPath = oldPath.resolveSibling(rf.getDestinationName() + ".tmp_rename");
-					
-				    // 1) rename → temporaneo
-				    Files.move(oldPath, tempPath, StandardCopyOption.REPLACE_EXISTING);
-				    
-				    // 2) rename → finale (case-sensitive)
-				    Files.move(tempPath, newPath, StandardCopyOption.REPLACE_EXISTING);
+                                // Windows requires a two-step rename when only casing changes to avoid conflicts
+                                if (System.getProperty("os.name").toLowerCase().contains("win") &&
+                                                (oldName.toLowerCase().equals(newName.toLowerCase())  &&
+                                                !oldName.equals(newName))) {
 
-				}
-				else {
-					Files.move(oldPath, newPath, StandardCopyOption.REPLACE_EXISTING);
-				}
+                                        Path tempPath = oldPath.resolveSibling(rf.getDestinationName() + ".tmp_rename");
+
+                                    Files.move(oldPath, tempPath, StandardCopyOption.REPLACE_EXISTING);
+
+                                    Files.move(tempPath, newPath, StandardCopyOption.REPLACE_EXISTING);
+
+                                }
+                                else {
+                                        Files.move(oldPath, newPath, StandardCopyOption.REPLACE_EXISTING);
+                                }
 				
 				rf.setFileStatus(FileStatus.OK);
 				rf.setSource(newPath.toFile());
@@ -183,15 +179,17 @@ public class FileRenameManager {
 	}
 
 
-	// --------------------------------------------------------------------
-	// Undo Last Rename
-	// --------------------------------------------------------------------
+        // --------------------------------------------------------------------
+        // Undo Last Rename
+        // --------------------------------------------------------------------
 
-	/**
-	 * Restores all files from the most recent rename batch.
-	 */
-	public void undoLast() throws IOException {
-		if (history.isEmpty()) return;
+        /**
+         * Restores all files from the most recent rename batch. This method
+         * operates on the filesystem and reloads the current folder afterward to
+         * refresh the rename preview.
+         */
+        public void undoLast() throws IOException {
+                if (history.isEmpty()) return;
 
 		List<RenameOperation> ops = history.pop();
 		rollback(ops);
@@ -203,16 +201,17 @@ public class FileRenameManager {
 	}
 
 
-	// --------------------------------------------------------------------
-	// Internal Rollback Helper
-	// --------------------------------------------------------------------
+        // --------------------------------------------------------------------
+        // Internal Rollback Helper
+        // --------------------------------------------------------------------
 
-	/**
-	 * Reverses a list of rename operations, in reverse order.
-	 */
-	private void rollback(List<RenameOperation> operations) throws IOException {
-		for (int i = operations.size() - 1; i >= 0; i--) {
-			RenameOperation op = operations.get(i);
+        /**
+         * Reverses a list of rename operations, in reverse order to minimize
+         * conflicts when restoring the previous state.
+         */
+        private void rollback(List<RenameOperation> operations) throws IOException {
+                for (int i = operations.size() - 1; i >= 0; i--) {
+                        RenameOperation op = operations.get(i);
 			if (Files.exists(op.newPath)) {
 				Files.move(op.newPath, op.oldPath, StandardCopyOption.REPLACE_EXISTING);
 			}

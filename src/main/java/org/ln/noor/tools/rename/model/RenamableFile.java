@@ -8,24 +8,23 @@ import org.ln.noor.tools.rename.util.FileNameUtil;
 import org.ln.noor.tools.rename.util.StringUtil;
 
 /**
- * Represents a file that can be renamed.
- * Wraps the original {@link File}, the destination name, 
- * selection status and rename result.
- * 
- * 
+ * Represents an entry in the file list for rename preview and apply flows.
+ * Maintains the source file reference, the computed destination name, and the
+ * status flags used by the rename rules engine.
+ *
  * @author Luca Noale
  */
 public class RenamableFile {
 
-    private File source;              // original file
-    private FileStatus fileStatus;          // status (OK, KO, etc.)
-    private String destinationName;         // new name without path
-    private boolean selected = true;        // default = selected
+    private File source;
+    private FileStatus fileStatus;
+    private String destinationName;
+    private boolean selected = true;
     private String description;
 
     public RenamableFile(String string) {
-		this(new File(string));
-	}   
+        this(new File(string));
+    }
     
     public RenamableFile(File source) {
         this.source = Objects.requireNonNull(source, "source file cannot be null");
@@ -36,29 +35,41 @@ public class RenamableFile {
 
 
 
-	/**
-	 * @param source the source to set
-	 */
-	public void setSource(File source) {
-		this.source = source;
-	}
+    /**
+     * Updates the source file reference when the rename preview path changes.
+     * This method touches only in-memory metadata and does not access the
+     * filesystem.
+     *
+     * @param source the source file that backs this entry
+     */
+    public void setSource(File source) {
+        this.source = source;
+    }
 
-	/** @return original source file */
+    /**
+     * @return original source file
+     */
     public File getSource() {
         return source;
     }
 
-    /** @return file extension (without dot) */
+    /**
+     * @return file extension (without dot)
+     */
     public String getExtension() {
         return FileNameUtil.getExtension(source.getName());
     }
 
-    /** @return parent directory path */
+    /**
+     * @return parent directory path
+     */
     public String getParentPath() {
         return source.getParent();
     }
 
-    /** @return new destination name (without path) */
+    /**
+     * @return new destination name (without path)
+     */
     public String getDestinationName() {
         return destinationName;
     }
@@ -67,7 +78,9 @@ public class RenamableFile {
     	this.destinationName = StringUtil.sanitize(destinationName);
     }
 
-    /** @return file status */
+    /**
+     * @return file status
+     */
     public FileStatus getFileStatus() {
         return fileStatus;
     }
@@ -76,7 +89,9 @@ public class RenamableFile {
         this.fileStatus = fileStatus;
     }
 
-    /** @return true if selected for renaming */
+    /**
+     * @return true if selected for renaming
+     */
     public boolean isSelected() {
         return selected;
     }
@@ -87,14 +102,20 @@ public class RenamableFile {
 
      
     public String getDescription() {
-		return description;
-	}
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getSafeDestinationName() {
+    /**
+     * Returns a valid destination name, falling back to the source file name
+     * when the rename preview produced an empty suggestion.
+     *
+     * @return destination name or the original file name when blank
+     */
+    public String getSafeDestinationName() {
         return (destinationName == null || destinationName.isBlank())
                 ? source.getName()
                 : destinationName;
