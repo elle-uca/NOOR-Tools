@@ -5,13 +5,19 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 /**
- * Dialog shown after all ActionTags have been executed.
- * Displays a detailed log.
+ * Dialog shown after all ActionTags have been applied.
+ * Displays a detailed log without touching the filesystem.
  *
  * @author Luca Noale
  */
 public class ActionLogDialog {
 
+    /**
+     * Shows the apply log dialog for the current rename preview.
+     * This method does not touch the filesystem.
+     *
+     * @param log text to display
+     */
     public static void show(String log) {
 
         JTextArea area = new JTextArea(log);
@@ -24,7 +30,7 @@ public class ActionLogDialog {
         JOptionPane.showMessageDialog(
                 null,
                 scroll,
-                "Execution Report",
+                "Apply Report",
                 JOptionPane.INFORMATION_MESSAGE
         );
     }

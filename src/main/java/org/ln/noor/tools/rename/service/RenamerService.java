@@ -22,12 +22,12 @@ import org.springframework.stereotype.Service;
 /**
  * Central service responsible for rename preview management.
  * <p>
- * {@code RenamerService} maintains the current list of loaded files,
- * applies rename rules, detects conflicts and notifies UI listeners
- * when the preview changes.
+ * {@code RenamerService} maintains the current file list,
+ * applies rename rules, detects conflicts, and notifies UI listeners
+ * when the rename preview changes.
  *
  * <p>
- * This service does <strong>not</strong> perform filesystem operations.
+ * This service does <strong>not</strong> apply changes to the filesystem.
  * It only computes rename previews and validates potential conflicts.
  *
  * <p>
@@ -38,12 +38,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class RenamerService {
 
-    /** Logger instance */
+    /** Logger instance. */
     private static final Logger logger =
             LoggerFactory.getLogger(RenamerService.class);
 
     /**
-     * Current list of files participating in the rename preview.
+     * Current file list participating in the rename preview.
      * <p>
      * This list represents the single source of truth for the UI.
      */
@@ -89,8 +89,9 @@ public class RenamerService {
     /**
      * Applies a rename rule to the current file list.
      * <p>
-     * The rule is executed on a copy of the current files and
-     * the result is merged back while preserving the original order.
+     * The rule is applied on a copy of the current file list so the
+     * original ordering can be preserved when merging the rename preview.
+     * This method does not touch the filesystem.
      *
      * @param ruleName rule identifier (e.g. {@code "add"}, {@code "remove"})
      * @param mode     rename mode (FULL, NAME_ONLY, EXT_ONLY)
@@ -111,7 +112,7 @@ public class RenamerService {
                     "Unknown rule: " + ruleName);
         }
 
-        // Work on a copy of the current file list
+        // Preserve the current file list order by operating on a copy.
         List<RenamableFile> selectedFiles =
                 new ArrayList<>(files);
 
@@ -120,11 +121,11 @@ public class RenamerService {
             return;
         }
 
-        // Apply rule and obtain updated preview
+        // Derive a rename preview from the rule service.
         List<RenamableFile> updatedFiles =
                 service.applyRule(selectedFiles, mode, params);
 
-        // Index updated files by source path
+        // Index by source file path to merge updates quickly.
         Map<Path, RenamableFile> updatedByPath =
                 updatedFiles.stream()
                         .collect(Collectors.toMap(
@@ -132,7 +133,7 @@ public class RenamerService {
                                 Function.identity(),
                                 (existing, replacement) -> replacement));
 
-        // Merge updates while preserving original order
+        // Merge updates while preserving original file list order.
         List<RenamableFile> merged =
                 new ArrayList<>(files.size());
 
@@ -147,7 +148,7 @@ public class RenamerService {
                             : current);
         }
 
-        // Update internal state and notify listeners
+        // Update internal state and notify listeners.
         setFiles(merged);
     }
 
@@ -155,7 +156,7 @@ public class RenamerService {
      * Reapplies the current rename preview.
      * <p>
      * This method is typically used after file loading
-     * or preference changes.
+     * or preference changes, and does not touch the filesystem.
      */
     public void reapplyRules() {
         if (files.isEmpty()) {
@@ -166,9 +167,9 @@ public class RenamerService {
 
     /**
      * Replaces the current file list and triggers conflict checks
-     * and listener notifications.
+     * and listener notifications without touching the filesystem.
      *
-     * @param newFiles the new list of files
+     * @param newFiles the new file list
      */
     public void setFiles(List<RenamableFile> newFiles) {
         files.clear();
@@ -182,9 +183,10 @@ public class RenamerService {
      * <p>
      * Conflicts are detected when:
      * <ul>
-     *   <li>A destination filename already exists on disk</li>
+     *   <li>A destination name already exists on the filesystem</li>
      *   <li>Multiple files resolve to the same destination name</li>
      * </ul>
+     * This method reads the filesystem to check existing destination names.
      *
      * @return {@code true} if any conflict is detected
      */
@@ -199,7 +201,7 @@ public class RenamerService {
                         .getSource()
                         .getParentFile();
 
-        // Collect existing filenames in the directory
+        // Collect existing filenames to detect filesystem conflicts.
         Set<String> existingNames = new HashSet<>();
         for (File f : directory.listFiles()) {
             existingNames.add(f.getName());
@@ -210,7 +212,7 @@ public class RenamerService {
 
         for (RenamableFile file : files) {
 
-            // Skip unselected files
+            // Leave unselected files unchanged in the preview.
             if (!file.isSelected()) {
                 file.setFileStatus(FileStatus.OK);
                 continue;
@@ -219,7 +221,7 @@ public class RenamerService {
             String oldName = file.getSource().getName();
             String newName = file.getDestinationName();
 
-            // Ensure a valid destination name
+            // Default to the source file name when the destination is blank.
             if (newName == null || newName.isBlank()) {
                 newName = oldName;
                 file.setDestinationName(newName);
@@ -227,7 +229,7 @@ public class RenamerService {
 
             file.setFileStatus(FileStatus.OK);
 
-            // Conflict with existing file on disk
+            // Conflict with an existing filesystem entry.
             if (existingNames.contains(newName)
                     && !newName.equals(oldName)) {
 
@@ -236,7 +238,7 @@ public class RenamerService {
                 continue;
             }
 
-            // Conflict with another destination name
+            // Conflict with another destination name in the preview.
             if (!usedNames.add(newName)) {
                 file.setFileStatus(FileStatus.KO);
                 conflictDetected = true;
@@ -247,7 +249,8 @@ public class RenamerService {
     }
 
     /**
-     * Reloads all files from a directory and rebuilds the preview.
+     * Reloads all files from a directory and rebuilds the rename preview.
+     * This method reads from the filesystem.
      *
      * @param directory directory to reload
      */
@@ -271,7 +274,7 @@ public class RenamerService {
                 RenamableFile newFile =
                         new RenamableFile(f);
 
-                // Initialize destination with source name
+                // Initialize rename preview with the source file name.
                 newFile.setDestinationName(f.getName());
                 reloaded.add(newFile);
             }
@@ -286,8 +289,9 @@ public class RenamerService {
 
     /**
      * Updates only destination names without replacing the file list.
+     * This method does not touch the filesystem.
      *
-     * @param updated updated preview list
+     * @param updated updated rename preview list
      */
     public void updateDestinationNames(
             List<RenamableFile> updated) {
@@ -301,14 +305,15 @@ public class RenamerService {
     /**
      * Returns an unmodifiable view of the current file list.
      *
-     * @return list of {@link RenamableFile}
+     * @return file list of {@link RenamableFile}
      */
     public List<RenamableFile> getFiles() {
         return Collections.unmodifiableList(files);
     }
 
     /**
-     * Registers a listener for preview updates.
+     * Registers a listener for rename preview updates.
+     * This method does not touch the filesystem.
      *
      * @param listener the listener to add
      */
@@ -319,6 +324,7 @@ public class RenamerService {
 
     /**
      * Removes a previously registered listener.
+     * This method does not touch the filesystem.
      *
      * @param listener the listener to remove
      */
@@ -329,7 +335,7 @@ public class RenamerService {
 
     /**
      * Notifies all registered listeners that the file list
-     * or preview has changed.
+     * or rename preview has changed.
      */
     public void notifyListeners() {
         for (RenamerServiceListener listener : listeners) {

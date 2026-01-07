@@ -57,6 +57,7 @@ import org.springframework.stereotype.Component;
  *
  * The frame connects user actions to the underlying services
  * responsible for rename logic, preferences and theme handling.
+ * It does not apply changes to the filesystem directly.
  *
  * This class is managed as a Spring component and represents
  * the primary entry point of the desktop UI.
@@ -73,7 +74,7 @@ public class MainFrame extends JFrame {
     /** Internationalization service */
     private final I18n i18n;
 
-    /** Service holding the current list of loaded files */
+    /** Service holding the current file list */
     private final RenamerService renamerService;
 
     /** Factory used to create rule panels */
@@ -92,15 +93,15 @@ public class MainFrame extends JFrame {
     private AccordionPanel accordion;
 
     /**
-     * Creates the main application frame.
+     * Creates the main application frame without touching the filesystem.
      *
      * @param i18n              internationalization service
-     * @param renamerService    service managing loaded files and rename preview
+     * @param renamerService    service managing the file list and rename preview
      * @param panelFactory      factory for rule panels
      * @param accordionFactory  factory for the accordion container
      * @param renameController  controller handling rename operations
      * @param service           user preferences service
-     * @param onClose           callback executed when the application is closing
+     * @param onClose           callback invoked when the application is closing
      */
     public MainFrame(
             I18n i18n,

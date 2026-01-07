@@ -19,8 +19,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * Applies rename batches to the filesystem and tracks undo history for the
- * rename tool. This component confirms pending changes, performs the final
- * rename apply step, and notifies interested listeners about undo state.
+ * rename tool. This component confirms pending changes, applies the
+ * filesystem rename step, and notifies interested listeners about undo state.
  * Naming rules and rename preview generation remain the responsibility of
  * {@link RenamerService} and its collaborators.
  *
@@ -80,9 +80,15 @@ public class FileRenameManager {
                 undoListeners.add(l);
         }
 
-    public void removeUndoStateListener(UndoStateListener l) {
-        undoListeners.remove(l);
-    }
+        /**
+         * Unsubscribes a listener from undo availability changes. This method
+         * does not touch the filesystem.
+         *
+         * @param l listener to remove
+         */
+        public void removeUndoStateListener(UndoStateListener l) {
+                undoListeners.remove(l);
+        }
 
     /**
      * Allows injecting a custom confirmation handler (primarily for tests)
@@ -102,7 +108,7 @@ public class FileRenameManager {
 
 
         // --------------------------------------------------------------------
-        // Rename Execution
+        // Rename Apply
         // --------------------------------------------------------------------
 
         /**
@@ -115,7 +121,7 @@ public class FileRenameManager {
          */
         public void commitRename(List<RenamableFile> files) throws IOException {
                 StringBuilder confirmMsg = new StringBuilder();
-                confirmMsg.append("The following actions will be executed:\n\n");
+                confirmMsg.append("The following actions will be applied:\n\n");
 
 		for (RenamableFile rf : files) {
 
@@ -168,9 +174,9 @@ public class FileRenameManager {
 				renamerService.notifyListeners();
 			}
 
-			// Save batch for undo
-			history.push(operations);
-			notifyUndoStateChanged();
+		// Save batch for undo.
+		history.push(operations);
+		notifyUndoStateChanged();
 
 		} catch (IOException e) {
 			rollback(operations);
