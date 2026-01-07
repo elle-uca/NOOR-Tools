@@ -3,17 +3,19 @@ package org.ln.noor.tools.rename.service;
 import org.springframework.stereotype.Service;
 
 /**
- * Rule service <Add>
+ * Rule service for the Add rule in the rename tool.
+ * <p>
+ * Produces destination names by inserting text at the start, end, or
+ * a specific position within each source file name (without extension),
+ * contributing to the rename preview. This rule service does not touch
+ * the filesystem or apply changes.
  *
- * Adds a substring at the beginning, end, or after a given position
- * in each filename (without extension).
- *
- * Examples:
- *   <Add:Hello:START>  -> HelloFile
- *   <Add:World:END>    -> FileWorld
- *   <Add:123:3>        -> Fil123eName   (after 3rd character)
- *
- * 
+ * <p>Examples:
+ * <ul>
+ *   <li>{@code <Add:Hello:START>} → {@code HelloFile}</li>
+ *   <li>{@code <Add:World:END>} → {@code FileWorld}</li>
+ *   <li>{@code <Add:123:3>} → {@code Fil123eName} (after the 3rd character)</li>
+ * </ul>
  *
  * @author Luca Noale
  */
@@ -61,18 +63,18 @@ public class AddRuleService extends AbstractRuleService {
 //
 //        int index = position - 1;
 //
-//        if (index <= 0) return text + base;                       // all'inizio
-//        if (position == Integer.MAX_VALUE) return base + text;    // alla fine
-//        if (index >= base.length()) return base + text;           // oltre → append
+//        if (index <= 0) return text + base;                       // at the start
+//        if (position == Integer.MAX_VALUE) return base + text;    // at the end
+//        if (index >= base.length()) return base + text;           // beyond length → append
 //        return base.substring(0, index) + text + base.substring(index);
 //    }
 //    
 //    @Override
 //    protected String transformExtension(String currentExt, Object... params) {
-//        // 🔧 Per EXT_ONLY in Add vogliamo SOSTITUIRE l’estensione, non inserirci testo.
+//        // EXT_ONLY should replace the extension rather than append text.
 //        String text = (params.length > 0 && params[0] instanceof String) ? (String) params[0] : "";
 //        if (text == null) text = "";
-//        // normalizza: senza il punto iniziale
+//        // normalize without the leading dot
 //        return text.startsWith(".") ? text.substring(1) : text;
 //    }
 
