@@ -1,51 +1,47 @@
 package org.ln.noor.tools.rename.util;
+
 import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 /**
- * Converts numbers between bases while logging each intermediate calculation.
+ * Converts numbers between bases (2–36) while logging each intermediate calculation.
  * The utility is intended for rename preview workflows and does not touch the filesystem.
  *
  * @author Luca Noale
  */
-
 public class NumberConverter {
 
     private static final Logger logger = LoggerFactory.getLogger(NumberConverter.class);
 
+    /** Symbols usable for bases up to 36 */
+    private static final String DIGITS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
     /**
-     * Converts a number from one base to another while emitting detailed logs for the rename preview flow.
-     * This method only performs in-memory calculations and does not interact with the filesystem.
-     *
-     * @param number the number to convert.
-     * @param baseIn the source base (for example 2, 10, or 16).
-     * @param baseOut the destination base (for example 2, 10, or 16).
-     * @return the converted number represented as a string.
+     * Converts a number from one base to another.
      */
     public String convert(String number, int baseIn, int baseOut) {
-    	
 
         // ---- Input validation ----
         if (number == null || number.isBlank()) {
             throw new IllegalArgumentException("Number must not be null or blank");
         }
-        
-        number = number.trim();
 
-        if (baseIn < 2 || baseIn > 16) {
-            throw new IllegalArgumentException("baseIn must be between 2 and 16");
+        number = number.trim().toUpperCase();
+
+        if (baseIn < 2 || baseIn > 36) {
+            throw new IllegalArgumentException("baseIn must be between 2 and 36");
         }
 
-        if (baseOut < 2 || baseOut > 16) {
-            throw new IllegalArgumentException("baseOut must be between 2 and 16");
+        if (baseOut < 2 || baseOut > 36) {
+            throw new IllegalArgumentException("baseOut must be between 2 and 36");
         }
-    	
+
         if (baseIn == baseOut) {
             return number;
         }
 
-        // Log the decimal conversion first to keep the preview trace easy to read.
         logger.info("\n--- PASSO 1: Da Base {} a Base 10 ---", baseIn);
         long decimalValue = toDecimal(number, baseIn);
         logger.info("\nRisultato in Base 10: {}", decimalValue);
@@ -54,7 +50,6 @@ public class NumberConverter {
             return String.valueOf(decimalValue);
         }
 
-        // Conversion back to the target base keeps the trace aligned with the UI output.
         logger.info("\n--- PASSO 2: Da Base 10 a Base {} ---", baseOut);
         String result = fromDecimal(decimalValue, baseOut);
         logger.info("\nRisultato Finale in Base {}: {}", baseOut, result);
@@ -63,87 +58,77 @@ public class NumberConverter {
     }
 
     /**
-     * Converts a number from any supported base to decimal without touching the filesystem.
+     * Converts a number from any base (2–36) to decimal.
      */
     private long toDecimal(String number, int base) {
         long decimalValue = 0;
-        String digits = "0123456789ABCDEF"; // Digits beyond 9 support hexadecimal-style inputs.
-        number = number.toUpperCase();
 
         logger.info("  Calcolo: Somma dei (Simbolo * Base ^ Posizione)");
 
         for (int i = 0; i < number.length(); i++) {
             char digitChar = number.charAt(i);
-            int digitValue = digits.indexOf(digitChar); // Translate symbol to numeric value (e.g. 'A' is 10).
-          
-         // ---- Digit validation ----
+            int digitValue = DIGITS.indexOf(digitChar);
+
             if (digitValue < 0 || digitValue >= base) {
                 throw new IllegalArgumentException(
                         "Invalid digit '" + digitChar + "' for base " + base);
-            }  
-            int power = number.length() - 1 - i; // Preserve positional weight from left to right.
+            }
 
-            // Track each contribution to keep the logged preview readable.
+            int power = number.length() - 1 - i;
             long contribution = digitValue * (long) Math.pow(base, power);
             decimalValue += contribution;
 
             logger.info("  Posizione {}: {} ({}) * {}^{} = {}",
-                              power, digitChar, digitValue, base, power, contribution);
+                    power, digitChar, digitValue, base, power, contribution);
         }
+
         return decimalValue;
     }
 
     /**
-     * Converts a decimal number into the requested base, producing an in-memory preview.
+     * Converts a decimal number to the requested base (2–36).
      */
     private String fromDecimal(long decimalValue, int base) {
         if (decimalValue == 0) return "0";
 
-        String result = "";
-        String digits = "0123456789ABCDEF";
+        StringBuilder result = new StringBuilder();
         long currentNumber = decimalValue;
 
         logger.info("  Calcolo: Divisioni successive per la Base {}", base);
 
         while (currentNumber > 0) {
-            // Track the remainder to capture the next symbol for the preview trace.
             long remainder = currentNumber % base;
-
-            // Update the quotient so the loop progresses toward zero.
             long quotient = currentNumber / base;
 
-            // Map the remainder to the symbol expected by the rename preview.
-            char digitChar = digits.charAt((int) remainder);
-
-            // Prepend to build the representation in the correct order.
-            result = digitChar + result;
+            char digitChar = DIGITS.charAt((int) remainder);
+            result.insert(0, digitChar);
 
             logger.info("  {} / {} = Quoziente {}, Resto {} ({})",
-                              currentNumber, base, quotient, remainder, digitChar);
-            
+                    currentNumber, base, quotient, remainder, digitChar);
+
             currentNumber = quotient;
         }
-        return result;
+
+        return result.toString();
     }
-    
+
     public static void main(String[] args) {
         NumberConverter converter = new NumberConverter();
         Scanner scanner = new Scanner(System.in);
-        
-        logger.info("--- Convertitore di Base Numerica ---");
 
-        logger.info("Inserisci il numero da convertire: ");
+        logger.info("--- Convertitore di Base Numerica (2–36) ---");
+
+        logger.info("Inserisci il numero da convertire:");
         String number = scanner.nextLine();
 
-        logger.info("Inserisci la base di partenza (es. 16, 2): ");
+        logger.info("Inserisci la base di partenza:");
         int baseIn = scanner.nextInt();
 
-        logger.info("Inserisci la base di arrivo (es. 10, 8): ");
+        logger.info("Inserisci la base di arrivo:");
         int baseOut = scanner.nextInt();
-        
+
         scanner.close();
 
-        // Esegue la conversione e mostra i passaggi
         converter.convert(number, baseIn, baseOut);
     }
 }
